@@ -21,9 +21,10 @@ GameObject:
   - component: {fileID: 4890817195804192}
   - component: {fileID: 212278336131092556}
   - component: {fileID: 114636898074051062}
+  - component: {fileID: 114298254182470998}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -41,6 +42,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114298254182470998
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1841510535242180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ad5cc353a823534585f32b4ef285ea2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Bullet: {fileID: 1702992595259932, guid: 748d4dd3c0ef84f42b04656f5ab7932e, type: 2}
+  time: 10
 --- !u!114 &114636898074051062
 MonoBehaviour:
   m_ObjectHideFlags: 1
