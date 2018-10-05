@@ -23,7 +23,7 @@ public class SelectManager : MonoBehaviour
     }
     public void Change()
     {
-        SceneManager.LoadScene("Game");
+        SceneManager.LoadScene("SampleScene");
     }
 
 }

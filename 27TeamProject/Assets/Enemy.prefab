@@ -101,6 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distance: 20
   speed: 0.1
+  inputHp: 9
   StartPosition: {x: 0, y: 0, z: 0}
   Bullet: {fileID: 1702992595259932, guid: 748d4dd3c0ef84f42b04656f5ab7932e, type: 2}
   time: 10
