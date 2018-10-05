@@ -1,7 +1,7 @@
 ﻿//
 //10月3日
 //作成者：安部崇寛
-//エネミー
+//エネミークラス
 //
 
 using System.Collections;
@@ -14,33 +14,44 @@ public class Enemy : MonoBehaviour {
     float distance;//移動距離
     [SerializeField]
     float speed;//移動スピード
+    [SerializeField]
+    int inputHp;//HPの初期設定
 
     float turndistance;
     float turnSpeed;
-    Vector3 StartPosition;
-    Vector3 velosity;
+    int hp;
+    
+    public Vector3 StartPosition;
 
     bool isTurn;
 
 	// Use this for initialization
-	void Start () {
+	public virtual void Start () {
         turndistance = distance;
         StartPosition = transform.position;
         isTurn = false;
+        hp = inputHp;
 	}
 	
 	// Update is called once per frame
-	void Update () {
-        //初期値と前後の移動距離との差で前後移動
-        if(StartPosition.x + turndistance >= transform.position.x && !isTurn)
+	public virtual void Update () {
+        if(hp < 1)
         {
-            Turn();   
+            Destroy(this.gameObject);
+        }
+    }
+
+    public void Move()
+    {
+        //初期値と前後の移動距離との差で前後移動
+        if (StartPosition.x + turndistance >= transform.position.x && !isTurn)
+        {
+            Turn();
         }
         else if (StartPosition.x - turndistance <= transform.position.x && isTurn)
         {
-            Turn2();
+            reTurn();
         }
-        
     }
 
     void Turn()
@@ -55,7 +66,7 @@ public class Enemy : MonoBehaviour {
     }
 
     //後ろ移動
-    void Turn2()
+    void reTurn()
     {
         transform.position -= new Vector3(speed, 0);
 
