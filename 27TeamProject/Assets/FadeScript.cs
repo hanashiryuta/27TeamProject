@@ -10,10 +10,14 @@ public class FadeScript : MonoBehaviour {
     float alfa;
     float red, green, blue;
 
+    public bool isFade;
+
 
 	// Use this for initialization
 	void Start () {
         alfa = 1;
+        isFade = false;
+        Time.timeScale = 0;
 	}
 	
 	// Update is called once per frame
@@ -21,5 +25,10 @@ public class FadeScript : MonoBehaviour {
         GetComponent<Image>().color = new Color(red, green, blue, alfa);
 
         alfa -= fadeSpeed;
+        if(alfa < 0)
+        {
+            isFade = true;
+            Time.timeScale = 1;
+        }
 	}
 }

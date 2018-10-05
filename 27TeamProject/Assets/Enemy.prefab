@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 114298254182470998}
   - component: {fileID: 50248597456200082}
   - component: {fileID: 61590358222895782}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -37,7 +37,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1841510535242180}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.86, y: 1.42, z: 0}
+  m_LocalPosition: {x: 13, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -99,11 +99,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ad5cc353a823534585f32b4ef285ea2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distance: 20
-  speed: 0.1
-  StartPosition: {x: 0, y: 0, z: 0}
+  speed: 0.03
+  inputHp: 100
   Bullet: {fileID: 1702992595259932, guid: 748d4dd3c0ef84f42b04656f5ab7932e, type: 2}
-  time: 10
+  time: 5
 --- !u!212 &212278336131092556
 SpriteRenderer:
   m_ObjectHideFlags: 1
