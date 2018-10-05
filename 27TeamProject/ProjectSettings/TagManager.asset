@@ -5,7 +5,6 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
-  - WarpGate1
   layers:
   - Default
   - TransparentFX
