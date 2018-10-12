@@ -1,7 +1,7 @@
 ﻿//
 //10月12日
 //吉川陽詩
-//titleのシーン遷移
+//csvの読み込み、ブロックの配置
 //
 using System.Collections;
 using System.Collections.Generic;
