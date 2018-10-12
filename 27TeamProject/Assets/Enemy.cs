@@ -25,9 +25,9 @@ public class Enemy : MonoBehaviour {
 
     bool isTurn;
     
-    RaycastHit2D hit;
+    RaycastHit hit;
 
-    readonly Collider2D collider  = new Collider2D();
+    readonly Collider collider  = new Collider();
 
 	// Use this for initialization
 	public virtual void Start () {
@@ -44,9 +44,11 @@ public class Enemy : MonoBehaviour {
             Destroy(this.gameObject);
         }
 
-        
 
-        hit = Physics2D.Raycast(new Vector2(transform.position.x - 0.5f, transform.position.y - 1), new Vector2(-1, -1));
+
+        Vector3 origin = new Vector3(transform.position.x - 0.5f, transform.position.y - 1, transform.position.z);
+        //hit = 
+            Physics.Raycast(origin, new Vector3(-1, -1, transform.position.z),out hit);
         Debug.DrawRay(transform.position, new Vector2(-0.5f, -1), Color.white, 1);
         Debug.Log(hit.collider);
 
@@ -55,7 +57,9 @@ public class Enemy : MonoBehaviour {
             isTurn = !isTurn;
         }
 
-        hit = Physics2D.Raycast(new Vector2(transform.position.x + 0.5f, transform.position.y - 1), new Vector2(1, -1));
+        origin = new Vector2(transform.position.x + 0.5f, transform.position.y - 1);
+        //hit = 
+        Physics.Raycast(origin, new Vector3(1, -1, transform.position.z), out hit);
         Debug.DrawRay(transform.position, new Vector2(0.5f, -1), Color.white, 1);
         Debug.Log(hit.collider);
         
@@ -102,7 +106,7 @@ public class Enemy : MonoBehaviour {
         //}
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    void OnCollisionEnter(Collision2D collision)
     {
         if(collision.gameObject.tag == "Enemy")
         {   
