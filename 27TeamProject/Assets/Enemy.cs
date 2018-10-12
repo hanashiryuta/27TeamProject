@@ -106,7 +106,7 @@ public class Enemy : MonoBehaviour {
         //}
     }
 
-    void OnCollisionEnter(Collision2D collision)
+    void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.tag == "Enemy")
         {   
