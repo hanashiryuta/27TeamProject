@@ -27,7 +27,10 @@ public class Enemy : MonoBehaviour {
     
     RaycastHit hit;
 
-    readonly Collider collider  = new Collider();
+    //readonly Collider collider  = new Collider();
+    Vector3 origin;
+
+    public LayerMask layerMask;
 
 	// Use this for initialization
 	public virtual void Start () {
@@ -43,31 +46,30 @@ public class Enemy : MonoBehaviour {
         {
             Destroy(this.gameObject);
         }
-
-
-
-        Vector3 origin = new Vector3(transform.position.x - 0.5f, transform.position.y - 1, transform.position.z);
-        //hit = 
-            Physics.Raycast(origin, new Vector3(-1, -1, transform.position.z),out hit);
-        Debug.DrawRay(transform.position, new Vector2(-0.5f, -1), Color.white, 1);
-        Debug.Log(hit.collider);
-
-        if (hit.collider == null && isTurn)
+        if (isTurn)
         {
-            isTurn = !isTurn;
-        }
+            origin = new Vector3(transform.position.x + 0.5f, transform.position.y - 1, transform.position.z);
+            Physics.Raycast(origin, new Vector3(-0.5f, 0, 0), out hit, layerMask);
+            Debug.DrawRay(origin, new Vector3(-0.5f, 0, 0), Color.white);
+            Debug.Log(hit.collider);
 
-        origin = new Vector2(transform.position.x + 0.5f, transform.position.y - 1);
-        //hit = 
-        Physics.Raycast(origin, new Vector3(1, -1, transform.position.z), out hit);
-        Debug.DrawRay(transform.position, new Vector2(0.5f, -1), Color.white, 1);
-        Debug.Log(hit.collider);
-        
-        if (hit.collider == null && !isTurn)
+            if (hit.collider == null)
+            {
+                isTurn = !isTurn;
+            }
+        }
+        else if(!isTurn)
         {
-            isTurn = !isTurn;
-        }
+            origin = new Vector3(transform.position.x - 0.5f, transform.position.y - 1, transform.position.z);
+            Physics.Raycast(origin, new Vector3(0.5f, 0, 0), out hit, layerMask);
+            Debug.DrawRay(origin, new Vector3(0.5f, 0, 0), Color.white);
+            Debug.Log(hit.collider);
 
+            if (hit.collider == null)
+            {
+                isTurn = !isTurn;
+            }
+        }
         Debug.Log(isTurn);
     }
 
@@ -108,9 +110,9 @@ public class Enemy : MonoBehaviour {
 
     void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.tag == "Enemy")
-        {   
-            isTurn = !isTurn;
-        }
+        //if(collision.gameObject.tag == "Enemy")
+        //{   
+        //    isTurn = !isTurn;
+        //}
     }
 }
