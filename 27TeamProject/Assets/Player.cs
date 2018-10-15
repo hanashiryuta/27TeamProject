@@ -11,7 +11,7 @@ public enum PlayerState
 public class Player : MonoBehaviour
 {
 
-    Rigidbody2D rigid;
+    Rigidbody rigid;
     public float moveSpeed;
     public float moveForceMultiplier = 50;
     public float jumpPower;
@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        rigid = GetComponent<Rigidbody2D>();
+        rigid = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -63,7 +63,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
