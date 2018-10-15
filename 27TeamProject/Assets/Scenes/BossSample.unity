@@ -342,7 +342,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1088082882509770, guid: af351ef1ea6e4644f9970527b419d657, type: 2}
       propertyPath: m_TagString
-      value: Ground
+      value: Rightblock
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 61461558524134004, guid: af351ef1ea6e4644f9970527b419d657, type: 2}
@@ -393,7 +393,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1088082882509770, guid: af351ef1ea6e4644f9970527b419d657, type: 2}
       propertyPath: m_TagString
-      value: Ground
+      value: Rightblock
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 61461558524134004, guid: af351ef1ea6e4644f9970527b419d657, type: 2}
@@ -762,7 +762,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1088082882509770, guid: af351ef1ea6e4644f9970527b419d657, type: 2}
       propertyPath: m_TagString
-      value: Ground
+      value: Leftblock
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 61461558524134004, guid: af351ef1ea6e4644f9970527b419d657, type: 2}
@@ -908,7 +908,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1088082882509770, guid: af351ef1ea6e4644f9970527b419d657, type: 2}
       propertyPath: m_TagString
-      value: Ground
+      value: Leftblock
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 61461558524134004, guid: af351ef1ea6e4644f9970527b419d657, type: 2}
@@ -1216,7 +1216,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1088082882509770, guid: af351ef1ea6e4644f9970527b419d657, type: 2}
       propertyPath: m_TagString
-      value: Ground
+      value: Leftblock
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 61461558524134004, guid: af351ef1ea6e4644f9970527b419d657, type: 2}
@@ -1384,7 +1384,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1088082882509770, guid: af351ef1ea6e4644f9970527b419d657, type: 2}
       propertyPath: m_TagString
-      value: Ground
+      value: Rightblock
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 61461558524134004, guid: af351ef1ea6e4644f9970527b419d657, type: 2}
