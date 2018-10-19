@@ -28,7 +28,7 @@ public class WrapGate : MonoBehaviour {
     {
         if(collision.tag == "Player")
         {
-            GameObject.Find("Nametransprot");
+            GameObject.Find("Nametransprot").GetComponent<Name>().stagename = stageName;
             selectManager.Change();
             Debug.Log(stageName);
         }

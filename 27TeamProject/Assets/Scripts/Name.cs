@@ -10,9 +10,9 @@ using UnityEngine;
 public class Name : MonoBehaviour {
 
     //static SelectManager instance;
-    static Name stageName;
+    static Name instance;
     //public WrapGate warpGate;
-    
+    public string stagename;
 
     // Use this for initialization
     void Awake()
