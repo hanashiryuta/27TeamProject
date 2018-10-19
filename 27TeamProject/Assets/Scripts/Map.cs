@@ -10,13 +10,14 @@ using System.IO;
 
 public class Map : MonoBehaviour {
     //ブロックのPrefabを入れる箱をGameObject型変数で宣言
-    public GameObject MapObject;
+    public List<GameObject> mapObjects ;
+    
 
     //ブロックの配置
-    public GameObject MapPut;
+    GameObject MapPut;
 
     //csvファイル読み込み
-    public TextAsset csvFile;
+    TextAsset csvFile;
 
     //csv全文字列を保存する
     string str = "";
@@ -42,12 +43,12 @@ public class Map : MonoBehaviour {
     int ix = 0;
     int iy = 0;
     int iz = 0;
-
-	// Use this for initialization
-	void Start () {
+    
+    // Use this for initialization
+    void Start () {
 
         //csvデータをstrに保存
-        csvFile = Resources.Load("test") as TextAsset;
+        csvFile = Resources.Load(GameObject.Find("Nametransprot").GetComponent<Name>().stagename) as TextAsset;
         StringReader reader = new StringReader(csvFile.text);
 
         while(reader.Peek() > -1)
@@ -114,7 +115,12 @@ public class Map : MonoBehaviour {
             {
                 if (map[a, b] == 1)
                 {
-                    MapPut = Instantiate(MapObject) as GameObject;
+                    MapPut = Instantiate(mapObjects[0]) as GameObject;
+                    MapPut.transform.position = new Vector3(ix, iy, iz);
+                }
+                if (map[a, b] == 2)
+                {
+                    MapPut = Instantiate(mapObjects[1]) as GameObject;
                     MapPut.transform.position = new Vector3(ix, iy, iz);
                 }
 
