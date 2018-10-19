@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - Leftblock
   - Rightblock
+  - WarpGate1
   layers:
   - Default
   - TransparentFX
