@@ -112,7 +112,7 @@ Camera:
   m_GameObject: {fileID: 1183076129794280}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 3
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_SensorSize: {x: 36, y: 24}
@@ -129,10 +129,10 @@ Camera:
   field of view: 60
   orthographic: 0
   orthographic size: 5
-  m_Depth: -1
+  m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 3895
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -188,9 +188,9 @@ MonoBehaviour:
   isHookShot: 1
   hitPosition: {x: 0, y: 0, z: 0}
   hitDistance: 0
-  swingSpeed: 0
-  swingSpeedRange: 0
-  swingSpeedRate: 0
+  swingSpeed: 1
+  swingSpeedRange: 10
+  swingSpeedRate: 0.1
   throwSpeed: 1000
   flySpeed: 50
   slap_Particle: {fileID: 1262637249157666, guid: 5d679909e1a36c34c97985e3e7b127ee,

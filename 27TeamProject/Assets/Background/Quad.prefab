@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4001411134713638}
   - component: {fileID: 212890276386773384}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: BG3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 33068817527695672}
   - component: {fileID: 23517769206057358}
   - component: {fileID: 64939439517958790}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: Quad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -64,7 +64,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1497417048838824}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 1, y: 0, z: 7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
