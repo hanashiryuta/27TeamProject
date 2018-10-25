@@ -15,6 +15,7 @@ public enum HookState
     MOVE,//移動
     STAY,//待機
     CATCH,//キャッチ
+    ATTACK,//アタック
     DEATH,//削除
     RETURN,//帰還
 }
@@ -56,6 +57,9 @@ public class Hook : MonoBehaviour {
             case HookState.CATCH://キャッチ
                 transform.position = catchObject.transform.position;
                 break;
+            case HookState.ATTACK://ノックバック攻撃
+                Attack();
+                break;
             case HookState.RETURN://帰還
                 hookVelocity = player.transform.position - transform.position;
                 transform.position += hookVelocity.normalized * moveSpeed;
@@ -77,6 +81,16 @@ public class Hook : MonoBehaviour {
             hookState = HookState.RETURN;
         }
     }
+    
+    /// <summary>
+    /// ノックバック攻撃処理
+    /// </summary>
+    void Attack()
+    {
+        Vector3 attackVelocity = catchObject.transform.position - transform.position;
+        catchObject.GetComponent<Rigidbody>().AddForce(attackVelocity * 1000);
+        hookState = HookState.RETURN;
+    }
 
     /// <summary>
     /// 削除処理
@@ -90,20 +104,30 @@ public class Hook : MonoBehaviour {
 
     private void OnTriggerEnter(Collider collision)
     {
-        //地面に当たったら
-        if (collision.gameObject.CompareTag("Ground") && hookState == HookState.MOVE)
-        {
-            //待機処理
-            hookState = HookState.STAY;
-            player.GetComponent<Player>().HookSet(gameObject);
-        }
+        ////地面に当たったら
+        //if (collision.gameObject.CompareTag("Ground") && hookState == HookState.MOVE)
+        //{
+        //    //待機処理
+        //    hookState = HookState.STAY;
+        //    player.GetComponent<Player>().HookSet(gameObject);
+        //}
         //敵に当たったら
         if (collision.gameObject.CompareTag("Enemy") && hookState == HookState.MOVE)
         {
-            //キャッチ処理
-            hookState = HookState.CATCH;
-            catchObject = collision.gameObject;
-            player.GetComponent<Player>().SwingSet(collision.gameObject);
+            //当たった時にボタン押していたら
+            if (Input.GetButton("Jump"))
+            {
+                //キャッチ処理
+                hookState = HookState.CATCH;
+                catchObject = collision.gameObject;
+                player.GetComponent<Player>().SwingSet(collision.gameObject);
+            }
+            //押していなければ
+            else
+            {
+                catchObject = collision.gameObject;
+                hookState = HookState.ATTACK;
+            }
         }
     }
 
