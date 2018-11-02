@@ -19,8 +19,9 @@ public class Enemy : MonoBehaviour {
     float turnSpeed;
     int hp;
     bool isTurn;
-    RaycastHit hit;
+    RaycastHit[] hitList;
     Vector3 origin;
+    Vector3 boxcastScale;
 
     [SerializeField]
     LayerMask layerMask;
@@ -45,43 +46,57 @@ public class Enemy : MonoBehaviour {
         isHook = true;
         BlowMode = false;
 	}
-	
-	// Update is called once per frame
-	public virtual void Update () {
-        if(hp < 1 || (!GetComponent<Renderer>().isVisible && transform.gameObject.layer == 12))
+
+    // Update is called once per frame
+    public virtual void Update()
+    {
+        if (hp < 1)
         {
             Destroy(this.gameObject);
         }
-        
-        if (!isHook) return;
-
-        if (isTurn)
+        if (!isTurn)
         {
-            origin = new Vector3(transform.position.x + 0.5f, transform.position.y - 1, transform.position.z);
-            Physics.Raycast(origin, new Vector3(-0.5f, 0, 0), out hit, layerMask);
-            Debug.DrawRay(origin, new Vector3(-0.5f, 0, 0), Color.white);
-            Debug.Log(hit.collider);
+            origin = new Vector3(transform.position.x + 1.0f, transform.position.y, transform.position.z);
+            hitList = Physics.BoxCastAll(origin, boxcastScale, -transform.up, Quaternion.identity, 1.0f, layerMask);
+            Debug.DrawRay(origin, -transform.up);
+            
+            int groundcount = 0;
+            foreach (var hl in hitList)
+            {
+                if (hl.transform.tag == "Ground")
+                {
+                    groundcount++;
+                }
+            }
 
-            if (hit.collider == null)
+            if (groundcount == 0)
             {
                 isTurn = !isTurn;
             }
         }
-        else if(!isTurn)
+        else if (isTurn)
         {
-            origin = new Vector3(transform.position.x - 0.5f, transform.position.y - 1, transform.position.z);
-            Physics.Raycast(origin, new Vector3(0.5f, 0, 0), out hit, layerMask);
-            Debug.DrawRay(origin, new Vector3(0.5f, 0, 0), Color.white);
-            Debug.Log(hit.collider);
+            origin = new Vector3(transform.position.x - 1.0f, transform.position.y, transform.position.z);
+            hitList = Physics.BoxCastAll(origin, boxcastScale, -transform.up, Quaternion.identity, 1.0f, layerMask);
+            Debug.DrawRay(origin, -transform.up);
+            
+            int groundcount = 0;
+            foreach (var hl in hitList)
+            {
+                if (hl.transform.tag == "Ground")
+                {
+                    groundcount++;
+                }
+            }
 
-            if (hit.collider == null)
+            if (groundcount == 0)
             {
                 isTurn = !isTurn;
             }
         }
-
         Debug.Log(isTurn);
     }
+
 
     public void Move()
     {   
