@@ -13,7 +13,13 @@ public class MoveEnemy : Enemy {
 	// Update is called once per frame
 	public override void Update () {
         base.Update();
-        Move();
-
+        if (!BlowMode)
+        {
+            if(isHook) Move();
+        }
+        else
+        {
+            Blow();
+        }
 	}
 }

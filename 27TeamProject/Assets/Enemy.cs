@@ -10,8 +10,6 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour {
 
-    //[SerializeField]
-    //float distance;//移動距離
     [SerializeField]
     float speed;//移動スピード
     [SerializeField]
@@ -20,32 +18,43 @@ public class Enemy : MonoBehaviour {
     //float turndistance;
     float turnSpeed;
     int hp;
-    
-    //public Vector3 StartPosition;
-
     bool isTurn;
-    
     RaycastHit hit;
-
-    //readonly Collider collider  = new Collider();
     Vector3 origin;
 
-    public LayerMask layerMask;
+    [SerializeField]
+    LayerMask layerMask;
+
+    [SerializeField]
+    GameObject hook;
+
+    [SerializeField]
+    float BlowOffSpeed;
+
+    [HideInInspector]
+    public bool isHook;
+
+    bool isBlow;
+    
+    public bool BlowMode;
 
 	// Use this for initialization
 	public virtual void Start () {
-        //turndistance = distance;
-        //StartPosition = transform.position;
         isTurn = false;
         hp = inputHp;
+        isHook = true;
+        BlowMode = false;
 	}
 	
 	// Update is called once per frame
 	public virtual void Update () {
-        if(hp < 1)
+        if(hp < 1 || (!GetComponent<Renderer>().isVisible && transform.gameObject.layer == 12))
         {
             Destroy(this.gameObject);
         }
+        
+        if (!isHook) return;
+
         if (isTurn)
         {
             origin = new Vector3(transform.position.x + 0.5f, transform.position.y - 1, transform.position.z);
@@ -70,17 +79,18 @@ public class Enemy : MonoBehaviour {
                 isTurn = !isTurn;
             }
         }
+
         Debug.Log(isTurn);
     }
 
     public void Move()
-    {
+    {   
         //初期値と前後の移動距離との差で前後移動
-        if(!isTurn)// (StartPosition.x + turndistance >= transform.position.x && !isTurn)
+        if(!isTurn)
         {
             Turn();
         }
-        else if(isTurn)// (StartPosition.x - turndistance <= transform.position.x && isTurn)
+        else if(isTurn)
         {
             reTurn();
         }
@@ -89,30 +99,54 @@ public class Enemy : MonoBehaviour {
     //前移動
     void Turn()
     {
-        transform.position += new Vector3(speed, 0);
-
-        //if (StartPosition.x + turndistance <= transform.position.x)
-        //{
-        //    isTurn = true;
-        //}
+        transform.position += new Vector3(speed, 0, 0);
     }
 
     //後ろ移動
     void reTurn()
     {
-        transform.position -= new Vector3(speed, 0);
-
-        //if (StartPosition.x - turndistance >= transform.position.x && isTurn)
-        //{
-        //    isTurn = false;
-        //}
+        transform.position -= new Vector3(speed, 0, 0);
     }
 
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Enemy")
+        if (collision.gameObject.layer == 12)
         {
-            isTurn = !isTurn;
+            BlowMode = true;
+            GetComponent<Rigidbody>().useGravity = false;
+            Vector3 Pos = transform.position - collision.transform.position;
+            if(Pos.z > 0)
+            {
+                isBlow = true;
+                //transform.position += new Vector3(0, 0, BlowOffSpeed);
+            }
+            if(Pos.z < 0)
+            {
+                isBlow = false;
+                //transform.position -= new Vector3(0, 0, BlowOffSpeed);
+            }
         }
+    }
+
+    public void Blow()
+    {
+        if (isBlow)
+        {
+            BackBlow();
+        }
+        else
+        {
+            FrontBlow();
+        }
+    }
+
+    void BackBlow()
+    {
+        transform.position += new Vector3(BlowOffSpeed, 0, BlowOffSpeed);
+    }
+
+    void FrontBlow()
+    {
+        transform.position -= new Vector3(BlowOffSpeed, 0, BlowOffSpeed);
     }
 }

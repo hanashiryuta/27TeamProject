@@ -104,6 +104,9 @@ public class Hook : MonoBehaviour {
             hookState = HookState.CATCH;
             catchObject = collision.gameObject;
             player.GetComponent<Player>().SwingSet(collision.gameObject);
+
+            collision.gameObject.layer = 12;
+            collision.GetComponent<Enemy>().isHook = false;
         }
     }
 
