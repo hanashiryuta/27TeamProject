@@ -8,6 +8,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum TestSwingState
+{
+    SIDE,
+    FRONT,
+}
+
+public enum TestMoveState
+{
+    SIDEVIEW,
+    TOPVIEW
+}
+
 /// <summary>
 /// プレイヤー状態
 /// </summary>
@@ -72,8 +84,13 @@ public class Player : MonoBehaviour
     public float throwSpeed;
     //フック移動スピード
     public float flySpeed;
+    //たたきつけスピード
+    public float slapSpeed;
     //たたきつけパーティクル
     public GameObject slap_Particle;
+
+    public TestSwingState testSwingState;
+    public TestMoveState testMoveState;
 
     // Use this for initialization
     void Start()
@@ -91,8 +108,8 @@ public class Player : MonoBehaviour
         switch (playerState)
         {
             case PlayerState.NORMALMOVE://移動
-                    Jump();
-                    HookShot();
+                Jump();
+                HookShot();
                 //else if (Input.GetButtonUp("Jump"))
                 //    hook.GetComponent<Hook>().hookState = HookState.RETURN;
                 break;
@@ -100,12 +117,13 @@ public class Player : MonoBehaviour
                 HookMove();
                 break;
             case PlayerState.HOOKSWING://フック振り回し
-                    HookSwing();
-                    Jump();
+                HookSwing();
+                Jump();
                 if (catchObject != null && Input.GetButtonUp("Jump"))
                 {
                     //下方向なら
-                    if (Input.GetAxis("Vertical") <= -0.5f)
+                    //if (Input.GetAxis("Vertical") <= -0.5f)
+                    if(!isJumpFlag)
                     {
                         //たたきつけ
                         ObjectSlap();
@@ -119,19 +137,28 @@ public class Player : MonoBehaviour
                 }
                 break;
             case PlayerState.HOOKRETURN://フック戻り
-                    Jump();
+                Jump();
                 break;
         }
     }
-    
+
     /// <summary>
     /// 移動処理
     /// </summary>
     public void Move()
     {
-        Vector3 moveVector = new Vector3(Input.GetAxis("Horizontal") * moveSpeed, 0);
-        Vector3 rigidVelocity = new Vector3(rigid.velocity.x, 0);
-        rigid.AddForce(moveForceMultiplier * (moveVector - rigidVelocity));
+        if (testMoveState == TestMoveState.SIDEVIEW)
+        {
+            Vector3 moveVector = new Vector3(Input.GetAxis("Horizontal") * moveSpeed, 0);
+            Vector3 rigidVelocity = new Vector3(rigid.velocity.x, 0);
+            rigid.AddForce(moveForceMultiplier * (moveVector - rigidVelocity));
+        }
+        else
+        {
+            Vector3 moveVector = new Vector3(Input.GetAxis("Horizontal") * moveSpeed, 0, Input.GetAxis("Vertical") * moveSpeed);
+            Vector3 rigidVelocity = new Vector3(rigid.velocity.x, 0, rigid.velocity.z);
+            rigid.AddForce(moveForceMultiplier * (moveVector - rigidVelocity));
+        }
     }
 
     /// <summary>
@@ -139,12 +166,19 @@ public class Player : MonoBehaviour
     /// </summary>
     public void Jump()
     {
+        //if (testMoveState == TestMoveState.SIDEVIEW)
+        //{
         //Bボタンでジャンプ
         if (isJumpFlag && Input.GetButtonDown("Fire2"))
         {
             isJumpFlag = false;
             rigid.AddForce(Vector2.up * jumpPower);
         }
+        //}
+        //else
+        //{
+
+        //}
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -162,11 +196,23 @@ public class Player : MonoBehaviour
     /// </summary>
     void HookPointer()
     {
-        //左スティックの方向にポインター配置
-        if (Mathf.Abs(Input.GetAxis("Vertical")) >= 0.1f || Mathf.Abs(Input.GetAxis("Horizontal")) >= 0.1f)
+        if (testMoveState == TestMoveState.SIDEVIEW)
         {
-            pointerAngle = Mathf.Atan2(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
-            hookPointer.transform.localPosition = new Vector3(Mathf.Cos(pointerAngle) * pointerRadius, Mathf.Sin(pointerAngle) * pointerRadius, -1);
+            //左スティックの方向にポインター配置
+            if (Mathf.Abs(Input.GetAxis("Vertical")) >= 0.1f || Mathf.Abs(Input.GetAxis("Horizontal")) >= 0.1f)
+            {
+                pointerAngle = Mathf.Atan2(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
+                hookPointer.transform.localPosition = new Vector3(Mathf.Cos(pointerAngle) * pointerRadius, Mathf.Sin(pointerAngle) * pointerRadius, -1);
+            }
+        }
+        else
+        {
+            //左スティックの方向にポインター配置
+            if (Mathf.Abs(Input.GetAxis("Vertical")) >= 0.1f || Mathf.Abs(Input.GetAxis("Horizontal")) >= 0.1f)
+            {
+                pointerAngle = Mathf.Atan2(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
+                hookPointer.transform.localPosition = new Vector3(Mathf.Cos(pointerAngle) * pointerRadius, 0.5f, Mathf.Sin(pointerAngle) * pointerRadius);
+            }
         }
     }
 
@@ -175,13 +221,27 @@ public class Player : MonoBehaviour
     /// </summary>
     void HookShot()
     {
-        if (isHookShot && Input.GetButtonDown("Jump"))
+        if (testMoveState == TestMoveState.SIDEVIEW)
         {
-            //ポインターの位置に向かって射出
-            hook = Instantiate(originHook, transform.position, Quaternion.identity);
-            hook.GetComponent<Hook>().player = gameObject;
-            hook.GetComponent<Hook>().targetPosition = new Vector3(hookPointer.transform.position.x, hookPointer.transform.position.y, 0);//new Vector3(Mathf.Cos(angle) * shotRadius, Mathf.Sin(angle) * shotRadius, 0);
-            isHookShot = false;
+            if (isHookShot && Input.GetButtonDown("Jump"))
+            {
+                //ポインターの位置に向かって射出
+                hook = Instantiate(originHook, transform.position, Quaternion.identity);
+                hook.GetComponent<Hook>().player = gameObject;
+                hook.GetComponent<Hook>().targetPosition = new Vector3(hookPointer.transform.position.x, hookPointer.transform.position.y, 0);//new Vector3(Mathf.Cos(angle) * shotRadius, Mathf.Sin(angle) * shotRadius, 0);
+                isHookShot = false;
+            }
+        }
+        else
+        {
+            if (isHookShot && Input.GetButtonDown("Jump"))
+            {
+                //ポインターの位置に向かって射出
+                hook = Instantiate(originHook, transform.position, Quaternion.identity);
+                hook.GetComponent<Hook>().player = gameObject;
+                hook.GetComponent<Hook>().targetPosition = hookPointer.transform.position;//new Vector3(Mathf.Cos(angle) * shotRadius, Mathf.Sin(angle) * shotRadius, 0);
+                isHookShot = false;
+            }
         }
     }
 
@@ -222,13 +282,26 @@ public class Player : MonoBehaviour
     /// <param name="m_CatchObject">回すオブジェクト</param>
     public void SwingSet(GameObject m_CatchObject)
     {
-        catchObject = m_CatchObject;
-        swingRadius = Vector3.Distance(transform.position, catchObject.transform.position);
-        if (swingRadius <= 1)
-            swingRadius = 1;
-        swingAngle = Mathf.Atan2(catchObject.transform.position.y - transform.position.y, catchObject.transform.position.x - transform.position.x) * 180 / Mathf.PI;
-        playerState = PlayerState.HOOKSWING;
-        swingSpeed = 0;
+        if (testSwingState == TestSwingState.SIDE)
+        {
+            catchObject = m_CatchObject;
+            swingRadius = Vector3.Distance(transform.position, catchObject.transform.position);
+            if (swingRadius <= 1)
+                swingRadius = 1;
+            swingAngle = Mathf.Atan2(catchObject.transform.position.y - transform.position.y, catchObject.transform.position.x - transform.position.x) * 180 / Mathf.PI;
+            playerState = PlayerState.HOOKSWING;
+            swingSpeed = 0;
+        }
+        else
+        {
+            catchObject = m_CatchObject;
+            swingRadius = Vector3.Distance(transform.position, catchObject.transform.position);
+            if (swingRadius <= 1)
+                swingRadius = 1;
+            swingAngle = Mathf.Atan2(catchObject.transform.position.z - transform.position.z, catchObject.transform.position.x - transform.position.x) * 180 / Mathf.PI;
+            playerState = PlayerState.HOOKSWING;
+            swingSpeed = 0;
+        }
     }
 
     /// <summary>
@@ -236,29 +309,56 @@ public class Player : MonoBehaviour
     /// </summary>
     void HookSwing()
     {
-        //ボタン押している間
-        if (Input.GetButton("Jump"))
+        if (testSwingState == TestSwingState.SIDE)
         {
-            swingSpeed += swingSpeedRate;
-            if (swingSpeed >= swingSpeedRange)
-                swingSpeed = swingSpeedRange;
-            swingAngle += swingSpeed;
-            catchObject.transform.position = transform.position + new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180), 0, swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180));
+            //ボタン押している間
+            if (Input.GetButton("Jump"))
+            {
+                swingSpeed += swingSpeedRate;
+                if (swingSpeed >= swingSpeedRange)
+                    swingSpeed = swingSpeedRange;
+                swingAngle += swingSpeed;
+                catchObject.transform.position = transform.position + new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180), 0, swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180));
+            }
+        }
+        else
+        {
+            //ボタン押している間
+            if (Input.GetButton("Jump"))
+            {
+                swingSpeed += swingSpeedRate;
+                if (swingSpeed >= swingSpeedRange)
+                    swingSpeed = swingSpeedRange;
+                swingAngle += swingSpeed;
+                catchObject.transform.position = transform.position + new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180), swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180), 0);
+            }
         }
     }
-    
+
     /// <summary>
     /// オブジェクト投擲
     /// </summary>
     void ObjectThrow()
     {
-        catchObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        catchObject.GetComponent<Rigidbody>().useGravity = false;
-        Vector3 throwVelocity = (hookPointer.transform.position - transform.position).normalized;
-        catchObject.transform.position = new Vector3(transform.position.x + throwVelocity.x, transform.position.y, 0);
-        throwVelocity.z = 0;
-        catchObject.GetComponent<Rigidbody>().AddForce(throwVelocity*throwSpeed);
-        playerState = PlayerState.HOOKRETURN;
+        if (testMoveState == TestMoveState.SIDEVIEW)
+        {
+            catchObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            catchObject.GetComponent<Rigidbody>().useGravity = false;
+            Vector3 throwVelocity = (hookPointer.transform.position - transform.position).normalized;
+            catchObject.transform.position = transform.position + throwVelocity;
+            throwVelocity.z = 0;
+            catchObject.GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
+            playerState = PlayerState.HOOKRETURN;
+        }
+        else
+        {
+            catchObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            catchObject.GetComponent<Rigidbody>().useGravity = false;
+            Vector3 throwVelocity = (hookPointer.transform.position - transform.position).normalized;
+            catchObject.transform.position = transform.position + throwVelocity;
+            catchObject.GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
+            playerState = PlayerState.HOOKRETURN;
+        }
     }
 
     /// <summary>
@@ -266,10 +366,17 @@ public class Player : MonoBehaviour
     /// </summary>
     void ObjectSlap()
     {
+        //if (testMoveState == TestMoveState.SIDEVIEW)
+        //{
         catchObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        catchObject.transform.position = new Vector3(transform.position.x + Input.GetAxisRaw("Horizontal"), transform.position.y, 0);
+        catchObject.transform.position = new Vector3(transform.position.x + Input.GetAxisRaw("Horizontal"), transform.position.y, transform.position.z);
         if (!isJumpFlag)
-            catchObject.GetComponent<Rigidbody>().AddForce(new Vector3(0, -1) * throwSpeed);
+            catchObject.GetComponent<Rigidbody>().AddForce(new Vector3(0, -1) * slapSpeed);
         Instantiate(slap_Particle, catchObject.transform.position, Quaternion.identity);
+        //}
+        //else
+        //{
+
+        //}
     }
 }
