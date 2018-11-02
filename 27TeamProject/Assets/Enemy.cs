@@ -56,7 +56,7 @@ public class Enemy : MonoBehaviour {
         }
         if (!isTurn)
         {
-            origin = new Vector3(transform.position.x + 1.0f, transform.position.y, transform.position.z);
+            origin = new Vector3(transform.position.x + 0.5f, transform.position.y, transform.position.z);
             hitList = Physics.BoxCastAll(origin, boxcastScale, -transform.up, Quaternion.identity, 1.0f, layerMask);
             Debug.DrawRay(origin, -transform.up);
             
@@ -76,7 +76,7 @@ public class Enemy : MonoBehaviour {
         }
         else if (isTurn)
         {
-            origin = new Vector3(transform.position.x - 1.0f, transform.position.y, transform.position.z);
+            origin = new Vector3(transform.position.x - 0.5f, transform.position.y, transform.position.z);
             hitList = Physics.BoxCastAll(origin, boxcastScale, -transform.up, Quaternion.identity, 1.0f, layerMask);
             Debug.DrawRay(origin, -transform.up);
             
