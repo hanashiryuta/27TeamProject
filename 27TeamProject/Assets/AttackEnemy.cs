@@ -26,15 +26,24 @@ public class AttackEnemy : Enemy {
 	
 	// Update is called once per frame
 	public override void Update () {
-        
         base.Update();
-        Move();
-        //一定時間ごとに弾丸を生成
-        bulletTime -= Time.deltaTime;
-        if (bulletTime < 0)
+        if (!BlowMode)
         {
-            Instantiate(Bullet, transform.position + new Vector3(-1.2f, 0, 0), Quaternion.identity);
-            bulletTime = time;
+            if (isHook)
+            {
+                Move();
+                //一定時間ごとに弾丸を生成
+                bulletTime -= Time.deltaTime;
+                if (bulletTime < 0)
+                {
+                    Instantiate(Bullet, transform.position + new Vector3(-1.2f, 0, 0), Quaternion.identity);
+                    bulletTime = time;
+                }
+            }
+        }
+        else
+        {
+            Blow();
         }
 	}
 }
