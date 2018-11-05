@@ -63,8 +63,8 @@ public class Enemy : MonoBehaviour {
 
         if (!isTurn)
         {
-            origin = new Vector3(transform.position.x + 0.5f, transform.position.y, transform.position.z);
-            hitList = Physics.BoxCastAll(origin, boxcastScale, -transform.up, Quaternion.identity, 1.0f, layerMask);
+            origin = new Vector3(transform.position.x + transform.lossyScale.x / 2, transform.position.y, transform.position.z);
+            hitList = Physics.BoxCastAll(origin, boxcastScale, -transform.up, Quaternion.identity, transform.lossyScale.y, layerMask);
             Debug.DrawRay(origin, -transform.up);
             
             int groundcount = 0;
@@ -83,8 +83,8 @@ public class Enemy : MonoBehaviour {
         }
         else if (isTurn)
         {
-            origin = new Vector3(transform.position.x - 0.5f, transform.position.y, transform.position.z);
-            hitList = Physics.BoxCastAll(origin, boxcastScale, -transform.up, Quaternion.identity, 1.0f, layerMask);
+            origin = new Vector3(transform.position.x - transform.lossyScale.x / 2, transform.position.y, transform.position.z);
+            hitList = Physics.BoxCastAll(origin, boxcastScale, -transform.up, Quaternion.identity, transform.lossyScale.y, layerMask);
             Debug.DrawRay(origin, -transform.up);
             
             int groundcount = 0;
@@ -166,11 +166,11 @@ public class Enemy : MonoBehaviour {
 
     void BackBlow()
     {
-        transform.position += new Vector3(BlowOffSpeed, 0, BlowOffSpeed);
+        transform.position -= new Vector3(BlowOffSpeed, 0, BlowOffSpeed);
     }
 
     void FrontBlow()
     {
-        transform.position -= new Vector3(BlowOffSpeed, 0, BlowOffSpeed);
+        transform.position += new Vector3(BlowOffSpeed, 0, BlowOffSpeed);
     }
 }
