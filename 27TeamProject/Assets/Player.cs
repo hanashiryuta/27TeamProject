@@ -88,9 +88,14 @@ public class Player : MonoBehaviour
     public float slapSpeed;
     //たたきつけパーティクル
     public GameObject slap_Particle;
+    Vector3 pointerPosition = Vector3.zero;
 
+    //デバッグ用変数
     public TestSwingState testSwingState;
     public TestMoveState testMoveState;
+
+    //ポインター用レイヤー
+    public LayerMask targetLayer;
 
     // Use this for initialization
     void Start()
@@ -211,7 +216,36 @@ public class Player : MonoBehaviour
             if (Mathf.Abs(Input.GetAxis("Vertical")) >= 0.1f || Mathf.Abs(Input.GetAxis("Horizontal")) >= 0.1f)
             {
                 pointerAngle = Mathf.Atan2(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
-                hookPointer.transform.localPosition = new Vector3(Mathf.Cos(pointerAngle) * pointerRadius, 0.5f, Mathf.Sin(pointerAngle) * pointerRadius);
+                pointerPosition = new Vector3(Mathf.Cos(pointerAngle) * pointerRadius, 0.5f, Mathf.Sin(pointerAngle) * pointerRadius);
+                               
+            }
+
+            //左スティックの方向に四角形のあたり判定を飛ばす
+            Collider[] targetList = Physics.OverlapBox(new Vector3((transform.position.x + (transform.position.x + pointerPosition.x)) / 2, transform.position.y, (transform.position.z + (transform.position.z + pointerPosition.z)) / 2),
+                new Vector3(transform.localScale.x, transform.localScale.y/2, pointerRadius/2),
+                Quaternion.Euler(0, (pointerAngle - 90), 0), targetLayer);
+            //transform.rotation = Quaternion.Euler(0, pointerAngle - 90, 0);
+
+            //1つ以上検知していれば
+            if (targetList.Length > 0)
+            {
+                //一番近いものを検索し、その位置にポインターを配置する
+                GameObject nearEnemy = targetList[0].gameObject;
+                foreach (var cx in targetList)
+                {
+                    float length = Vector3.Distance(transform.position, cx.transform.position);
+                    float nearLength = Vector3.Distance(transform.position, nearEnemy.transform.position);
+
+                    if (length <= nearLength)
+                    {
+                        nearEnemy = cx.gameObject;
+                    }
+                }
+                hookPointer.transform.position = nearEnemy.transform.position;
+            }
+            else
+            {
+                hookPointer.transform.position = pointerPosition+transform.position;
             }
         }
     }
