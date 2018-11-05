@@ -2749,6 +2749,20 @@ Prefab:
       propertyPath: swingSpeedRate
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 1490922673037830, guid: 679b2ef7fc49fbe4285f3c030bc9dfbf, type: 2}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 20939059754983658, guid: 679b2ef7fc49fbe4285f3c030bc9dfbf,
+        type: 2}
+      propertyPath: m_CullingMask.m_Bits
+      value: 40759
+      objectReference: {fileID: 0}
+    - target: {fileID: 20591268176294916, guid: 679b2ef7fc49fbe4285f3c030bc9dfbf,
+        type: 2}
+      propertyPath: m_CullingMask.m_Bits
+      value: 16384
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 679b2ef7fc49fbe4285f3c030bc9dfbf, type: 2}
   m_IsPrefabAsset: 0
