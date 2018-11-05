@@ -17,7 +17,10 @@ public class Enemy : MonoBehaviour {
 
     //float turndistance;
     float turnSpeed;
+
+    [SerializeField]
     int hp;
+
     bool isTurn;
     RaycastHit[] hitList;
     Vector3 origin;
@@ -39,8 +42,11 @@ public class Enemy : MonoBehaviour {
     
     public bool BlowMode;
 
-	// Use this for initialization
-	public virtual void Start () {
+    [SerializeField]
+    int ThrowAtack;
+
+    // Use this for initialization
+    public virtual void Start () {
         isTurn = false;
         hp = inputHp;
         isHook = true;
@@ -54,6 +60,7 @@ public class Enemy : MonoBehaviour {
         {
             Destroy(this.gameObject);
         }
+
         if (!isTurn)
         {
             origin = new Vector3(transform.position.x + 0.5f, transform.position.y, transform.position.z);
@@ -133,13 +140,15 @@ public class Enemy : MonoBehaviour {
             if(Pos.z > 0)
             {
                 isBlow = true;
-                //transform.position += new Vector3(0, 0, BlowOffSpeed);
             }
             if(Pos.z < 0)
             {
                 isBlow = false;
-                //transform.position -= new Vector3(0, 0, BlowOffSpeed);
             }
+        }
+        else if(collision.gameObject.layer == 14)
+        {
+            hp -= collision.gameObject.GetComponent<Enemy>().ThrowAtack;
         }
     }
 

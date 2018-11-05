@@ -358,6 +358,7 @@ public class Player : MonoBehaviour
             catchObject.transform.position = transform.position + throwVelocity;
             catchObject.GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
             playerState = PlayerState.HOOKRETURN;
+            catchObject.gameObject.layer = 14;
         }
     }
 
