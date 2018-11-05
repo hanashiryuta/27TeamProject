@@ -10,8 +10,6 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour {
 
-    //[SerializeField]
-    //float distance;//移動距離
     [SerializeField]
     float speed;//移動スピード
     [SerializeField]
@@ -19,53 +17,86 @@ public class Enemy : MonoBehaviour {
 
     //float turndistance;
     float turnSpeed;
+
+    [SerializeField]
     int hp;
-    
-    //public Vector3 StartPosition;
 
     bool isTurn;
-    
-    RaycastHit hit;
-
-    //readonly Collider collider  = new Collider();
+    RaycastHit[] hitList;
     Vector3 origin;
+    Vector3 boxcastScale;
 
-    public LayerMask layerMask;
+    [SerializeField]
+    LayerMask layerMask;
 
-	// Use this for initialization
-	public virtual void Start () {
-        //turndistance = distance;
-        //StartPosition = transform.position;
+    [SerializeField]
+    GameObject hook;
+
+    [SerializeField]
+    float BlowOffSpeed;
+
+    [HideInInspector]
+    public bool isHook;
+
+    bool isBlow;
+    
+    public bool BlowMode;
+
+    [SerializeField]
+    int ThrowAtack;
+
+    // Use this for initialization
+    public virtual void Start () {
         isTurn = false;
         hp = inputHp;
+        isHook = true;
+        BlowMode = false;
 	}
-	
-	// Update is called once per frame
-	public virtual void Update () {
-        if(hp < 1)
+
+    // Update is called once per frame
+    public virtual void Update()
+    {
+        if (hp < 1)
         {
             Destroy(this.gameObject);
         }
-        if (isTurn)
-        {
-            origin = new Vector3(transform.position.x + 0.5f, transform.position.y - 1, transform.position.z);
-            Physics.Raycast(origin, new Vector3(-0.5f, 0, 0), out hit, layerMask);
-            Debug.DrawRay(origin, new Vector3(-0.5f, 0, 0), Color.white);
-            Debug.Log(hit.collider);
 
-            if (hit.collider == null)
+        if (!isTurn)
+        {
+            origin = new Vector3(transform.position.x + 0.5f, transform.position.y, transform.position.z);
+            hitList = Physics.BoxCastAll(origin, boxcastScale, -transform.up, Quaternion.identity, 1.0f, layerMask);
+            Debug.DrawRay(origin, -transform.up);
+            
+            int groundcount = 0;
+            foreach (var hl in hitList)
+            {
+                if (hl.transform.tag == "Ground")
+                {
+                    groundcount++;
+                }
+            }
+
+            if (groundcount == 0)
             {
                 isTurn = !isTurn;
             }
         }
-        else if(!isTurn)
+        else if (isTurn)
         {
-            origin = new Vector3(transform.position.x - 0.5f, transform.position.y - 1, transform.position.z);
-            Physics.Raycast(origin, new Vector3(0.5f, 0, 0), out hit, layerMask);
-            Debug.DrawRay(origin, new Vector3(0.5f, 0, 0), Color.white);
-            Debug.Log(hit.collider);
+            origin = new Vector3(transform.position.x - 0.5f, transform.position.y, transform.position.z);
+            hitList = Physics.BoxCastAll(origin, boxcastScale, -transform.up, Quaternion.identity, 1.0f, layerMask);
+            Debug.DrawRay(origin, -transform.up);
+            
+            int groundcount = 0;
+            foreach (var hl in hitList)
+            {
+                if (hl.transform.tag == "Ground")
+                {
+                    groundcount++;
+                }
+            }
 
-            if (hit.collider == null)
+            if (groundcount == 0)
             {
                 isTurn = !isTurn;
             }
@@ -73,14 +104,15 @@ public class Enemy : MonoBehaviour {
         Debug.Log(isTurn);
     }
 
+
     public void Move()
-    {
+    {   
         //初期値と前後の移動距離との差で前後移動
-        if(!isTurn)// (StartPosition.x + turndistance >= transform.position.x && !isTurn)
+        if(!isTurn)
         {
             Turn();
         }
-        else if(isTurn)// (StartPosition.x - turndistance <= transform.position.x && isTurn)
+        else if(isTurn)
         {
             reTurn();
         }
@@ -89,30 +121,56 @@ public class Enemy : MonoBehaviour {
     //前移動
     void Turn()
     {
-        transform.position += new Vector3(speed, 0);
-
-        //if (StartPosition.x + turndistance <= transform.position.x)
-        //{
-        //    isTurn = true;
-        //}
+        transform.position += new Vector3(speed, 0, 0);
     }
 
     //後ろ移動
     void reTurn()
     {
-        transform.position -= new Vector3(speed, 0);
-
-        //if (StartPosition.x - turndistance >= transform.position.x && isTurn)
-        //{
-        //    isTurn = false;
-        //}
+        transform.position -= new Vector3(speed, 0, 0);
     }
 
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Enemy")
+        if (collision.gameObject.layer == 12)
         {
-            isTurn = !isTurn;
+            BlowMode = true;
+            GetComponent<Rigidbody>().useGravity = false;
+            Vector3 Pos = transform.position - collision.transform.position;
+            if(Pos.z > 0)
+            {
+                isBlow = true;
+            }
+            if(Pos.z < 0)
+            {
+                isBlow = false;
+            }
         }
+        else if(collision.gameObject.layer == 14)
+        {
+            hp -= collision.gameObject.GetComponent<Enemy>().ThrowAtack;
+        }
+    }
+
+    public void Blow()
+    {
+        if (isBlow)
+        {
+            BackBlow();
+        }
+        else
+        {
+            FrontBlow();
+        }
+    }
+
+    void BackBlow()
+    {
+        transform.position += new Vector3(BlowOffSpeed, 0, BlowOffSpeed);
+    }
+
+    void FrontBlow()
+    {
+        transform.position -= new Vector3(BlowOffSpeed, 0, BlowOffSpeed);
     }
 }

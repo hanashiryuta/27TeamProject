@@ -114,6 +114,7 @@ public class Hook : MonoBehaviour {
         //敵に当たったら
         if (collision.gameObject.CompareTag("Enemy") && hookState == HookState.MOVE)
         {
+
             //当たった時にボタン押していたら
             if (Input.GetButton("Jump"))
             {
@@ -121,6 +122,9 @@ public class Hook : MonoBehaviour {
                 hookState = HookState.CATCH;
                 catchObject = collision.gameObject;
                 player.GetComponent<Player>().SwingSet(collision.gameObject);
+                
+               collision.gameObject.layer = 12;
+               collision.GetComponent<Enemy>().isHook = false;
             }
             //押していなければ
             else

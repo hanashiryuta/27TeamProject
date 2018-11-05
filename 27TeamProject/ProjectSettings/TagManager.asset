@@ -22,9 +22,10 @@ TagManager:
   - Enemy
   - Player
   - Hook
+  - CatchEnemy
   - BG3
   - Pointer
-  - 
+  - ThrowEnemy
   - 
   - 
   - 
