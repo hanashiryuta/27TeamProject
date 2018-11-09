@@ -13,16 +13,16 @@ public class Bullet : MonoBehaviour {
     [SerializeField]
     float BulletSpeed;//弾丸のスピード
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        //常にスピード分進み続ける
-        transform.position += new Vector3(BulletSpeed, 0);
+    Vector3 normalpos;
 
+    void Awake()
+    {
+        normalpos = Vector3.Normalize(GameObject.FindGameObjectWithTag("Player").transform.position - transform.position);
+        GetComponent<Rigidbody>().AddForce(normalpos * BulletSpeed);
+    }
+
+    // Update is called once per frame
+    void Update () {
         //画面外に行ったら消滅
         if (!GetComponent<Renderer>().isVisible)
         {

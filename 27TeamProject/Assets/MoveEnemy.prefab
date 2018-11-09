@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0.03
-  inputHp: 1
+  inputHp: 100
   hp: 0
   layerMask:
     serializedVersion: 2
@@ -121,7 +121,10 @@ MonoBehaviour:
   BlowOffSpeed: 0.1
   isHook: 0
   BlowMode: 0
-  ThrowAtack: 5
+  ThrowAttack: 5
+  SwingAttack: 5
+  mode: 0
+  ChaseRange: 10
 --- !u!212 &212229978006262312
 SpriteRenderer:
   m_ObjectHideFlags: 1

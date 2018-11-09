@@ -16,7 +16,10 @@ public class AttackEnemy : Enemy {
     [SerializeField]
     float time;//発射する間隔
 
-    float bulletTime;
+    float bulletTime; //再発射までの時間
+
+    [SerializeField]
+    float BulletRange;
     
     // Use this for initialization
     public override void Start () {
@@ -34,10 +37,17 @@ public class AttackEnemy : Enemy {
                 Move();
                 //一定時間ごとに弾丸を生成
                 bulletTime -= Time.deltaTime;
+                GameObject Player = GameObject.FindGameObjectWithTag("Player");
+                Vector3 pos = Player.transform.position - transform.position;
+                Vector3 normalpos = Vector3.Normalize(pos);
                 if (bulletTime < 0)
                 {
-                    Instantiate(Bullet, transform.position + new Vector3(-1.2f, 0, 0), Quaternion.identity);
-                    bulletTime = time;
+                    //レンジの外なら発射しない
+                    if (Mathf.Abs(pos.x) < BulletRange && Mathf.Abs(pos.z) < BulletRange)
+                    {
+                        Instantiate(Bullet, transform.position + new Vector3(normalpos.x * 1.2f, 0, normalpos.z * 1.2f), Quaternion.identity);
+                        bulletTime = time;
+                    }
                 }
             }
         }
