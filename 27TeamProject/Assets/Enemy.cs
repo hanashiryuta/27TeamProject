@@ -15,6 +15,7 @@ public enum MoveMode
     VERTICAL,
     HORIZONTAL,
     PLAYERCHASE,
+    RANDOMMOVE,
 }
 
 public class Enemy : MonoBehaviour {
@@ -53,9 +54,16 @@ public class Enemy : MonoBehaviour {
     [SerializeField]
     float ChaseRange; //Player追跡距離
 
+    GameObject wavewall;
+    float x, z;
+
     public virtual void Awake()
     {
+        //mode = MoveMode.RANDOMMOVE;
         mode = Enum.GetValues(typeof(MoveMode)).Cast<MoveMode>().OrderBy(c => UnityEngine.Random.Range(0, 3)).FirstOrDefault();
+        wavewall = GameObject.FindGameObjectWithTag("Player");
+        x = UnityEngine.Random.Range(wavewall.transform.position.x, wavewall.transform.position.x + 10.0f);
+        z = UnityEngine.Random.Range(wavewall.transform.position.z, wavewall.transform.position.z + 10.0f);
     }
 
     // Use this for initialization
@@ -74,7 +82,7 @@ public class Enemy : MonoBehaviour {
             Destroy(this.gameObject);
         }
         
-        if(mode == MoveMode.PLAYERCHASE)
+        if(mode == MoveMode.PLAYERCHASE || mode == MoveMode.RANDOMMOVE)
         {
             return;
         }
@@ -184,6 +192,11 @@ public class Enemy : MonoBehaviour {
     
     public void Move()
     {   
+        if(mode == MoveMode.RANDOMMOVE)
+        {
+            RandomMove();
+        }
+
         if(mode == MoveMode.PLAYERCHASE)
         {
             PlayerShaseMove();
@@ -247,6 +260,18 @@ public class Enemy : MonoBehaviour {
         Vector3 normalpos = Vector3.Normalize(pos);
         if (Mathf.Abs(pos.x) < ChaseRange && Mathf.Abs(pos.z) < ChaseRange)
             transform.position += normalpos * speed;
+    }
+
+    void RandomMove()
+    {
+        Vector3 pos = new Vector3(x, 0.0f, z) - transform.position;
+        Vector3 normalpos = Vector3.Normalize(pos);
+        if ((pos.z < 0.1f && pos.z > -0.1f) && (pos.x < 0.1f && pos.x > -0.1f))
+        {
+            x = UnityEngine.Random.Range(wavewall.transform.position.x, wavewall.transform.position.x + 10.0f);
+            z = UnityEngine.Random.Range(wavewall.transform.position.z, wavewall.transform.position.z + 10.0f);
+        }
+        transform.position += normalpos * speed;
     }
 
     public void Blow()
