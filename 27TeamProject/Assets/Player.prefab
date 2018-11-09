@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 20591268176294916}
   - component: {fileID: 81688184197010884}
   m_Layer: 0
-  m_Name: pointerCamera
+  m_Name: FrontCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -86,7 +86,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4404873928623988}
   - component: {fileID: 212565082724729288}
-  m_Layer: 13
+  m_Layer: 14
   m_Name: testPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -312,7 +312,7 @@ Camera:
   m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 8192
+    m_Bits: 81920
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -352,7 +352,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 3895
+    m_Bits: 40759
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -422,6 +422,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23c4bef184fd9184f909d84208df08cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hp: 10
   moveSpeed: 5
   moveForceMultiplier: 50
   jumpPower: 300
@@ -433,13 +434,22 @@ MonoBehaviour:
   isHookShot: 1
   hitPosition: {x: 0, y: 0, z: 0}
   hitDistance: 0
-  swingSpeed: 1
+  swingSpeed: 0.5
   swingSpeedRange: 10
-  swingSpeedRate: 0.1
+  swingSpeedRate: 0.01
   throwSpeed: 4000
   flySpeed: 50
   slapSpeed: 500
   slap_Particle: {fileID: 1262637249157666, guid: 5d679909e1a36c34c97985e3e7b127ee,
+    type: 2}
+  origin_TimingTime: 2
+  timingTime: 0
+  swingButtonRate: 1
+  origin_Timing_Particle: {fileID: 1399463009838916, guid: 147ac3aba1bb73c4694794e59c66f1c6,
+    type: 2}
+  good_Timing_Particle: {fileID: 1104028873220918, guid: 13e39f6fd8d4f9d4c9904d9f80f49482,
+    type: 2}
+  badTiming_Particle: {fileID: 1096071843622702, guid: 93df2532b1437714aa9b755cedc69efd,
     type: 2}
   testSwingState: 0
   testMoveState: 1
@@ -501,7 +511,7 @@ SpriteRenderer:
   m_Size: {x: 0.24691358, y: 0.28395063}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!212 &212251562300373168
@@ -547,7 +557,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!212 &212445319529733554
@@ -593,7 +603,7 @@ SpriteRenderer:
   m_Size: {x: 0.30555555, y: 0.30864197}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!212 &212565082724729288
@@ -685,6 +695,6 @@ SpriteRenderer:
   m_Size: {x: 0.2808642, y: 0.2777778}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
