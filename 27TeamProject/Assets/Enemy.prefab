@@ -82,7 +82,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0.03
-  inputHp: 5
+  inputHp: 100
   hp: 0
   layerMask:
     serializedVersion: 2
@@ -91,9 +91,13 @@ MonoBehaviour:
   BlowOffSpeed: 0.1
   isHook: 0
   BlowMode: 0
-  ThrowAtack: 1
+  ThrowAttack: 5
+  SwingAttack: 5
+  mode: 1
+  ChaseRange: 10
   Bullet: {fileID: 1702992595259932, guid: 748d4dd3c0ef84f42b04656f5ab7932e, type: 2}
   time: 5
+  BulletRange: 20
 --- !u!212 &212278336131092556
 SpriteRenderer:
   m_ObjectHideFlags: 1

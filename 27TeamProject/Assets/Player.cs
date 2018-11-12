@@ -385,6 +385,7 @@ public class Player : MonoBehaviour
     /// </summary>
     void HookSwing()
     {
+        catchObject.GetComponent<BoxCollider>().isTrigger = true;
         if (testSwingState == TestSwingState.SIDE)
         {
             //ボタン押している間
@@ -479,6 +480,7 @@ public class Player : MonoBehaviour
             catchObject.transform.position = transform.position + throwVelocity;
             catchObject.GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
             playerState = PlayerState.HOOKRETURN;
+            catchObject.GetComponent<BoxCollider>().isTrigger = false;
             catchObject.gameObject.layer = 15;
         }
     }

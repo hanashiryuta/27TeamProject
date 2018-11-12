@@ -7,43 +7,64 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Linq;
+
+public enum MoveMode
+{
+    VERTICAL,
+    HORIZONTAL,
+    PLAYERCHASE,
+    RANDOMMOVE,
+}
 
 public class Enemy : MonoBehaviour {
 
     [SerializeField]
-    float speed;//移動スピード
+    float speed; //移動スピード
     [SerializeField]
-    int inputHp;//HPの初期設定
-
-    //float turndistance;
-    float turnSpeed;
-
+    int inputHp; //HPの初期設定用
     [SerializeField]
-    int hp;
+    int hp; //処理で使用するHP変数
 
-    bool isTurn;
-    RaycastHit[] hitList;
-    Vector3 origin;
-    Vector3 boxcastScale;
+    bool isTurn; //進行方向変更用フラグ
+    RaycastHit[] hitList; //BoxCastでHitしたものを入れる変数
+    Vector3 origin; //Boxcast開始地点
+    Vector3 boxcastScale; //BoxCastをどのEnemyの中点からどの距離で生成するか
 
     [SerializeField]
-    LayerMask layerMask;
-
+    LayerMask layerMask; //Boxcastで使用するレイヤー指定用
     [SerializeField]
-    GameObject hook;
-
+    GameObject hook; //フック
     [SerializeField]
-    float BlowOffSpeed;
-
+    float BlowOffSpeed; //吹き飛ぶスピード
     [HideInInspector]
-    public bool isHook;
+    public bool isHook; //フックに捕まっているかの判定
 
-    bool isBlow;
+    bool isBlow; //吹き飛ぶ時の方向判定
     
-    public bool BlowMode;
+    public bool BlowMode; //吹き飛ぶ前と後の切り替え用
 
     [SerializeField]
-    int ThrowAtack;
+    int ThrowAttack; //投げられた時のEnemyの攻撃力
+    [SerializeField]
+    int SwingAttack;
+    [SerializeField]
+    MoveMode mode; //移動設定
+    [SerializeField]
+    float ChaseRange; //Player追跡距離
+
+    GameObject wavewall;
+    float x, z;
+
+    public virtual void Awake()
+    {
+        //mode = MoveMode.RANDOMMOVE;
+        mode = Enum.GetValues(typeof(MoveMode)).Cast<MoveMode>().OrderBy(c => UnityEngine.Random.Range(0, 3)).FirstOrDefault();
+        wavewall = GameObject.FindGameObjectWithTag("Player");
+        x = UnityEngine.Random.Range(wavewall.transform.position.x, wavewall.transform.position.x + 10.0f);
+        z = UnityEngine.Random.Range(wavewall.transform.position.z, wavewall.transform.position.z + 10.0f);
+    }
 
     // Use this for initialization
     public virtual void Start () {
@@ -56,17 +77,39 @@ public class Enemy : MonoBehaviour {
     // Update is called once per frame
     public virtual void Update()
     {
-        if (hp < 1)
+        if (hp < 1 || transform.position.z > 50)
         {
             Destroy(this.gameObject);
         }
+        
+        if(mode == MoveMode.PLAYERCHASE || mode == MoveMode.RANDOMMOVE)
+        {
+            return;
+        }
+        else
+        {
+            switch (mode)
+            {
+                case MoveMode.VERTICAL:
+                    VerticalBoxCast();
+                    break;
 
+                case MoveMode.HORIZONTAL:
+                    HorizontalBoxCast();
+                    break;
+            }
+        }
+        Debug.Log(isTurn);
+    }
+    
+    void VerticalBoxCast()
+    {
         if (!isTurn)
         {
-            origin = new Vector3(transform.position.x + 0.5f, transform.position.y, transform.position.z);
-            hitList = Physics.BoxCastAll(origin, boxcastScale, -transform.up, Quaternion.identity, 1.0f, layerMask);
+            origin = new Vector3(transform.position.x, transform.position.y, transform.position.z + transform.lossyScale.z / 2);
+            hitList = Physics.BoxCastAll(origin, boxcastScale, -transform.up, Quaternion.identity, transform.lossyScale.y, layerMask);
             Debug.DrawRay(origin, -transform.up);
-            
+
             int groundcount = 0;
             foreach (var hl in hitList)
             {
@@ -83,10 +126,10 @@ public class Enemy : MonoBehaviour {
         }
         else if (isTurn)
         {
-            origin = new Vector3(transform.position.x - 0.5f, transform.position.y, transform.position.z);
-            hitList = Physics.BoxCastAll(origin, boxcastScale, -transform.up, Quaternion.identity, 1.0f, layerMask);
+            origin = new Vector3(transform.position.x, transform.position.y, transform.position.z - transform.lossyScale.z / 2);
+            hitList = Physics.BoxCastAll(origin, boxcastScale, -transform.up, Quaternion.identity, transform.lossyScale.y, layerMask);
             Debug.DrawRay(origin, -transform.up);
-            
+
             int groundcount = 0;
             foreach (var hl in hitList)
             {
@@ -101,55 +144,134 @@ public class Enemy : MonoBehaviour {
                 isTurn = !isTurn;
             }
         }
-        Debug.Log(isTurn);
     }
+    
+    void HorizontalBoxCast()
+    {
+        if (!isTurn)
+        {
+            origin = new Vector3(transform.position.x + transform.lossyScale.x / 2, transform.position.y, transform.position.z);
+            hitList = Physics.BoxCastAll(origin, boxcastScale, -transform.up, Quaternion.identity, transform.lossyScale.y, layerMask);
+            Debug.DrawRay(origin, -transform.up);
 
+            int groundcount = 0;
+            foreach (var hl in hitList)
+            {
+                if (hl.transform.tag == "Ground")
+                {
+                    groundcount++;
+                }
+            }
 
+            if (groundcount == 0)
+            {
+                isTurn = !isTurn;
+            }
+        }
+        else if (isTurn)
+        {
+            origin = new Vector3(transform.position.x - transform.lossyScale.x / 2, transform.position.y, transform.position.z);
+            hitList = Physics.BoxCastAll(origin, boxcastScale, -transform.up, Quaternion.identity, transform.lossyScale.y, layerMask);
+            Debug.DrawRay(origin, -transform.up);
+
+            int groundcount = 0;
+            foreach (var hl in hitList)
+            {
+                if (hl.transform.tag == "Ground")
+                {
+                    groundcount++;
+                }
+            }
+
+            if (groundcount == 0)
+            {
+                isTurn = !isTurn;
+            }
+        }
+    }
+    
     public void Move()
     {   
-        //初期値と前後の移動距離との差で前後移動
-        if(!isTurn)
+        if(mode == MoveMode.RANDOMMOVE)
         {
-            Turn();
+            RandomMove();
         }
-        else if(isTurn)
+
+        if(mode == MoveMode.PLAYERCHASE)
         {
-            reTurn();
+            PlayerShaseMove();
+        }
+        else
+        {
+            if(!isTurn)
+            {
+                switch (mode)
+                {
+                    case MoveMode.HORIZONTAL:
+                        TurnHorizontal();
+                        break;
+
+                    case MoveMode.VERTICAL:
+                        TurnVertical();
+                        break;
+                }
+            }
+            else if(isTurn)
+            {
+                switch (mode)
+                {
+                    case MoveMode.HORIZONTAL:
+                        reTurnHorizontal();
+                        break;
+
+                    case MoveMode.VERTICAL:
+                        reTurnVertical();
+                        break;
+                }
+            }
         }
     }
 
-    //前移動
-    void Turn()
+    void TurnHorizontal()
     {
         transform.position += new Vector3(speed, 0, 0);
+        
     }
 
-    //後ろ移動
-    void reTurn()
+    void reTurnHorizontal()
     {
         transform.position -= new Vector3(speed, 0, 0);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void TurnVertical()
     {
-        if (collision.gameObject.layer == 12)
+        transform.position += new Vector3(0, 0, speed);
+    }
+
+    void reTurnVertical()
+    {
+        transform.position -= new Vector3(0, 0, speed);
+    }
+
+    void PlayerShaseMove()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        Vector3 pos = player.transform.position - transform.position;
+        Vector3 normalpos = Vector3.Normalize(pos);
+        if (Mathf.Abs(pos.x) < ChaseRange && Mathf.Abs(pos.z) < ChaseRange)
+            transform.position += normalpos * speed;
+    }
+
+    void RandomMove()
+    {
+        Vector3 pos = new Vector3(x, 0.0f, z) - transform.position;
+        Vector3 normalpos = Vector3.Normalize(pos);
+        if ((pos.z < 0.1f && pos.z > -0.1f) && (pos.x < 0.1f && pos.x > -0.1f))
         {
-            BlowMode = true;
-            GetComponent<Rigidbody>().useGravity = false;
-            Vector3 Pos = transform.position - collision.transform.position;
-            if(Pos.z > 0)
-            {
-                isBlow = true;
-            }
-            if(Pos.z < 0)
-            {
-                isBlow = false;
-            }
+            x = UnityEngine.Random.Range(wavewall.transform.position.x, wavewall.transform.position.x + 10.0f);
+            z = UnityEngine.Random.Range(wavewall.transform.position.z, wavewall.transform.position.z + 10.0f);
         }
-        else if(collision.gameObject.layer == 14)
-        {
-            hp -= collision.gameObject.GetComponent<Enemy>().ThrowAtack;
-        }
+        transform.position += normalpos * speed;
     }
 
     public void Blow()
@@ -166,11 +288,54 @@ public class Enemy : MonoBehaviour {
 
     void BackBlow()
     {
-        transform.position += new Vector3(BlowOffSpeed, 0, BlowOffSpeed);
+        transform.position -= new Vector3(BlowOffSpeed, 0, BlowOffSpeed);
     }
 
     void FrontBlow()
     {
-        transform.position -= new Vector3(BlowOffSpeed, 0, BlowOffSpeed);
+        transform.position += new Vector3(BlowOffSpeed, 0, BlowOffSpeed);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        //if (collision.gameObject.layer == 12)
+        //{
+        //    BlowMode = true;
+        //    //GetComponent<Rigidbody>().useGravity = false;
+        //    Vector3 Pos = transform.position - collision.transform.position;
+        //    if(Pos.z > 0)
+        //    {
+        //        isBlow = true;
+        //    }
+        //    if(Pos.z < 0)
+        //    {
+        //        isBlow = false;
+        //    }
+        //    hp -= collision.gameObject.GetComponent<Enemy>().SwingAttack;
+        //}
+        //else 
+        if (collision.gameObject.layer == 14)
+        {
+            hp -= collision.gameObject.GetComponent<Enemy>().ThrowAttack;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.layer == 12)
+        {
+            //BlowMode = true;
+            //GetComponent<Rigidbody>().useGravity = false;
+            Vector3 Pos = transform.position - other.transform.position;
+            if (Pos.z > 0)
+            {
+                isBlow = true;
+            }
+            if (Pos.z < 0)
+            {
+                isBlow = false;
+            }
+            hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
+        }
     }
 }
