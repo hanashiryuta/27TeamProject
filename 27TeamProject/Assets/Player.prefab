@@ -436,7 +436,7 @@ MonoBehaviour:
   hitDistance: 0
   swingSpeed: 0.5
   swingSpeedRange: 10
-  swingSpeedRate: 0.01
+  swingSpeedRate: 0.05
   throwSpeed: 4000
   flySpeed: 50
   slapSpeed: 500
@@ -641,7 +641,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 143b8df8f4abe2d47b01331461ca1c21, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d25d5a14102c4e942b481fea623458af, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
