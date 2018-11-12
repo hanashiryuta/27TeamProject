@@ -2767,6 +2767,14 @@ Prefab:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1568799018512466, guid: 679b2ef7fc49fbe4285f3c030bc9dfbf, type: 2}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 1183076129794280, guid: 679b2ef7fc49fbe4285f3c030bc9dfbf, type: 2}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 679b2ef7fc49fbe4285f3c030bc9dfbf, type: 2}
   m_IsPrefabAsset: 0
