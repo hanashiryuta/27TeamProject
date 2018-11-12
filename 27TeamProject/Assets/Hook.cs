@@ -42,6 +42,13 @@ public class Hook : MonoBehaviour {
 	void Start () {
         //移動方向設定
         hookVelocity = targetPosition - transform.position;
+        Vector3 scale = transform.localScale;
+        scale.x = hookVelocity.normalized.x;
+        if (scale.x >= 0)
+            scale.x = 1;
+        else
+            scale.x = -1;
+        transform.localScale = scale;
 	}
 
     void FixedUpdate()
@@ -79,6 +86,7 @@ public class Hook : MonoBehaviour {
         if (Vector3.Distance(targetPosition, transform.position) <= 0.2f)
         {
             hookState = HookState.RETURN;
+            player.GetComponent<Player>().playerState = PlayerState.HOOKRETURN;
         }
     }
     

@@ -106,19 +106,22 @@ public class Player : MonoBehaviour
     //ポインター用レイヤー
     public LayerMask targetLayer;
 
+    Animator anim;
+
     // Use this for initialization
     void Start()
     {
         //取得
         rigid = GetComponent<Rigidbody>();
         timingTime = origin_TimingTime;
+        anim = GetComponentInChildren<Animator>();
     }
 
     private void FixedUpdate()
     {
         HookPointer();
         Move();
-
+        anim.SetBool("isJump", !isJumpFlag);
         //プレイヤーの状態で変化
         switch (playerState)
         {
@@ -134,6 +137,7 @@ public class Player : MonoBehaviour
             case PlayerState.HOOKSWING://フック振り回し
                 if (isJumpFlag)
                 {
+                    anim.SetBool("isCatch", true);
                     HookSwing();
                     //Jump();
                     if (catchObject != null && Input.GetButtonUp("Jump"))
@@ -148,6 +152,8 @@ public class Player : MonoBehaviour
                         //}
                         //else
                         //{
+                        anim.SetBool("isCatch", false);
+                        anim.SetTrigger("isThrow");
                         //    //投げつけ
                         ObjectThrow();
                         //}
@@ -161,6 +167,7 @@ public class Player : MonoBehaviour
                 }
                 break;
             case PlayerState.HOOKRETURN://フック戻り
+                anim.SetBool("isShot", false);
                 Jump();
                 break;
         }
@@ -182,6 +189,15 @@ public class Player : MonoBehaviour
             Vector3 moveVector = new Vector3(Input.GetAxis("Horizontal") * moveSpeed, 0, Input.GetAxis("Vertical") * moveSpeed);
             Vector3 rigidVelocity = new Vector3(rigid.velocity.x, 0, rigid.velocity.z);
             rigid.AddForce(moveForceMultiplier * (moveVector - rigidVelocity));
+            anim.SetFloat("move", moveVector.sqrMagnitude);
+            if(moveVector.x >= 0)
+            {
+                anim.SetBool("isMirror", false);
+            }
+            else
+            {
+                anim.SetBool("isMirror", true);
+            }
         }
     }
 
@@ -198,6 +214,7 @@ public class Player : MonoBehaviour
             isJumpFlag = false;
             rigid.AddForce(Vector2.up * jumpPower);
         }
+        anim.SetFloat("jumpVelocity", rigid.velocity.y);
         //}
         //else
         //{
@@ -212,6 +229,10 @@ public class Player : MonoBehaviour
         {
             //フラグセット
             isJumpFlag = true;
+        }
+        if(collision.gameObject.CompareTag("Enemy"))
+        {
+
         }
     }
 
@@ -295,6 +316,7 @@ public class Player : MonoBehaviour
                 hook.GetComponent<Hook>().player = gameObject;
                 hook.GetComponent<Hook>().targetPosition = hookPointer.transform.position;//new Vector3(Mathf.Cos(angle) * shotRadius, Mathf.Sin(angle) * shotRadius, 0);
                 isHookShot = false;
+                anim.SetBool("isShot",true);
             }
         }
     }
@@ -366,7 +388,7 @@ public class Player : MonoBehaviour
         if (testSwingState == TestSwingState.SIDE)
         {
             //ボタン押している間
-            if (Input.GetButton("Jump")&&isJumpFlag)
+            if (Input.GetButton("Jump"))
             {
                                 
                 if (timing_Particle == null)
