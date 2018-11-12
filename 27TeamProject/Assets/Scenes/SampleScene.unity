@@ -262,6 +262,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 1413421401212336, guid: c15784f2ed00fe1499157260f2c8f9c2, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c15784f2ed00fe1499157260f2c8f9c2, type: 2}
   m_IsPrefabAsset: 0
@@ -1467,6 +1471,7 @@ MonoBehaviour:
   mapObjects:
   - {fileID: 1054374672118998, guid: 3d3c60f288f0b81479a7894ec70ab603, type: 2}
   - {fileID: 1183246249824456, guid: b05b67e2745d93448b13e6a632bb50f0, type: 2}
+  blocksize: 1
 --- !u!4 &1096057066
 Transform:
   m_ObjectHideFlags: 0
