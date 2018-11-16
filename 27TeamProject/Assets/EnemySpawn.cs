@@ -14,22 +14,28 @@ public class EnemySpawn : MonoBehaviour {
     int SpawnLimit;
     [SerializeField]
     int SpawnCount;
+    
+    GameObject waveManager;
 
 	// Use this for initialization
 	void Start () {
         SpawnTime = SpawnSetTime;
+        waveManager = GameObject.FindGameObjectWithTag("WaveManager");
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        SpawnTime -= Time.deltaTime;
-        if(SpawnTime < 0)
+        if (waveManager.GetComponent<WaveManager>().Flag)
         {
-            if(SpawnCount < SpawnLimit)
+            SpawnTime -= Time.deltaTime;
+            if(SpawnTime < 0)
             {
-                Instantiate(SpawnEnemy, transform.position, Quaternion.identity);
-                SpawnTime = SpawnSetTime;
-                SpawnCount++;
+                if(SpawnCount < SpawnLimit)
+                {
+                    Instantiate(SpawnEnemy, transform.position, Quaternion.identity);
+                    SpawnTime = SpawnSetTime;
+                    SpawnCount++;
+                }
             }
         }
 	}

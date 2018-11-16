@@ -9,6 +9,7 @@ TagManager:
   - Leftblock
   - Rightblock
   - WarpGate1
+  - WaveManager
   layers:
   - Default
   - TransparentFX
