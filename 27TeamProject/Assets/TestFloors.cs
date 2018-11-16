@@ -15,6 +15,7 @@ public class TestFloors : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        transform.position -= new Vector3(20, 0,0);
         block.transform.localScale = new Vector3(blockSize, blockSize, blockSize);
         for (int j = 0; j < ZBlockNum; j++)
         {
@@ -22,7 +23,6 @@ public class TestFloors : MonoBehaviour
             {
                 // b = Instantiate(block, new Vector3(transform.position.x + blockSize * i, transform.position.y, transform.position.z + blockSize * j), Quaternion.identity, transform);
                 GameObject b = Instantiate(block, new Vector3(transform.position.x + blockSize * i, transform.position.y, transform.position.z + blockSize * j), Quaternion.identity,transform) as GameObject;
-                b.transform.position = new Vector3(blockSize * i, 0, blockSize * j);
                 Vector2 offset = new Vector2(_x + 0.1f * i, _y + 0.1f * j);
                 b.GetComponent<Renderer>().material.SetTextureScale("_MainTex", new Vector2(0.1f, 0.1f));
                 b.GetComponent<Renderer>().material.SetTextureOffset("_MainTex", offset);

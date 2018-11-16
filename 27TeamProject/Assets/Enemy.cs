@@ -54,7 +54,7 @@ public class Enemy : MonoBehaviour {
     [SerializeField]
     float ChaseRange; //Player追跡距離
 
-    GameObject wavewall;
+    GameObject[] wavewall;
     float x, z;
 
     public GameObject slap_Circle;
@@ -64,11 +64,11 @@ public class Enemy : MonoBehaviour {
 
     public virtual void Awake()
     {
-        //mode = MoveMode.RANDOMMOVE;
-        mode = Enum.GetValues(typeof(MoveMode)).Cast<MoveMode>().OrderBy(c => UnityEngine.Random.Range(0, 3)).FirstOrDefault();
-        wavewall = GameObject.FindGameObjectWithTag("Player");
-        x = UnityEngine.Random.Range(wavewall.transform.position.x, wavewall.transform.position.x + 10.0f);
-        z = UnityEngine.Random.Range(wavewall.transform.position.z, wavewall.transform.position.z + 10.0f);
+        mode = MoveMode.RANDOMMOVE;
+        //mode = Enum.GetValues(typeof(MoveMode)).Cast<MoveMode>().OrderBy(c => UnityEngine.Random.Range(0, 3)).FirstOrDefault();
+        wavewall = GameObject.FindGameObjectsWithTag("IronBlock");
+        x = UnityEngine.Random.Range(wavewall[1].transform.position.x - 1, wavewall[3].transform.position.x + 1);
+        z = UnityEngine.Random.Range(wavewall[1].transform.position.z + 1, wavewall[2].transform.position.z - 1);
     }
 
     // Use this for initialization
@@ -279,10 +279,10 @@ public class Enemy : MonoBehaviour {
     {
         Vector3 pos = new Vector3(x, 0.0f, z) - transform.position;
         Vector3 normalpos = Vector3.Normalize(pos);
-        if ((pos.z < 0.1f && pos.z > -0.1f) && (pos.x < 0.1f && pos.x > -0.1f))
+        if ((pos.z < 0.1f && pos.z > -0.1f) || (pos.x < 0.1f && pos.x > -0.1f))
         {
-            x = UnityEngine.Random.Range(wavewall.transform.position.x, wavewall.transform.position.x + 10.0f);
-            z = UnityEngine.Random.Range(wavewall.transform.position.z, wavewall.transform.position.z + 10.0f);
+            x = UnityEngine.Random.Range(wavewall[1].transform.position.x - 1, wavewall[3].transform.position.x + 1);
+            z = UnityEngine.Random.Range(wavewall[1].transform.position.z + 1, wavewall[2].transform.position.z - 1);
         }
         transform.position += normalpos * speed;
     }

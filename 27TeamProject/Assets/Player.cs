@@ -149,9 +149,9 @@ public class Player : MonoBehaviour
         Vector3 scale = transform.localScale;
         scale.x = Input.GetAxis("Horizontal");
         if (scale.x >= 0)
-            scale.x = 1;
+            scale.x = 1.5f;
         else
-            scale.x = -1;
+            scale.x = -1.5f;
         transform.localScale = scale;
 
         //プレイヤーの状態で変化

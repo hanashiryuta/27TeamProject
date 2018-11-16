@@ -11,6 +11,7 @@ TagManager:
   - WarpGate1
   - Slap_Circle
   - WaveManager
+  - IronBlock
   layers:
   - Default
   - TransparentFX
@@ -31,7 +32,7 @@ TagManager:
   - Particle
   - Slap_Circle
   - SlapEnemy
-  - 
+  - IronBlock
   - 
   - 
   - 

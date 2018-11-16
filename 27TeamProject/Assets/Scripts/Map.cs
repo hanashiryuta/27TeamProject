@@ -57,11 +57,10 @@ public class Map : MonoBehaviour {
 
                 int a = 1;
                 string block = a.ToString();
-
                 if (map[g][r] == block)
                 {
                     MapPut = Instantiate(mapObjects[0]) as GameObject;
-                    MapPut.transform.position = new Vector3(blocksize * r, 0, blocksize * g);
+                    //MapPut.transform.position = new Vector3(blocksize * r, 0, blocksize * g);
                 }
 
                 int b = 2;
@@ -74,23 +73,34 @@ public class Map : MonoBehaviour {
                 }
 
                 int c = 3;
-                string maps = c.ToString();
-                if(map[g][r] == maps)
-                {
-                    MapPut = Instantiate(mapObjects[2]) as GameObject;
-                    MapPut.transform.position = new Vector3(blocksize * r, 0, blocksize * g);                   
-                }
-
-                int d = 4;
-                string cameras = d.ToString();
+                string cameras = c.ToString();
                 if(map[g][r] == cameras)
                 {
-                    MapPut = Instantiate(mapObjects[3]) as GameObject;
+                    MapPut = Instantiate(mapObjects[2]) as GameObject;
                     MapPut.transform.position = new Vector3(blocksize * r, 0, blocksize * g);
                 }
 
-               
-
+                int d = 4;
+                string waveManager = d.ToString();
+                if (map[g][r] == waveManager)
+                {
+                    MapPut = Instantiate(mapObjects[3]) as GameObject;
+                    MapPut.transform.position = new Vector3(blocksize * r, 2, blocksize * g);
+                }
+                int e = 5;
+                string moveEnemySpawn = e.ToString();
+                if (map[g][r] == moveEnemySpawn)
+                {
+                    MapPut = Instantiate(mapObjects[4]) as GameObject;
+                    MapPut.transform.position = new Vector3(blocksize * r, 2, blocksize * g);
+                }
+                int f = 5;
+                string PaulEnemySpawn = f.ToString();
+                if (map[g][r] == PaulEnemySpawn)
+                {
+                    MapPut = Instantiate(mapObjects[5]) as GameObject;
+                    MapPut.transform.position = new Vector3(blocksize * r, 2, blocksize * g);
+                }
 
                 ix = ix + blocksize * r;
             }
