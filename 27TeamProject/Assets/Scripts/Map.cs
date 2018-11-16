@@ -31,6 +31,10 @@ public class Map : MonoBehaviour {
     int ix = 0;
     int iy = 0;
     int iz = 0;
+
+    //画像ずらし用変数
+    int _x = 100;
+    int _y = 100;
     
     // Use this for initialization
     void Start () {
@@ -67,6 +71,18 @@ public class Map : MonoBehaviour {
                 {
                     MapPut = Instantiate(mapObjects[1]) as GameObject;
                     MapPut.transform.position = new Vector3(blocksize * r, 0, blocksize * g);
+                }
+
+                int c = 3;
+                string maps = c.ToString();
+                if(map[g][r] == maps)
+                {
+                    MapPut = Instantiate(mapObjects[2]) as GameObject;
+                    MapPut.transform.position = new Vector3(blocksize * r, 0, blocksize * g);
+                    Vector2 offset = new Vector2(_x + 0.1f * r, _y + 0.1f * g);
+                    MapPut.GetComponent<Renderer>().material.SetTextureScale("_MainTex", new Vector2(0.1f, 0.1f));
+                    MapPut.GetComponent<Renderer>().material.SetTextureOffset("_MainTex", offset);
+                    MapPut.transform.localRotation= Quaternion.Euler(0, 180, 0);
                 }
 
                 ix = ix + blocksize * r;
