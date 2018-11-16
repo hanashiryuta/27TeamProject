@@ -9,49 +9,60 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1413421401212336}
+  m_RootGameObject: {fileID: 1067454824323930}
   m_IsPrefabAsset: 1
---- !u!1 &1413421401212336
+--- !u!1 &1067454824323930
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4475175542433182}
-  - component: {fileID: 114925856160231892}
+  - component: {fileID: 4488756265772418}
+  - component: {fileID: 65332559822699580}
+  - component: {fileID: 114842215511291608}
   m_Layer: 0
-  m_Name: TestFloors
-  m_TagString: Untagged
+  m_Name: WaveManager
+  m_TagString: WaveManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4475175542433182
+--- !u!4 &4488756265772418
 Transform:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1413421401212336}
+  m_GameObject: {fileID: 1067454824323930}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 5.81, y: 1.6, z: 0.7128906}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114925856160231892
+--- !u!65 &65332559822699580
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1067454824323930}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114842215511291608
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1413421401212336}
+  m_GameObject: {fileID: 1067454824323930}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f2d91406c606834497f36cd18411996, type: 3}
+  m_Script: {fileID: 11500000, guid: 253671dcd21d8ee41b8d780aebc301d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockSize: 2
-  block: {fileID: 1350221681858516, guid: d0bdda439e9ea794bb08a3e8b45eaa75, type: 2}
-  XBlockNum: 50
-  ZBlockNum: 10
+  Flag: 0
+  WaveBlock: {fileID: 1054374672118998, guid: 3d3c60f288f0b81479a7894ec70ab603, type: 2}

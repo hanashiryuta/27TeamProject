@@ -10,6 +10,7 @@ TagManager:
   - Rightblock
   - WarpGate1
   - Slap_Circle
+  - WaveManager
   layers:
   - Default
   - TransparentFX
