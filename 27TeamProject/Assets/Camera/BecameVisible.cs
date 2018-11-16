@@ -23,10 +23,7 @@ public class BecameVisible : MonoBehaviour {
     {
         //カメラ取得
         var cameraCtrl = Camera.main.GetComponent<CameraControl>();
-        if (cameraCtrl.transform.position.x > transform.position.x)
-            cameraCtrl.CheckLeft();
-        else
-            cameraCtrl.CheckRight();
+        cameraCtrl.CheckLeft();
         cameraCtrl.CameraStop();
     }
 
@@ -35,9 +32,6 @@ public class BecameVisible : MonoBehaviour {
     {
         //カメラ取得
         var cameraCtrl = Camera.main.GetComponent<CameraControl>();
-        if (cameraCtrl.transform.position.x > transform.position.x)
-            cameraCtrl.CheckLeft();
-        else
-            cameraCtrl.CheckRight();
+        cameraCtrl.CheckLeft();
     }
 }

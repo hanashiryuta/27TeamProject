@@ -9,7 +9,6 @@ TagManager:
   - Leftblock
   - Rightblock
   - WarpGate1
-  - Slap_Circle
   layers:
   - Default
   - TransparentFX
@@ -28,8 +27,8 @@ TagManager:
   - Pointer
   - ThrowEnemy
   - Particle
-  - Slap_Circle
-  - SlapEnemy
+  - 
+  - 
   - 
   - 
   - 

@@ -42,7 +42,7 @@ public class Enemy : MonoBehaviour {
     public bool isHook; //フックに捕まっているかの判定
 
     bool isBlow; //吹き飛ぶ時の方向判定
-
+    
     public bool BlowMode; //吹き飛ぶ前と後の切り替え用
 
     [SerializeField]
@@ -56,11 +56,6 @@ public class Enemy : MonoBehaviour {
 
     GameObject wavewall;
     float x, z;
-
-    public GameObject slap_Circle;
-
-    [HideInInspector]
-    public bool isSlap;
 
     public virtual void Awake()
     {
@@ -86,8 +81,6 @@ public class Enemy : MonoBehaviour {
         {
             Destroy(this.gameObject);
         }
-        if (isSlap)
-            Slap();
         
         if(mode == MoveMode.PLAYERCHASE || mode == MoveMode.RANDOMMOVE)
         {
@@ -108,13 +101,7 @@ public class Enemy : MonoBehaviour {
         }
         Debug.Log(isTurn);
     }
-
-    private void Slap()
-    {
-        Instantiate(slap_Circle, transform.position, Quaternion.identity);
-        Destroy(gameObject);
-    }
-
+    
     void VerticalBoxCast()
     {
         if (!isTurn)
@@ -330,11 +317,6 @@ public class Enemy : MonoBehaviour {
         if (collision.gameObject.layer == 14)
         {
             hp -= collision.gameObject.GetComponent<Enemy>().ThrowAttack;
-        }
-        if(collision.gameObject.CompareTag("Slap_Circle"))
-        {
-            Vector3 slapVelocity = transform.position - collision.gameObject.transform.position;
-            GetComponent<Rigidbody>().AddForce(slapVelocity.normalized * 400);
         }
     }
 
