@@ -9,6 +9,7 @@ TagManager:
   - Leftblock
   - Rightblock
   - WarpGate1
+  - Slap_Circle
   - WaveManager
   layers:
   - Default
@@ -28,8 +29,8 @@ TagManager:
   - Pointer
   - ThrowEnemy
   - Particle
-  - 
-  - 
+  - Slap_Circle
+  - SlapEnemy
   - 
   - 
   - 
