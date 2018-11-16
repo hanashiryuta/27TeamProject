@@ -9,6 +9,8 @@ public class TestFloors : MonoBehaviour
     public GameObject block;
     public float XBlockNum;
     public float ZBlockNum;
+    int _x, _y = 100;
+    
 
     // Use this for initialization
     void Start()
@@ -18,7 +20,13 @@ public class TestFloors : MonoBehaviour
         {
             for (int i = 0; i < XBlockNum; i++)
             {
-                GameObject b = Instantiate(block, new Vector3(transform.position.x + blockSize * i, transform.position.y, transform.position.z + blockSize * j), Quaternion.identity, transform);
+                // b = Instantiate(block, new Vector3(transform.position.x + blockSize * i, transform.position.y, transform.position.z + blockSize * j), Quaternion.identity, transform);
+                GameObject b = Instantiate(block, new Vector3(transform.position.x + blockSize * i, transform.position.y, transform.position.z + blockSize * j), Quaternion.identity,transform) as GameObject;
+                b.transform.position = new Vector3(blockSize * i, 0, blockSize * j);
+                Vector2 offset = new Vector2(_x + 0.1f * i, _y + 0.1f * j);
+                b.GetComponent<Renderer>().material.SetTextureScale("_MainTex", new Vector2(0.1f, 0.1f));
+                b.GetComponent<Renderer>().material.SetTextureOffset("_MainTex", offset);
+                b.transform.localRotation = Quaternion.Euler(0, 180, 0);
             }
         }
     }

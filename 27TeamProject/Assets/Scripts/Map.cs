@@ -31,6 +31,10 @@ public class Map : MonoBehaviour {
     int ix = 0;
     int iy = 0;
     int iz = 0;
+
+    //画像ずらし用変数
+    int _x = 100;
+    int _y = 100;
     
     // Use this for initialization
     void Start () {
@@ -61,13 +65,32 @@ public class Map : MonoBehaviour {
                 }
 
                 int b = 2;
-                string enemy = b.ToString();
+                string player = b.ToString();
 
-                if (map[g][r] == enemy)
+                if (map[g][r] == player)
                 {
                     MapPut = Instantiate(mapObjects[1]) as GameObject;
+                    MapPut.transform.position = new Vector3(blocksize * r, 2, blocksize * g);
+                }
+
+                int c = 3;
+                string maps = c.ToString();
+                if(map[g][r] == maps)
+                {
+                    MapPut = Instantiate(mapObjects[2]) as GameObject;
+                    MapPut.transform.position = new Vector3(blocksize * r, 0, blocksize * g);                   
+                }
+
+                int d = 4;
+                string cameras = d.ToString();
+                if(map[g][r] == cameras)
+                {
+                    MapPut = Instantiate(mapObjects[3]) as GameObject;
                     MapPut.transform.position = new Vector3(blocksize * r, 0, blocksize * g);
                 }
+
+               
+
 
                 ix = ix + blocksize * r;
             }

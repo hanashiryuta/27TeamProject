@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class CameraControl : MonoBehaviour {
 
-    public GameObject player;　//追従するプレイヤーを入れるオブジェクト
+    GameObject player;　//追従するプレイヤーを入れるオブジェクト
     private Vector3 cameraPosition;　//カメラの初期値格納用
     private bool checkLeft;　//カメラ範囲の左チェック用
     private bool checkRight;　//カメラ範囲の右チェック用
@@ -19,6 +19,7 @@ public class CameraControl : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
         //カメラ初期値格納
         cameraPosition = transform.position;
         checkLeft = false;

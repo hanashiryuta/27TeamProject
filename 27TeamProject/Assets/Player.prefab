@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 81688184197010884}
   m_Layer: 0
   m_Name: FrontCamera
-  m_TagString: MainCamera
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -105,11 +105,11 @@ GameObject:
   - component: {fileID: 81479191061806080}
   m_Layer: 0
   m_Name: Main Camera
-  m_TagString: MainCamera
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1891483206765618
 GameObject:
   m_ObjectHideFlags: 1
@@ -166,8 +166,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1939518651920206}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 3, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children:
   - {fileID: 4833152511872374}
   - {fileID: 4570063941898326}
@@ -312,7 +312,7 @@ Camera:
   m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 81920
+    m_Bits: 16384
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -423,7 +423,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 10
-  moveSpeed: 5
+  moveSpeed: 15
   moveForceMultiplier: 50
   jumpPower: 300
   playerState: 0
@@ -434,9 +434,9 @@ MonoBehaviour:
   isHookShot: 1
   hitPosition: {x: 0, y: 0, z: 0}
   hitDistance: 0
-  swingSpeed: 0.5
+  swingSpeed: 1
   swingSpeedRange: 10
-  swingSpeedRate: 0.05
+  swingSpeedRate: 0.1
   throwSpeed: 4000
   flySpeed: 50
   slapSpeed: 500
