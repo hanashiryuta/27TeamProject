@@ -65,12 +65,12 @@ public class Map : MonoBehaviour {
                 }
 
                 int b = 2;
-                string enemy = b.ToString();
+                string player = b.ToString();
 
-                if (map[g][r] == enemy)
+                if (map[g][r] == player)
                 {
                     MapPut = Instantiate(mapObjects[1]) as GameObject;
-                    MapPut.transform.position = new Vector3(blocksize * r, 0, blocksize * g);
+                    MapPut.transform.position = new Vector3(blocksize * r, 2, blocksize * g);
                 }
 
                 int c = 3;
@@ -78,12 +78,19 @@ public class Map : MonoBehaviour {
                 if(map[g][r] == maps)
                 {
                     MapPut = Instantiate(mapObjects[2]) as GameObject;
-                    MapPut.transform.position = new Vector3(blocksize * r, 0, blocksize * g);
-                    Vector2 offset = new Vector2(_x + 0.1f * r, _y + 0.1f * g);
-                    MapPut.GetComponent<Renderer>().material.SetTextureScale("_MainTex", new Vector2(0.1f, 0.1f));
-                    MapPut.GetComponent<Renderer>().material.SetTextureOffset("_MainTex", offset);
-                    MapPut.transform.localRotation= Quaternion.Euler(0, 180, 0);
+                    MapPut.transform.position = new Vector3(blocksize * r, 0, blocksize * g);                   
                 }
+
+                int d = 4;
+                string cameras = d.ToString();
+                if(map[g][r] == cameras)
+                {
+                    MapPut = Instantiate(mapObjects[3]) as GameObject;
+                    MapPut.transform.position = new Vector3(blocksize * r, 0, blocksize * g);
+                }
+
+               
+
 
                 ix = ix + blocksize * r;
             }
