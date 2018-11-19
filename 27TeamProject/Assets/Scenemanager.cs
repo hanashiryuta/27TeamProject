@@ -1,16 +1,10 @@
-﻿//
-//10月3日
-//田中　悠斗
-//titleのシーン遷移
-//
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class TitleManager : MonoBehaviour
-{
+public class Scenemanager : MonoBehaviour {
     public Button selectButton;
 
     // Use this for initialization
@@ -30,9 +24,9 @@ public class TitleManager : MonoBehaviour
 
     }
 
-    public void GameStart()
+    public void Title()
     {
-        SceneManager.LoadScene("Select");
+        SceneManager.LoadScene("Title");
     }
 
     public void GameEnd()

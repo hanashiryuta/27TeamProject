@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class WaveManager : MonoBehaviour
 {
@@ -10,7 +12,19 @@ public class WaveManager : MonoBehaviour
     float x, ix, y;
     float time = 0.5f;
     int count = 0;
-    int max = 5;    
+    int max = 5;
+
+    int waveCount;
+    bool isSceneChange;
+    [HideInInspector]
+    public bool isWave = false;
+    float waveInterval=5;
+
+    [HideInInspector]
+    public int enemyDeathNum;
+
+    public Text enemyDeathCountText;
+    public Text waveCountText;
 
     //public void OnCollisionEnter(Collision collision)
     //{
@@ -57,43 +71,75 @@ public class WaveManager : MonoBehaviour
     {
         x = transform.position.x + 40;
         ix = transform.position.x - 40;
-        if (Flag == true)
+        //if (Flag == true)
+        //{
+        //    y = 10;
+        //    time -= Time.deltaTime;
+        //    if (time <= 0)
+        //    {
+        Vector3 CreatePoint = new Vector3(x, y, transform.position.z - 8);
+        //if (count == max)
         {
-            y = 10;
-            time -= Time.deltaTime;
-            if (time <= 0)
-            {
-                Vector3 CreatePoint = new Vector3(x, y, transform.position.z -8);
-                if (count == max)
-                {
-                    Instantiate(WaveBlock, CreatePoint, Quaternion.identity);
-                }
-                Vector3 CreatePoint2 = new Vector3(x, y, transform.position.z +10);
-                if (count == max)
-                {
-                    Instantiate(WaveBlock, CreatePoint2, Quaternion.identity);
-                }
-                Vector3 CreatePoint3 = new Vector3(ix, y, transform.position.z - 8);
-                if (count == max)
-                {
-                    Instantiate(WaveBlock, CreatePoint3, Quaternion.identity);
-                }
-                Vector3 CreatePoint4 = new Vector3(ix, y, transform.position.z +10);
-                if (count == max)
-                {
-                    Instantiate(WaveBlock, CreatePoint4, Quaternion.identity);
-                }
-                count++;
-                time = 0.02f;
-            }
-
+            Instantiate(WaveBlock, CreatePoint, Quaternion.identity);
         }
+        Vector3 CreatePoint2 = new Vector3(x, y, transform.position.z + 10);
+        //if (count == max)
+        {
+            Instantiate(WaveBlock, CreatePoint2, Quaternion.identity);
+        }
+        Vector3 CreatePoint3 = new Vector3(ix, y, transform.position.z - 8);
+        //if (count == max)
+        {
+            Instantiate(WaveBlock, CreatePoint3, Quaternion.identity);
+        }
+        Vector3 CreatePoint4 = new Vector3(ix, y, transform.position.z + 10);
+        //if (count == max)
+        {
+            Instantiate(WaveBlock, CreatePoint4, Quaternion.identity);
+        }
+        count++;
+        time = 0.02f;
+        //}
 
-    }
-    void Update()
+    //}
+
+}
+    void Start()
     {
         BlockInstance();
         //Spark();
+    }
+
+    void Update()
+    {
+        if (waveCount > 0)
+            waveCountText.text = "wave:" + waveCount.ToString();
+        else
+            waveCountText.text = "";
+        enemyDeathCountText.text = enemyDeathNum.ToString() + "/" + (30 + 10 * waveCount).ToString();
+        if (!isWave)
+        {
+            waveInterval -= Time.deltaTime;
+            if(waveInterval < 0)
+            {
+                waveInterval = 5;
+                isWave = true;
+            }
+        }
+        else
+        {
+            if (enemyDeathNum >= 30 + 10 * waveCount)
+            {
+                waveCount++;
+                enemyDeathNum = 0;
+                isWave = false;
+            }
+        }
+        if(waveCount > 3)
+        {
+            isSceneChange = true;
+            SceneManager.LoadScene("GameClear");
+        }
     }
 }
 
