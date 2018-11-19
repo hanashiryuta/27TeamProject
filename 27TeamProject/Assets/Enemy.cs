@@ -59,6 +59,8 @@ public class Enemy : MonoBehaviour {
 
     public GameObject slap_Circle;
 
+    public GameObject enemy3;
+
     [HideInInspector]
     public bool isSlap;
     
@@ -320,6 +322,7 @@ public class Enemy : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
+
         //if (collision.gameObject.layer == 12)
         //{
         //    BlowMode = true;
@@ -346,6 +349,7 @@ public class Enemy : MonoBehaviour {
             Vector3 slapVelocity = transform.position - collision.gameObject.transform.position;
             GetComponent<Rigidbody>().AddForce(slapVelocity.normalized * 400);
         }
+
     }
 
     private void OnTriggerEnter(Collider other)
