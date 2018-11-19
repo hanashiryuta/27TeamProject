@@ -8,6 +8,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
 
 public enum TestSwingState
 {
@@ -119,6 +121,9 @@ public class Player : MonoBehaviour
     public Image hpBar;
     public Image spBar;
 
+    public GameObject origin_Swing_Particle;
+    GameObject swing_Particle;
+
     // Use this for initialization
     void Start()
     {
@@ -194,6 +199,12 @@ public class Player : MonoBehaviour
                         //}
                         hook.GetComponent<Hook>().hookState = HookState.RETURN;
                     }
+                    if(catchObject == null)
+                    {
+                        hook.GetComponent<Hook>().hookState = HookState.RETURN;
+                        Destroy(swing_Particle);
+                        playerState = PlayerState.HOOKRETURN;
+                    }
                 }
                 else
                 {
@@ -212,6 +223,7 @@ public class Player : MonoBehaviour
     {
         anim.SetBool("isDeath", true);
         isPlayerDeath = true;
+        SceneManager.LoadScene("GameOver");
     }
 
     /// <summary>
@@ -271,7 +283,7 @@ public class Player : MonoBehaviour
             //フラグセット
             isJumpFlag = true;
         }
-        if (collision.gameObject.CompareTag("Enemy") && damegeTime <= 0)
+        if (collision.gameObject.CompareTag("Enemy") && damegeTime <= 0&&catchObject != collision.gameObject)
         {
             damegeTime = origin_DamegeTime;
             anim.SetTrigger("isDamege");
@@ -299,7 +311,7 @@ public class Player : MonoBehaviour
             if (Mathf.Abs(Input.GetAxis("Vertical")) >= 0.1f || Mathf.Abs(Input.GetAxis("Horizontal")) >= 0.1f)
             {
                 pointerAngle = Mathf.Atan2(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
-                pointerPosition = new Vector3(Mathf.Cos(pointerAngle) * pointerRadius, 1.0f, Mathf.Sin(pointerAngle) * pointerRadius);
+                pointerPosition = new Vector3(Mathf.Cos(pointerAngle) * pointerRadius, 2, Mathf.Sin(pointerAngle) * pointerRadius);
 
             }
 
@@ -355,7 +367,7 @@ public class Player : MonoBehaviour
             if (isHookShot && Input.GetButtonDown("Jump"))
             {
                 //ポインターの位置に向かって射出
-                hook = Instantiate(originHook, transform.position, Quaternion.identity);
+                hook = Instantiate(originHook, transform.position+new Vector3(0,2,0), Quaternion.identity);
                 hook.GetComponent<Hook>().player = gameObject;
                 hook.GetComponent<Hook>().targetPosition = hookPointer.transform.position;//new Vector3(Mathf.Cos(angle) * shotRadius, Mathf.Sin(angle) * shotRadius, 0);
                 isHookShot = false;
@@ -404,12 +416,15 @@ public class Player : MonoBehaviour
         if (testSwingState == TestSwingState.SIDE)
         {
             catchObject = m_CatchObject;
+            catchObject.GetComponent<BoxCollider>().isTrigger = true;
+            catchObject.GetComponent<Rigidbody>().useGravity = false;
             swingRadius = Vector3.Distance(transform.position, catchObject.transform.position);
             if (swingRadius <= 1)
                 swingRadius = 1;
             swingAngle = Mathf.Atan2(catchObject.transform.position.y - transform.position.y, catchObject.transform.position.x - transform.position.x) * 180 / Mathf.PI;
             playerState = PlayerState.HOOKSWING;
             swingSpeed = 0;
+            swing_Particle = Instantiate(origin_Swing_Particle,catchObject.transform.position,Quaternion.identity,catchObject.transform);
         }
         else
         {
@@ -428,8 +443,6 @@ public class Player : MonoBehaviour
     /// </summary>
     void HookSwing()
     {
-        catchObject.GetComponent<BoxCollider>().isTrigger = true;
-        catchObject.GetComponent<Rigidbody>().useGravity = false;
         if (testSwingState == TestSwingState.SIDE)
         {
             //ボタン押している間
@@ -523,11 +536,13 @@ public class Player : MonoBehaviour
             catchObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
             catchObject.GetComponent<Rigidbody>().useGravity = false;
             Vector3 throwVelocity = (hookPointer.transform.position - transform.position).normalized;
-            catchObject.transform.position = new Vector3(transform.position.x + 2, 1.5f, transform.position.z + throwVelocity.z);
+            throwVelocity.y = 0;
+            catchObject.transform.position = new Vector3(transform.position.x + throwVelocity.x*2, 3, transform.position.z + throwVelocity.z*2);
             catchObject.GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
             playerState = PlayerState.HOOKRETURN;
             catchObject.GetComponent<BoxCollider>().isTrigger = false;
             catchObject.gameObject.layer = 15;
+            Destroy(swing_Particle);
         }
     }
 

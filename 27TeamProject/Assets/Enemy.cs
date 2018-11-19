@@ -61,6 +61,12 @@ public class Enemy : MonoBehaviour {
 
     [HideInInspector]
     public bool isSlap;
+    
+    [HideInInspector]
+    public WaveManager waveManager;
+
+    public GameObject origin_Damege_Particle;
+    public GameObject origin_Death_Particle;
 
     public virtual void Awake()
     {
@@ -82,8 +88,11 @@ public class Enemy : MonoBehaviour {
     // Update is called once per frame
     public virtual void Update()
     {
-        if (hp < 1 || transform.position.z > 50)
+        if ((hp < 1 || Mathf.Abs(transform.position.z) > 50)||!waveManager.isWave)
         {
+            Instantiate(origin_Death_Particle, transform.position, Quaternion.identity);
+            if (waveManager.isWave)
+                waveManager.enemyDeathNum++;
             Destroy(this.gameObject);
         }
         if (isSlap)
@@ -330,6 +339,7 @@ public class Enemy : MonoBehaviour {
         if (collision.gameObject.layer == 14)
         {
             hp -= collision.gameObject.GetComponent<Enemy>().ThrowAttack;
+            Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
         }
         if(collision.gameObject.CompareTag("Slap_Circle"))
         {
@@ -354,6 +364,7 @@ public class Enemy : MonoBehaviour {
                 isBlow = false;
             }
             hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
+            Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
         }
     }
 }

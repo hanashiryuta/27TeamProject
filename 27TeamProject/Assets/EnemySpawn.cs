@@ -25,18 +25,23 @@ public class EnemySpawn : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (waveManager.GetComponent<WaveManager>().Flag)
+        if (waveManager.GetComponent<WaveManager>().isWave)
         {
             SpawnTime -= Time.deltaTime;
             if(SpawnTime < 0)
             {
                 if(SpawnCount < SpawnLimit)
                 {
-                    Instantiate(SpawnEnemy, transform.position, Quaternion.identity);
+                    GameObject enemy = Instantiate(SpawnEnemy, transform.position, Quaternion.identity);
+                    enemy.GetComponent<Enemy>().waveManager = waveManager.GetComponent<WaveManager>();
                     SpawnTime = SpawnSetTime;
                     SpawnCount++;
                 }
             }
+        }
+        else
+        {
+            SpawnCount = 0;
         }
 	}
 }

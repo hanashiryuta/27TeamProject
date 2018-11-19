@@ -68,7 +68,7 @@ public class Hook : MonoBehaviour {
                 Attack();
                 break;
             case HookState.RETURN://帰還
-                hookVelocity = player.transform.position - transform.position;
+                hookVelocity = player.transform.position+new Vector3(0,2,0) - transform.position;
                 transform.position += hookVelocity.normalized * moveSpeed;
                 break;
             case HookState.DEATH://削除
