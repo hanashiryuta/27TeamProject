@@ -16,6 +16,7 @@ public enum MoveMode
     HORIZONTAL,
     PLAYERCHASE,
     RANDOMMOVE,
+    PAUL,
 }
 
 public class Enemy : MonoBehaviour {
@@ -70,8 +71,17 @@ public class Enemy : MonoBehaviour {
 
     public virtual void Awake()
     {
-        mode = MoveMode.RANDOMMOVE;
+        //mode = MoveMode.RANDOMMOVE;
         //mode = Enum.GetValues(typeof(MoveMode)).Cast<MoveMode>().OrderBy(c => UnityEngine.Random.Range(0, 3)).FirstOrDefault();
+        int random = UnityEngine.Random.Range(0, 2);
+        if (random == 0)
+        {
+            mode = MoveMode.RANDOMMOVE;
+        }
+        else if(random == 1)
+        {
+            mode = MoveMode.PLAYERCHASE;
+        }
         wavewall = GameObject.FindGameObjectsWithTag("IronBlock");
         x = UnityEngine.Random.Range(wavewall[1].transform.position.x - 1, wavewall[3].transform.position.x + 1);
         z = UnityEngine.Random.Range(wavewall[1].transform.position.z + 1, wavewall[2].transform.position.z - 1);
@@ -88,7 +98,7 @@ public class Enemy : MonoBehaviour {
     // Update is called once per frame
     public virtual void Update()
     {
-        if ((hp < 1 || Mathf.Abs(transform.position.z) > 50)||!waveManager.isWave)
+        if ((hp < 1 || Mathf.Abs(transform.position.z) > 50) || !waveManager.isWave)
         {
             Instantiate(origin_Death_Particle, transform.position, Quaternion.identity);
             if (waveManager.isWave)
@@ -98,7 +108,7 @@ public class Enemy : MonoBehaviour {
         if (isSlap)
             Slap();
         
-        if(mode == MoveMode.PLAYERCHASE || mode == MoveMode.RANDOMMOVE)
+        if(/*mode == MoveMode.PLAYERCHASE ||*/ mode == MoveMode.RANDOMMOVE || mode == MoveMode.PAUL)
         {
             return;
         }
@@ -113,6 +123,11 @@ public class Enemy : MonoBehaviour {
                 case MoveMode.HORIZONTAL:
                     HorizontalBoxCast();
                     break;
+
+                case MoveMode.PLAYERCHASE:
+                    HorizontalBoxCast();
+                    break;
+
             }
         }
         Debug.Log(isTurn);
@@ -281,7 +296,20 @@ public class Enemy : MonoBehaviour {
         Vector3 pos = player.transform.position - transform.position;
         Vector3 normalpos = Vector3.Normalize(pos);
         if (Mathf.Abs(pos.x) < ChaseRange && Mathf.Abs(pos.z) < ChaseRange)
+        {
             transform.position += normalpos * speed;
+        }
+        else
+        {
+            if (!isTurn)
+            {
+                TurnHorizontal();
+            }
+            else if(isTurn)
+            {
+                reTurnHorizontal();
+            }
+        }
     }
 
     void RandomMove()

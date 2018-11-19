@@ -1,4 +1,10 @@
-﻿using System.Collections;
+﻿//
+//11月
+//作成者：安部崇寛
+//Enemyのスポーン
+//
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
