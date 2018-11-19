@@ -124,6 +124,8 @@ public class Player : MonoBehaviour
     public GameObject origin_Swing_Particle;
     GameObject swing_Particle;
 
+    bool isDamege;
+
     // Use this for initialization
     void Start()
     {
@@ -180,7 +182,7 @@ public class Player : MonoBehaviour
                     anim.SetBool("isCatch", true);
                     HookSwing();
                     //Jump();
-                    if (catchObject != null && (Input.GetButtonUp("Jump") || sp <= 0))
+                    if ((Input.GetButtonUp("Jump") || sp <= 0) || isDamege)
                     {
                         Destroy(timing_Particle);
                         //下方向なら
@@ -205,6 +207,7 @@ public class Player : MonoBehaviour
                         Destroy(swing_Particle);
                         playerState = PlayerState.HOOKRETURN;
                     }
+                    isDamege = false;
                 }
                 else
                 {
@@ -285,6 +288,7 @@ public class Player : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Enemy") && damegeTime <= 0&&catchObject != collision.gameObject)
         {
+            isDamege = true;
             damegeTime = origin_DamegeTime;
             anim.SetTrigger("isDamege");
             hp--;
