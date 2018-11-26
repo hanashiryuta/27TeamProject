@@ -118,7 +118,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   hook: {fileID: 1345325903641440, guid: 38efe2a7165f6d447a685850c1279a71, type: 2}
-  BlowOffSpeed: 0.1
+  BlowOffSpeed: 0.5
   isHook: 0
   BlowMode: 0
   ThrowAttack: 5

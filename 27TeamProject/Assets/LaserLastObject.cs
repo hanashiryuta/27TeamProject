@@ -12,9 +12,5 @@ public class LaserLastObject : MonoBehaviour {
         {
             transform.position -= new Vector3(0, 0, speed);
         }
-        else
-        {
-            transform.position = transform.parent.GetComponent<PaulLaserScript>().PaulList[0].transform.position;
-        }
 	}
 }

@@ -9,8 +9,6 @@ public class PaulLaserScript : MonoBehaviour {
     int count;
 
     [SerializeField]
-    GameObject LaserObject;
-    [SerializeField]
     float setTime;
     [SerializeField]
     float time;
@@ -36,20 +34,21 @@ public class PaulLaserScript : MonoBehaviour {
             time -= Time.deltaTime;
             if(time < 0)
             {
-                Instantiate(LaserObject, transform.position + new Vector3(0, 0, -10), Quaternion.identity);
-                lineRenderer.enabled = true;
-                lineRenderer.SetPosition(0, PaulList[count - 2].transform.position);
+                PaulList[count - 1].transform.position = new Vector3(PaulList[0].transform.position.x, PaulList[0].transform.position.y, PaulList[0].transform.position.z);
                 time = setTime;
                 isLaser = true;
+                lineRenderer.SetPosition(0, PaulList[count - 2].transform.position);
             }
         }
         else
         {
+            lineRenderer.enabled = true;
+            
             lineRenderer.SetPosition(1, PaulList[count - 1].transform.position);
             if (PaulList[count - 1].transform.position.z < -30)
             {
+                PaulList[count - 1].transform.position = new Vector3(PaulList[0].transform.position.x, PaulList[0].transform.position.y, PaulList[0].transform.position.z + 1);
                 isLaser = false;
-                PaulList[count - 1].transform.position = PaulList[0].transform.position;
                 lineRenderer.enabled = false;
             }
         }

@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿//
+//10月3日
+//作成者：安部崇寛
+//エネミークラス
+//
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,11 +12,10 @@ public class PaulEnemy : Enemy {
     RaycastHit[] hitlist;
     Vector3 boxcastScale;
 
-    MoveMode mode;
+    Status status;
 
     public override void Awake()
     {
-        mode = MoveMode.PAUL;
 
     }
 
@@ -23,5 +27,10 @@ public class PaulEnemy : Enemy {
     public override void Update()
     {
         base.Update();
+    }
+
+    public override void TriggerSet(Collider other)
+    {
+        
     }
 }
