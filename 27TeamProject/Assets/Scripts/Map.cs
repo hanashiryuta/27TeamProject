@@ -101,13 +101,13 @@ public class Map : MonoBehaviour {
                     MapPut = Instantiate(mapObjects[5]) as GameObject;
                     MapPut.transform.position = new Vector3(blocksize * r, 2, blocksize * g);
                 }
-                int s = 5;
-                string StickEnemySpawn = s.ToString();
-                if (map[g][r] == StickEnemySpawn)
-                {
-                    MapPut = Instantiate(mapObjects[6]) as GameObject;
-                    MapPut.transform.position = new Vector3(blocksize * r, 2, blocksize * g);
-                }
+                //int s = 5;
+                //string StickEnemySpawn = s.ToString();
+                //if (map[g][r] == StickEnemySpawn)
+                //{
+                //    MapPut = Instantiate(mapObjects[6]) as GameObject;
+                //    MapPut.transform.position = new Vector3(blocksize * r, 2, blocksize * g);
+                //}
 
                 ix = ix + blocksize * r;
             }

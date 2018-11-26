@@ -631,9 +631,9 @@ MonoBehaviour:
   isHookShot: 1
   hitPosition: {x: 0, y: 0, z: 0}
   hitDistance: 0
-  swingSpeed: 1
+  swingSpeed: 0.2
   swingSpeedRange: 10
-  swingSpeedRate: 0.1
+  swingSpeedRate: 0.01
   throwSpeed: 4000
   flySpeed: 50
   slapSpeed: 500
@@ -641,7 +641,7 @@ MonoBehaviour:
     type: 2}
   origin_TimingTime: 2
   timingTime: 0
-  swingButtonRate: 1
+  swingButtonRate: 2
   origin_Timing_Particle: {fileID: 1399463009838916, guid: 147ac3aba1bb73c4694794e59c66f1c6,
     type: 2}
   good_Timing_Particle: {fileID: 1104028873220918, guid: 13e39f6fd8d4f9d4c9904d9f80f49482,

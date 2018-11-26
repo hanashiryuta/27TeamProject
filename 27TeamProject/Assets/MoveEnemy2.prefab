@@ -121,18 +121,25 @@ MonoBehaviour:
   BlowOffSpeed: 0.1
   isHook: 0
   BlowMode: 0
+  maxThrowAttack: 20
+  maxSwingAttack: 5
   ThrowAttack: 5
   SwingAttack: 5
   mode: 2
   ChaseRange: 20
   slap_Circle: {fileID: 1774002166212886, guid: fbd1550471567d647b8e952fcc435f58,
     type: 2}
+  enemy3: {fileID: 0}
   isSlap: 0
   waveManager: {fileID: 0}
   origin_Damege_Particle: {fileID: 1008917523343304, guid: 12d84c5b7e2eaf143a0e141a6f8ee136,
     type: 2}
   origin_Death_Particle: {fileID: 1424774110854730, guid: 58a5f048cb2bdda438cd7659b9d09afb,
     type: 2}
+  animator: {fileID: 0}
+  isFly: 0
+  GUIFont: {fileID: 12800000, guid: d7d5b71cb41044c43bffbb0141fd35ae, type: 3}
+  origin_GUITime: 0.5
 --- !u!212 &212129535349473934
 SpriteRenderer:
   m_ObjectHideFlags: 1

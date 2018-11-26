@@ -14,7 +14,7 @@ public class WaveManager : MonoBehaviour
     int count = 0;
     int max = 5;
 
-    int waveCount;
+    int waveCount = 1;
     bool isSceneChange;
     [HideInInspector]
     public bool isWave = false;
@@ -69,11 +69,11 @@ public class WaveManager : MonoBehaviour
     //}
     public void BlockInstance()
     {
-        x = transform.position.x + 40;
-        ix = transform.position.x - 40;
+        x = transform.position.x + 30;
+        ix = transform.position.x - 30;
         //if (Flag == true)
         //{
-        //    y = 10;
+            y = 10;
         //    time -= Time.deltaTime;
         //    if (time <= 0)
         //    {
@@ -85,17 +85,17 @@ public class WaveManager : MonoBehaviour
         Vector3 CreatePoint2 = new Vector3(x, y, transform.position.z + 10);
         //if (count == max)
         {
-            Instantiate(WaveBlock, CreatePoint2, Quaternion.identity);
+            Instantiate(WaveBlock, CreatePoint2, Quaternion.Euler(0,-90,0));
         }
-        Vector3 CreatePoint3 = new Vector3(ix, y, transform.position.z - 8);
+        Vector3 CreatePoint3 = new Vector3(ix, y, transform.position.z +10);
         //if (count == max)
         {
-            Instantiate(WaveBlock, CreatePoint3, Quaternion.identity);
+            Instantiate(WaveBlock, CreatePoint3, Quaternion.Euler(0, -180, 0));
         }
-        Vector3 CreatePoint4 = new Vector3(ix, y, transform.position.z + 10);
+        Vector3 CreatePoint4 = new Vector3(ix, y, transform.position.z -8);
         //if (count == max)
         {
-            Instantiate(WaveBlock, CreatePoint4, Quaternion.identity);
+            Instantiate(WaveBlock, CreatePoint4, Quaternion.Euler(0, -270, 0));
         }
         count++;
         time = 0.02f;
@@ -116,7 +116,7 @@ public class WaveManager : MonoBehaviour
             waveCountText.text = "wave:" + waveCount.ToString();
         else
             waveCountText.text = "";
-        enemyDeathCountText.text = enemyDeathNum.ToString() + "/" + (30 + 10 * waveCount).ToString();
+        enemyDeathCountText.text = enemyDeathNum.ToString() + "/" + (20 + 10 * waveCount).ToString();
         if (!isWave)
         {
             waveInterval -= Time.deltaTime;
@@ -128,7 +128,7 @@ public class WaveManager : MonoBehaviour
         }
         else
         {
-            if (enemyDeathNum >= 30 + 10 * waveCount)
+            if (enemyDeathNum >= 20 + 10 * waveCount)
             {
                 waveCount++;
                 enemyDeathNum = 0;
