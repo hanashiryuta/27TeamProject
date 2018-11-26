@@ -12,6 +12,8 @@ TagManager:
   - Slap_Circle
   - WaveManager
   - IronBlock
+  - PaulEnemyUnder
+  - PaulEnemy
   layers:
   - Default
   - TransparentFX

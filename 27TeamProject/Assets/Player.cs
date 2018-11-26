@@ -553,7 +553,7 @@ public class Player : MonoBehaviour
             catchObject.transform.position = new Vector3(transform.position.x + throwVelocity.x*2, 3, transform.position.z + throwVelocity.z*2);
             catchObject.GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
             playerState = PlayerState.HOOKRETURN;
-            catchObject.GetComponent<BoxCollider>().isTrigger = false;
+            //catchObject.GetComponent<BoxCollider>().isTrigger = false;
             catchObject.gameObject.layer = 15;
             Destroy(swing_Particle);
             catchObject.GetComponent<Enemy>().isFly = true;

@@ -18,6 +18,12 @@ public enum MoveMode
     RANDOMMOVE,
 }
 
+enum Status
+{
+    NORMAL,
+    DAMEGE,
+}
+
 public class Enemy : MonoBehaviour {
 
     [SerializeField]
@@ -27,10 +33,11 @@ public class Enemy : MonoBehaviour {
     [SerializeField]
     int hp; //処理で使用するHP変数
 
-    bool isTurn; //進行方向変更用フラグ
+    Vector3 velosity;
+
     RaycastHit[] hitList; //BoxCastでHitしたものを入れる変数
     Vector3 origin; //Boxcast開始地点
-    Vector3 boxcastScale; //BoxCastをどのEnemyの中点からどの距離で生成するか
+    Vector3 boxcastRange; //BoxCastをどのEnemyの中点からどの距離で生成するか
 
     [SerializeField]
     LayerMask layerMask; //Boxcastで使用するレイヤー指定用
@@ -40,9 +47,7 @@ public class Enemy : MonoBehaviour {
     float BlowOffSpeed; //吹き飛ぶスピード
     [HideInInspector]
     public bool isHook; //フックに捕まっているかの判定
-
-    bool isBlow; //吹き飛ぶ時の方向判定
-
+    
     public bool BlowMode; //吹き飛ぶ前と後の切り替え用
     
     public int maxThrowAttack;
@@ -73,6 +78,18 @@ public class Enemy : MonoBehaviour {
     public GameObject origin_Damege_Particle;
     public GameObject origin_Death_Particle;
 
+    float angleX;
+    Vector3 PosBlow;
+    
+    float throwSetTime = 1;
+    float throwTime;
+
+    Status status;
+
+    int ThisEnemyLayer;
+    int CatchEnemyLayer;
+    int ThrowEnemyLayer;
+    
     public Animator animator;
 
     Vector3 currentPosition;
@@ -84,20 +101,44 @@ public class Enemy : MonoBehaviour {
 
     public virtual void Awake()
     {
-        mode = MoveMode.RANDOMMOVE;
+        //mode = MoveMode.RANDOMMOVE;
         //mode = Enum.GetValues(typeof(MoveMode)).Cast<MoveMode>().OrderBy(c => UnityEngine.Random.Range(0, 3)).FirstOrDefault();
+        int random = UnityEngine.Random.Range(0, 2);
+        if (random == 0)
+        {
+            mode = MoveMode.RANDOMMOVE;
+        }
+        else if(random == 1)
+        {
+            mode = MoveMode.PLAYERCHASE;
+        }
         wavewall = GameObject.FindGameObjectsWithTag("IronBlock");
         x = UnityEngine.Random.Range(wavewall[1].transform.position.x - 1, wavewall[3].transform.position.x + 1);
         z = UnityEngine.Random.Range(wavewall[1].transform.position.z + 1, wavewall[2].transform.position.z - 1);
     }
 
     // Use this for initialization
-    public virtual void Start()
-    {
-        isTurn = false;
+    public virtual void Start () {
         hp = inputHp;
         isHook = true;
         BlowMode = false;
+        angleX = transform.rotation.x;
+        status = Status.NORMAL;
+        ThisEnemyLayer = LayerMask.NameToLayer("Enemy");
+        CatchEnemyLayer = LayerMask.NameToLayer("CatchEnemy");
+        ThrowEnemyLayer = LayerMask.NameToLayer("ThrowEnemy");
+        switch (mode)
+        {
+            case MoveMode.HORIZONTAL:
+                velosity = new Vector3(1, 0, 0);
+                break;
+            case MoveMode.VERTICAL:
+                velosity = new Vector3(0, 0, 1);
+                break;
+            case MoveMode.PLAYERCHASE:
+                velosity = new Vector3(1, 0, 0);
+                break;
+        }
         GUITime = origin_GUITime;
     }
 
@@ -126,24 +167,25 @@ public class Enemy : MonoBehaviour {
         if (isSlap)
             Slap();
 
-        if (mode == MoveMode.PLAYERCHASE || mode == MoveMode.RANDOMMOVE)
+        
+        switch (status)
         {
-            return;
-        }
-        else
-        {
-            switch (mode)
-            {
-                case MoveMode.VERTICAL:
-                    VerticalBoxCast();
-                    break;
+            case Status.DAMEGE:
+                throwTime -= Time.deltaTime;
+                if(throwTime < 0)
+                {
+                    status = Status.NORMAL;
+                }
 
-                case MoveMode.HORIZONTAL:
-                    HorizontalBoxCast();
-                    break;
-            }
+                break;
+
+            case Status.NORMAL:
+                BoxCast();
+                break;
         }
-        Debug.Log(isTurn);
+
+        if (isSlap)
+            Slap();
     }
 
     private void Slap()
@@ -152,91 +194,23 @@ public class Enemy : MonoBehaviour {
         Destroy(gameObject);
     }
 
-    void VerticalBoxCast()
+    void BoxCast()
     {
-        if (!isTurn)
+        origin = transform.position + velosity * transform.localScale.x / 2;
+        hitList = Physics.BoxCastAll(origin, boxcastRange, -transform.up, Quaternion.identity, transform.lossyScale.y, layerMask);
+        Debug.DrawRay(origin, -transform.up);
+
+        int groundcount = 0;
+        foreach (var hl in hitList)
         {
-            origin = new Vector3(transform.position.x, transform.position.y, transform.position.z + transform.lossyScale.z / 2);
-            hitList = Physics.BoxCastAll(origin, boxcastScale, -transform.up, Quaternion.identity, transform.lossyScale.y, layerMask);
-            Debug.DrawRay(origin, -transform.up);
-
-            int groundcount = 0;
-            foreach (var hl in hitList)
+            if (hl.transform.tag == "Ground")
             {
-                if (hl.transform.tag == "Ground")
-                {
-                    groundcount++;
-                }
-            }
-
-            if (groundcount == 0)
-            {
-                isTurn = !isTurn;
+                groundcount++;
             }
         }
-        else if (isTurn)
+        if (groundcount == 0)
         {
-            origin = new Vector3(transform.position.x, transform.position.y, transform.position.z - transform.lossyScale.z / 2);
-            hitList = Physics.BoxCastAll(origin, boxcastScale, -transform.up, Quaternion.identity, transform.lossyScale.y, layerMask);
-            Debug.DrawRay(origin, -transform.up);
-
-            int groundcount = 0;
-            foreach (var hl in hitList)
-            {
-                if (hl.transform.tag == "Ground")
-                {
-                    groundcount++;
-                }
-            }
-
-            if (groundcount == 0)
-            {
-                isTurn = !isTurn;
-            }
-        }
-    }
-
-    void HorizontalBoxCast()
-    {
-        if (!isTurn)
-        {
-            origin = new Vector3(transform.position.x + transform.lossyScale.x / 2, transform.position.y, transform.position.z);
-            hitList = Physics.BoxCastAll(origin, boxcastScale, -transform.up, Quaternion.identity, transform.lossyScale.y, layerMask);
-            Debug.DrawRay(origin, -transform.up);
-
-            int groundcount = 0;
-            foreach (var hl in hitList)
-            {
-                if (hl.transform.tag == "Ground")
-                {
-                    groundcount++;
-                }
-            }
-
-            if (groundcount == 0)
-            {
-                isTurn = !isTurn;
-            }
-        }
-        else if (isTurn)
-        {
-            origin = new Vector3(transform.position.x - transform.lossyScale.x / 2, transform.position.y, transform.position.z);
-            hitList = Physics.BoxCastAll(origin, boxcastScale, -transform.up, Quaternion.identity, transform.lossyScale.y, layerMask);
-            Debug.DrawRay(origin, -transform.up);
-
-            int groundcount = 0;
-            foreach (var hl in hitList)
-            {
-                if (hl.transform.tag == "Ground")
-                {
-                    groundcount++;
-                }
-            }
-
-            if (groundcount == 0)
-            {
-                isTurn = !isTurn;
-            }
+            velosity *= -1;
         }
     }
 
@@ -253,32 +227,7 @@ public class Enemy : MonoBehaviour {
         }
         else
         {
-            if (!isTurn)
-            {
-                switch (mode)
-                {
-                    case MoveMode.HORIZONTAL:
-                        TurnHorizontal();
-                        break;
-
-                    case MoveMode.VERTICAL:
-                        TurnVertical();
-                        break;
-                }
-            }
-            else if (isTurn)
-            {
-                switch (mode)
-                {
-                    case MoveMode.HORIZONTAL:
-                        reTurnHorizontal();
-                        break;
-
-                    case MoveMode.VERTICAL:
-                        reTurnVertical();
-                        break;
-                }
-            }
+            transform.position += velosity * speed;
         }
         currentPosition = transform.position;
         Vector3 direction = currentPosition - previousePositoin;
@@ -294,35 +243,20 @@ public class Enemy : MonoBehaviour {
 
         previousePositoin = currentPosition;
     }
-
-    void TurnHorizontal()
-    {
-        transform.position += new Vector3(speed, 0, 0);
-
-    }
-
-    void reTurnHorizontal()
-    {
-        transform.position -= new Vector3(speed, 0, 0);
-    }
-
-    void TurnVertical()
-    {
-        transform.position += new Vector3(0, 0, speed);
-    }
-
-    void reTurnVertical()
-    {
-        transform.position -= new Vector3(0, 0, speed);
-    }
-
+    
     void PlayerShaseMove()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Vector3 pos = player.transform.position - transform.position;
         Vector3 normalpos = Vector3.Normalize(pos);
         if (Mathf.Abs(pos.x) < ChaseRange && Mathf.Abs(pos.z) < ChaseRange)
+        {
             transform.position += normalpos * speed;
+        }
+        else
+        {
+            transform.position += velosity * speed;
+        }
     }
 
     void RandomMove()
@@ -338,53 +272,15 @@ public class Enemy : MonoBehaviour {
     }
 
     public void Blow()
-    {
-        if (isBlow)
-        {
-            BackBlow();
-        }
-        else
-        {
-            FrontBlow();
-        }
+    {   
+        Vector3 normal = Vector3.Normalize(PosBlow);
+        transform.position += new Vector3(BlowOffSpeed * normal.x, BlowOffSpeed, BlowOffSpeed * normal.z);
+        angleX += 10;
+        transform.rotation = Quaternion.Euler(0, 0, angleX);
     }
-
-    void BackBlow()
-    {
-        transform.position -= new Vector3(BlowOffSpeed, 0, BlowOffSpeed);
-    }
-
-    void FrontBlow()
-    {
-        transform.position += new Vector3(BlowOffSpeed, 0, BlowOffSpeed);
-    }
-
+    
     private void OnCollisionEnter(Collision collision)
     {
-
-        //if (collision.gameObject.layer == 12)
-        //{
-        //    BlowMode = true;
-        //    //GetComponent<Rigidbody>().useGravity = false;
-        //    Vector3 Pos = transform.position - collision.transform.position;
-        //    if(Pos.z > 0)
-        //    {
-        //        isBlow = true;
-        //    }
-        //    if(Pos.z < 0)
-        //    {
-        //        isBlow = false;
-        //    }
-        //    hp -= collision.gameObject.GetComponent<Enemy>().SwingAttack;
-        //}
-        //else 
-        if (collision.gameObject.layer == 15)
-        {
-            GUIText = collision.gameObject.GetComponent<Enemy>().ThrowAttack.ToString();
-            isGUIDraw = true;
-            hp -= collision.gameObject.GetComponent<Enemy>().ThrowAttack;
-            Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
-        }
         if (collision.gameObject.CompareTag("Slap_Circle"))
         {
             Vector3 slapVelocity = transform.position - collision.gameObject.transform.position;
@@ -399,26 +295,46 @@ public class Enemy : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == 12)
+        if (other.gameObject.layer == CatchEnemyLayer)
         {
-            //BlowMode = true;
-            //GetComponent<Rigidbody>().useGravity = false;
-            Vector3 Pos = transform.position - other.transform.position;
-            if (Pos.z > 0)
-            {
-                isBlow = true;
-            }
-            if (Pos.z < 0)
-            {
-                isBlow = false;
-            }
             GUIText = other.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
             isGUIDraw = true;
             hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
             Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
+            if (hp <= 5)
+            {
+                TriggerSet(other);
+            }
+        }
+
+        if (other.gameObject.layer == ThrowEnemyLayer)
+        {        
+            GUIText = other.gameObject.GetComponent<Enemy>().ThrowAttack.ToString();
+            isGUIDraw = true;
+            hp -= other.gameObject.GetComponent<Enemy>().ThrowAttack;
+            Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
+            status = Status.DAMEGE;
+            throwTime = throwSetTime;
+            Physics.IgnoreCollision(other.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
         }
     }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer == ThrowEnemyLayer)
+            Physics.IgnoreCollision(other.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>(), false);
+    }
+    
+    public virtual void TriggerSet(Collider other)
+    {
+        BlowMode = true;
+        GetComponent<Rigidbody>().useGravity = false;
+        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX;
+        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationY;
+        PosBlow = transform.position - other.transform.position;        
+    }
+}
     Vector2 GUIPosition;
     public Font GUIFont;
     bool isGUIDraw;
