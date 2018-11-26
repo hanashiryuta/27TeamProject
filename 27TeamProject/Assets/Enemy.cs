@@ -44,11 +44,14 @@ public class Enemy : MonoBehaviour {
     bool isBlow; //吹き飛ぶ時の方向判定
 
     public bool BlowMode; //吹き飛ぶ前と後の切り替え用
+    
+    public int maxThrowAttack;
+    public int maxSwingAttack;
 
     [SerializeField]
-    int ThrowAttack; //投げられた時のEnemyの攻撃力
+    public int ThrowAttack; //投げられた時のEnemyの攻撃力
     [SerializeField]
-    int SwingAttack;
+    public int SwingAttack;
     [SerializeField]
     MoveMode mode; //移動設定
     [SerializeField]
@@ -63,12 +66,21 @@ public class Enemy : MonoBehaviour {
 
     [HideInInspector]
     public bool isSlap;
-    
+
     [HideInInspector]
     public WaveManager waveManager;
 
     public GameObject origin_Damege_Particle;
     public GameObject origin_Death_Particle;
+
+    public Animator animator;
+
+    Vector3 currentPosition;
+    Vector3 previousePositoin;
+
+    float flyDeathTime = 2.0f;
+    [HideInInspector]
+    public bool isFly;
 
     public virtual void Awake()
     {
@@ -80,17 +92,31 @@ public class Enemy : MonoBehaviour {
     }
 
     // Use this for initialization
-    public virtual void Start () {
+    public virtual void Start()
+    {
         isTurn = false;
         hp = inputHp;
         isHook = true;
         BlowMode = false;
-	}
+        GUITime = origin_GUITime;
+    }
 
     // Update is called once per frame
     public virtual void Update()
     {
-        if ((hp < 1 || Mathf.Abs(transform.position.z) > 50)||!waveManager.isWave)
+        if (isGUIDraw)
+        {
+            GUITime -= Time.deltaTime;
+            if (GUITime < 0)
+            {
+                GUITime = origin_GUITime;
+                isGUIDraw = false;
+            }
+        }
+
+        if (isFly)
+            flyDeathTime -= Time.deltaTime;
+        if ((hp < 1 || Mathf.Abs(transform.position.z) > 50) || !waveManager.isWave || flyDeathTime < 0)
         {
             Instantiate(origin_Death_Particle, transform.position, Quaternion.identity);
             if (waveManager.isWave)
@@ -99,8 +125,8 @@ public class Enemy : MonoBehaviour {
         }
         if (isSlap)
             Slap();
-        
-        if(mode == MoveMode.PLAYERCHASE || mode == MoveMode.RANDOMMOVE)
+
+        if (mode == MoveMode.PLAYERCHASE || mode == MoveMode.RANDOMMOVE)
         {
             return;
         }
@@ -169,7 +195,7 @@ public class Enemy : MonoBehaviour {
             }
         }
     }
-    
+
     void HorizontalBoxCast()
     {
         if (!isTurn)
@@ -213,21 +239,21 @@ public class Enemy : MonoBehaviour {
             }
         }
     }
-    
+
     public void Move()
-    {   
-        if(mode == MoveMode.RANDOMMOVE)
+    {
+        if (mode == MoveMode.RANDOMMOVE)
         {
             RandomMove();
         }
 
-        if(mode == MoveMode.PLAYERCHASE)
+        if (mode == MoveMode.PLAYERCHASE)
         {
             PlayerShaseMove();
         }
         else
         {
-            if(!isTurn)
+            if (!isTurn)
             {
                 switch (mode)
                 {
@@ -240,7 +266,7 @@ public class Enemy : MonoBehaviour {
                         break;
                 }
             }
-            else if(isTurn)
+            else if (isTurn)
             {
                 switch (mode)
                 {
@@ -254,12 +280,25 @@ public class Enemy : MonoBehaviour {
                 }
             }
         }
+        currentPosition = transform.position;
+        Vector3 direction = currentPosition - previousePositoin;
+
+        Vector3 scale = transform.localScale;
+        scale.x = Mathf.Abs(scale.x);
+
+        if (direction.x > 0)
+        {
+            scale.x *= -1;
+        }
+        transform.localScale = scale;
+
+        previousePositoin = currentPosition;
     }
 
     void TurnHorizontal()
     {
         transform.position += new Vector3(speed, 0, 0);
-        
+
     }
 
     void reTurnHorizontal()
@@ -339,22 +378,28 @@ public class Enemy : MonoBehaviour {
         //    hp -= collision.gameObject.GetComponent<Enemy>().SwingAttack;
         //}
         //else 
-        if (collision.gameObject.layer == 14)
+        if (collision.gameObject.layer == 15)
         {
+            GUIText = collision.gameObject.GetComponent<Enemy>().ThrowAttack.ToString();
+            isGUIDraw = true;
             hp -= collision.gameObject.GetComponent<Enemy>().ThrowAttack;
             Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
         }
-        if(collision.gameObject.CompareTag("Slap_Circle"))
+        if (collision.gameObject.CompareTag("Slap_Circle"))
         {
             Vector3 slapVelocity = transform.position - collision.gameObject.transform.position;
             GetComponent<Rigidbody>().AddForce(slapVelocity.normalized * 400);
+        }
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            animator.SetTrigger("isAttack");
         }
 
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.layer == 12)
+        if (other.gameObject.layer == 12)
         {
             //BlowMode = true;
             //GetComponent<Rigidbody>().useGravity = false;
@@ -367,8 +412,39 @@ public class Enemy : MonoBehaviour {
             {
                 isBlow = false;
             }
+            GUIText = other.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
+            isGUIDraw = true;
             hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
             Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
+        }
+    }
+
+    Vector2 GUIPosition;
+    public Font GUIFont;
+    bool isGUIDraw;
+    float GUITextArpha = 1.0f;
+    string GUIText;
+    public float origin_GUITime = 0.5f;
+    float GUITime;
+
+    private void TextDraw(Vector2 position, int fontSize, Color color, string text, float arpha)
+    {
+        GUIStyle guiStyle = new GUIStyle();
+        GUIStyleState styleState = new GUIStyleState();        
+        guiStyle.font = GUIFont;
+        guiStyle.fontSize = fontSize;
+        styleState.textColor = color;
+        guiStyle.normal = styleState;
+        GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, arpha);
+        GUI.Label(new Rect(position, new Vector2(100, 100)), text, guiStyle);
+    }
+
+    private void OnGUI()
+    {
+        if (isGUIDraw)
+        {
+            TextDraw(Camera.main.WorldToScreenPoint(transform.position), 110, Color.black, GUIText, GUITextArpha);
+            TextDraw(Camera.main.WorldToScreenPoint(transform.position), 100, Color.red, GUIText, GUITextArpha);
         }
     }
 }

@@ -39,6 +39,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4838356376873606}
   - component: {fileID: 212229978006262312}
+  - component: {fileID: 95719171232007388}
   m_Layer: 0
   m_Name: enemy 2
   m_TagString: Untagged
@@ -67,8 +68,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1775580952873750}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.1, y: 0.35, z: 0}
-  m_LocalScale: {x: 0.09, y: 0.09, z: 0.09}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4139533963852084}
   m_RootOrder: 0
@@ -100,6 +101,24 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!95 &95719171232007388
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1775580952873750}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c970981ccc351204f9f7b6fd4e1a3435, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &114873638709546350
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -121,19 +140,25 @@ MonoBehaviour:
   BlowOffSpeed: 0.1
   isHook: 0
   BlowMode: 1
-  ThrowAttack: 5
+  maxThrowAttack: 20
+  maxSwingAttack: 5
+  ThrowAttack: 20
   SwingAttack: 5
   mode: 0
   ChaseRange: 10
-  enemy3: {fileID: 0}
   slap_Circle: {fileID: 1774002166212886, guid: fbd1550471567d647b8e952fcc435f58,
     type: 2}
+  enemy3: {fileID: 0}
   isSlap: 0
   waveManager: {fileID: 0}
   origin_Damege_Particle: {fileID: 1008917523343304, guid: 12d84c5b7e2eaf143a0e141a6f8ee136,
     type: 2}
   origin_Death_Particle: {fileID: 1424774110854730, guid: 58a5f048cb2bdda438cd7659b9d09afb,
     type: 2}
+  animator: {fileID: 95719171232007388}
+  isFly: 0
+  GUIFont: {fileID: 12800000, guid: d7d5b71cb41044c43bffbb0141fd35ae, type: 3}
+  origin_GUITime: 0.5
 --- !u!212 &212229978006262312
 SpriteRenderer:
   m_ObjectHideFlags: 1
