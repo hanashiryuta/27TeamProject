@@ -334,7 +334,7 @@ public class Enemy : MonoBehaviour {
         GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationY;
         PosBlow = transform.position - other.transform.position;        
     }
-}
+
     Vector2 GUIPosition;
     public Font GUIFont;
     bool isGUIDraw;
