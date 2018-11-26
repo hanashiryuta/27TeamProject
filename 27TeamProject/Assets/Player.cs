@@ -124,6 +124,8 @@ public class Player : MonoBehaviour
     public GameObject origin_Swing_Particle;
     GameObject swing_Particle;
 
+    bool isDamege;
+
     // Use this for initialization
     void Start()
     {
@@ -177,10 +179,21 @@ public class Player : MonoBehaviour
             case PlayerState.HOOKSWING://フック振り回し
                 if (isJumpFlag)
                 {
-                    anim.SetBool("isCatch", true);
-                    HookSwing();
+                    if (catchObject == null)
+                    {
+                        anim.SetBool("isCatch", false);
+                        hook.GetComponent<Hook>().hookState = HookState.RETURN;
+                        Destroy(swing_Particle);
+                        playerState = PlayerState.HOOKRETURN;
+                        break;
+                    }
+                    else
+                    {
+                        anim.SetBool("isCatch", true);
+                        HookSwing();
+                    }
                     //Jump();
-                    if (catchObject != null && (Input.GetButtonUp("Jump") || sp <= 0))
+                    if ((Input.GetButtonUp("Jump") || sp <= 0) || isDamege)
                     {
                         Destroy(timing_Particle);
                         //下方向なら
@@ -199,12 +212,7 @@ public class Player : MonoBehaviour
                         //}
                         hook.GetComponent<Hook>().hookState = HookState.RETURN;
                     }
-                    if(catchObject == null)
-                    {
-                        hook.GetComponent<Hook>().hookState = HookState.RETURN;
-                        Destroy(swing_Particle);
-                        playerState = PlayerState.HOOKRETURN;
-                    }
+                    isDamege = false;
                 }
                 else
                 {
@@ -243,14 +251,6 @@ public class Player : MonoBehaviour
             Vector3 rigidVelocity = new Vector3(rigid.velocity.x, 0, rigid.velocity.z);
             rigid.AddForce(moveForceMultiplier * (moveVector - rigidVelocity));
             anim.SetFloat("move", moveVector.sqrMagnitude);
-            if(moveVector.x >= 0)
-            {
-                anim.SetBool("isMirror", false);
-            }
-            else
-            {
-                anim.SetBool("isMirror", true);
-            }
         }
     }
 
@@ -285,6 +285,7 @@ public class Player : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Enemy") && damegeTime <= 0&&catchObject != collision.gameObject)
         {
+            isDamege = true;
             damegeTime = origin_DamegeTime;
             anim.SetTrigger("isDamege");
             hp--;
@@ -337,10 +338,16 @@ public class Player : MonoBehaviour
                     }
                 }
                 hookPointer.transform.position = nearEnemy.transform.position;
+                Color color = hookPointer.GetComponent<Renderer>().material.color;
+                color = Color.yellow;
+                hookPointer.GetComponent<Renderer>().material.color = color;
             }
             else
             {
                 hookPointer.transform.position = pointerPosition + transform.position;
+                Color color = hookPointer.GetComponent<Renderer>().material.color;
+                color = Color.white;
+                hookPointer.GetComponent<Renderer>().material.color = color;
             }
         }
         
@@ -489,6 +496,7 @@ public class Player : MonoBehaviour
                         }
                     }
                 }
+                
 
                 swingSpeed += swingSpeedRate;
 
@@ -496,6 +504,11 @@ public class Player : MonoBehaviour
                     swingSpeed = swingSpeedRange;
                 else if (swingSpeed <= 0)
                     swingSpeed = 0;
+
+                Enemy enemy = catchObject.GetComponent<Enemy>();
+
+                enemy.ThrowAttack = (int)(enemy.maxThrowAttack * swingSpeed / swingSpeedRange);
+                enemy.SwingAttack = (int)(enemy.maxSwingAttack * swingSpeed / swingSpeedRange);
 
                 swingAngle += swingSpeed;
                 catchObject.transform.position = transform.position + new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180), 2, swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180));
@@ -543,6 +556,7 @@ public class Player : MonoBehaviour
             //catchObject.GetComponent<BoxCollider>().isTrigger = false;
             catchObject.gameObject.layer = 15;
             Destroy(swing_Particle);
+            catchObject.GetComponent<Enemy>().isFly = true;
         }
     }
 

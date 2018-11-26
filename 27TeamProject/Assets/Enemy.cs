@@ -49,11 +49,14 @@ public class Enemy : MonoBehaviour {
     public bool isHook; //フックに捕まっているかの判定
     
     public bool BlowMode; //吹き飛ぶ前と後の切り替え用
+    
+    public int maxThrowAttack;
+    public int maxSwingAttack;
 
     [SerializeField]
-    int ThrowAttack; //投げられた時のEnemyの攻撃力
+    public int ThrowAttack; //投げられた時のEnemyの攻撃力
     [SerializeField]
-    int SwingAttack;
+    public int SwingAttack;
     [SerializeField]
     MoveMode mode; //移動設定
     [SerializeField]
@@ -64,9 +67,11 @@ public class Enemy : MonoBehaviour {
 
     public GameObject slap_Circle;
 
+    public GameObject enemy3;
+
     [HideInInspector]
     public bool isSlap;
-    
+
     [HideInInspector]
     public WaveManager waveManager;
 
@@ -84,6 +89,15 @@ public class Enemy : MonoBehaviour {
     int ThisEnemyLayer;
     int CatchEnemyLayer;
     int ThrowEnemyLayer;
+    
+    public Animator animator;
+
+    Vector3 currentPosition;
+    Vector3 previousePositoin;
+
+    float flyDeathTime = 2.0f;
+    [HideInInspector]
+    public bool isFly;
 
     public virtual void Awake()
     {
@@ -125,19 +139,35 @@ public class Enemy : MonoBehaviour {
                 velosity = new Vector3(1, 0, 0);
                 break;
         }
+        GUITime = origin_GUITime;
     }
 
     // Update is called once per frame
     public virtual void Update()
     {
-        if ((hp < 1 || Mathf.Abs(transform.position.z) > 50) || !waveManager.isWave)
+        if (isGUIDraw)
+        {
+            GUITime -= Time.deltaTime;
+            if (GUITime < 0)
+            {
+                GUITime = origin_GUITime;
+                isGUIDraw = false;
+            }
+        }
+
+        if (isFly)
+            flyDeathTime -= Time.deltaTime;
+        if ((hp < 1 || Mathf.Abs(transform.position.z) > 50) || !waveManager.isWave || flyDeathTime < 0)
         {
             Instantiate(origin_Death_Particle, transform.position, Quaternion.identity);
             if (waveManager.isWave)
                 waveManager.enemyDeathNum++;
             Destroy(this.gameObject);
         }
+        if (isSlap)
+            Slap();
 
+        
         switch (status)
         {
             case Status.DAMEGE:
@@ -178,21 +208,20 @@ public class Enemy : MonoBehaviour {
                 groundcount++;
             }
         }
-
         if (groundcount == 0)
         {
             velosity *= -1;
         }
     }
-    
+
     public void Move()
-    {   
-        if(mode == MoveMode.RANDOMMOVE)
+    {
+        if (mode == MoveMode.RANDOMMOVE)
         {
             RandomMove();
         }
 
-        if(mode == MoveMode.PLAYERCHASE)
+        if (mode == MoveMode.PLAYERCHASE)
         {
             PlayerShaseMove();
         }
@@ -200,6 +229,19 @@ public class Enemy : MonoBehaviour {
         {
             transform.position += velosity * speed;
         }
+        currentPosition = transform.position;
+        Vector3 direction = currentPosition - previousePositoin;
+
+        Vector3 scale = transform.localScale;
+        scale.x = Mathf.Abs(scale.x);
+
+        if (direction.x > 0)
+        {
+            scale.x *= -1;
+        }
+        transform.localScale = scale;
+
+        previousePositoin = currentPosition;
     }
     
     void PlayerShaseMove()
@@ -239,17 +281,24 @@ public class Enemy : MonoBehaviour {
     
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.CompareTag("Slap_Circle"))
+        if (collision.gameObject.CompareTag("Slap_Circle"))
         {
             Vector3 slapVelocity = transform.position - collision.gameObject.transform.position;
             GetComponent<Rigidbody>().AddForce(slapVelocity.normalized * 400);
         }
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            animator.SetTrigger("isAttack");
+        }
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == CatchEnemyLayer)
         {
+            GUIText = other.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
+            isGUIDraw = true;
             hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
             Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
             if (hp <= 5)
@@ -259,7 +308,9 @@ public class Enemy : MonoBehaviour {
         }
 
         if (other.gameObject.layer == ThrowEnemyLayer)
-        {
+        {        
+            GUIText = other.gameObject.GetComponent<Enemy>().ThrowAttack.ToString();
+            isGUIDraw = true;
             hp -= other.gameObject.GetComponent<Enemy>().ThrowAttack;
             Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
             status = Status.DAMEGE;
@@ -282,5 +333,34 @@ public class Enemy : MonoBehaviour {
         GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX;
         GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationY;
         PosBlow = transform.position - other.transform.position;        
+    }
+}
+    Vector2 GUIPosition;
+    public Font GUIFont;
+    bool isGUIDraw;
+    float GUITextArpha = 1.0f;
+    string GUIText;
+    public float origin_GUITime = 0.5f;
+    float GUITime;
+
+    private void TextDraw(Vector2 position, int fontSize, Color color, string text, float arpha)
+    {
+        GUIStyle guiStyle = new GUIStyle();
+        GUIStyleState styleState = new GUIStyleState();        
+        guiStyle.font = GUIFont;
+        guiStyle.fontSize = fontSize;
+        styleState.textColor = color;
+        guiStyle.normal = styleState;
+        GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, arpha);
+        GUI.Label(new Rect(position, new Vector2(100, 100)), text, guiStyle);
+    }
+
+    private void OnGUI()
+    {
+        if (isGUIDraw)
+        {
+            TextDraw(Camera.main.WorldToScreenPoint(transform.position), 110, Color.black, GUIText, GUITextArpha);
+            TextDraw(Camera.main.WorldToScreenPoint(transform.position), 100, Color.red, GUIText, GUITextArpha);
+        }
     }
 }

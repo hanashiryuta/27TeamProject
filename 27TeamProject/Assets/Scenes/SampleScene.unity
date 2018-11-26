@@ -328,6 +328,7 @@ MonoBehaviour:
   - {fileID: 1067454824323930, guid: c63f8cc6074d4404bbde1eeea0ced153, type: 2}
   - {fileID: 1102664194090012, guid: 25e5e45dc28cf594e925f4496bad040e, type: 2}
   - {fileID: 1025830835339394, guid: 755d8320089569d4aac7d6f1b4834df7, type: 2}
+  - {fileID: 1650326248750870, guid: 539aed79a22de2b4d9ccd04a9137287d, type: 2}
   blocksize: 2
 --- !u!4 &1096057066
 Transform:
@@ -419,7 +420,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1366087045
 Transform:
   m_ObjectHideFlags: 0
@@ -521,6 +522,11 @@ Prefab:
     - target: {fileID: 20122941485265734, guid: 96d69211613df1649b0724cb033711cf,
         type: 2}
       propertyPath: m_Depth
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 20525191192428472, guid: 96d69211613df1649b0724cb033711cf,
+        type: 2}
+      propertyPath: m_Depth
       value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -573,6 +579,11 @@ Prefab:
     - target: {fileID: 1990319850680760, guid: ba1524275c05c0742809d02a0782cb0c, type: 2}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 20729416870094694, guid: ba1524275c05c0742809d02a0782cb0c,
+        type: 2}
+      propertyPath: m_Depth
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ba1524275c05c0742809d02a0782cb0c, type: 2}

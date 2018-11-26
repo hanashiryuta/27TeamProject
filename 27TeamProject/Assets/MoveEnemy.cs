@@ -16,10 +16,12 @@ public class MoveEnemy : Enemy {
         if (!BlowMode)
         {
             if(isHook) Move();
+            
         }
         else
         {
             Blow();
         }
 	}
+    
 }
