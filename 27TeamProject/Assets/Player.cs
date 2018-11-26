@@ -214,10 +214,15 @@ public class Player : MonoBehaviour
                     }
                     isDamege = false;
                 }
-                else
+                else if(sp > 20)
                 {
                     ObjectSlap();
                     hook.GetComponent<Hook>().hookState = HookState.RETURN;
+                }
+                else
+                {
+                    hook.GetComponent<Hook>().hookState = HookState.RETURN;
+                    playerState = PlayerState.HOOKRETURN;
                 }
                 break;
             case PlayerState.HOOKRETURN://フック戻り
@@ -557,6 +562,7 @@ public class Player : MonoBehaviour
             catchObject.gameObject.layer = 15;
             Destroy(swing_Particle);
             catchObject.GetComponent<Enemy>().isFly = true;
+            timingTime = origin_TimingTime;
         }
     }
 
@@ -575,6 +581,7 @@ public class Player : MonoBehaviour
         playerState = PlayerState.HOOKRETURN;
         catchObject.GetComponent<Enemy>().isSlap = true;
         catchObject.gameObject.layer = 18;
+        sp -= 20;
         //}
         //else
         //{
