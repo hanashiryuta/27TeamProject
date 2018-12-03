@@ -11,26 +11,26 @@ using UnityEngine;
 public class EnemySpawn : MonoBehaviour {
 
     [SerializeField]
-    float SpawnSetTime;
+    public float SpawnSetTime;
     [SerializeField]
-    float SpawnTime;
+    public float SpawnTime;
     [SerializeField]
-    GameObject SpawnEnemy;
+    public GameObject SpawnEnemy;
     [SerializeField]
-    int SpawnLimit;
+    public int SpawnLimit;
     [SerializeField]
-    int SpawnCount;
+    public int SpawnCount;
     
-    GameObject waveManager;
+    public GameObject waveManager;
 
 	// Use this for initialization
-	void Start () {
+	public virtual void Start () {
         SpawnTime = SpawnSetTime;
         waveManager = GameObject.FindGameObjectWithTag("WaveManager");
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	public virtual void Update () {
         if (waveManager.GetComponent<WaveManager>().isWave)
         {
             SpawnTime -= Time.deltaTime;
