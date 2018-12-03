@@ -94,7 +94,7 @@ public class Player : MonoBehaviour
     public GameObject slap_Particle;
     Vector3 pointerPosition = Vector3.zero;
     public float origin_TimingTime;
-    public float timingTime;
+    float timingTime;
 
     public float swingButtonRate;
     public GameObject origin_Timing_Particle;
@@ -144,6 +144,8 @@ public class Player : MonoBehaviour
         spBar.fillAmount = sp / maxSP;
 
         damegeTime -= Time.deltaTime;
+        if (damegeTime <= 0)
+            isDamege = false;
         if (hp <= 0)
         {
             Death();
@@ -166,6 +168,7 @@ public class Player : MonoBehaviour
         {
             case PlayerState.NORMALMOVE://移動
                 Jump();
+                if(!isDamege)
                 HookShot();
                 //else if (Input.GetButtonUp("Jump"))
                 //    hook.GetComponent<Hook>().hookState = HookState.RETURN;
@@ -174,7 +177,7 @@ public class Player : MonoBehaviour
                     sp = maxSP;
                 break;
             case PlayerState.HOOKMOVE://フック移動
-                HookMove();
+                //HookMove();
                 break;
             case PlayerState.HOOKSWING://フック振り回し
                 if (isJumpFlag)
@@ -192,27 +195,14 @@ public class Player : MonoBehaviour
                         anim.SetBool("isCatch", true);
                         HookSwing();
                     }
-                    //Jump();
-                    if ((Input.GetButtonUp("Jump") || sp <= 0) || isDamege)
+                    if ((Input.GetButtonUp("Jump") || sp <= 0))
                     {
                         Destroy(timing_Particle);
-                        //下方向なら
-                        //if (Input.GetAxis("Vertical") <= -0.5f)
-                        //if(!isJumpFlag)
-                        //{
-                        //    //たたきつけ
-                        //    ObjectSlap();
-                        //}
-                        //else
-                        //{
                         anim.SetBool("isCatch", false);
                         anim.SetTrigger("isThrow");
-                        //    //投げつけ
                         ObjectThrow();
-                        //}
                         hook.GetComponent<Hook>().hookState = HookState.RETURN;
                     }
-                    isDamege = false;
                 }
                 else if(sp > 20)
                 {
@@ -244,19 +234,11 @@ public class Player : MonoBehaviour
     /// </summary>
     public void Move()
     {
-        if (testMoveState == TestMoveState.SIDEVIEW)
-        {
-            Vector3 moveVector = new Vector3(Input.GetAxis("Horizontal") * moveSpeed, 0);
-            Vector3 rigidVelocity = new Vector3(rigid.velocity.x, 0);
-            rigid.AddForce(moveForceMultiplier * (moveVector - rigidVelocity));
-        }
-        else
-        {
-            Vector3 moveVector = new Vector3(Input.GetAxis("Horizontal") * moveSpeed, 0, Input.GetAxis("Vertical") * moveSpeed);
-            Vector3 rigidVelocity = new Vector3(rigid.velocity.x, 0, rigid.velocity.z);
-            rigid.AddForce(moveForceMultiplier * (moveVector - rigidVelocity));
-            anim.SetFloat("move", moveVector.sqrMagnitude);
-        }
+        Vector3 moveVector = new Vector3(Input.GetAxis("Horizontal") * moveSpeed, 0, Input.GetAxis("Vertical") * moveSpeed);
+        Vector3 rigidVelocity = new Vector3(rigid.velocity.x, 0, rigid.velocity.z);
+        rigid.AddForce(moveForceMultiplier * (moveVector - rigidVelocity));
+        anim.SetFloat("move", moveVector.sqrMagnitude);
+        
     }
 
     /// <summary>
@@ -302,59 +284,48 @@ public class Player : MonoBehaviour
     /// </summary>
     void HookPointer()
     {
-        if (testMoveState == TestMoveState.SIDEVIEW)
+        //左スティックの方向にポインター配置
+        if (Mathf.Abs(Input.GetAxis("Vertical")) >= 0.1f || Mathf.Abs(Input.GetAxis("Horizontal")) >= 0.1f)
         {
-            //左スティックの方向にポインター配置
-            if (Mathf.Abs(Input.GetAxis("Vertical")) >= 0.1f || Mathf.Abs(Input.GetAxis("Horizontal")) >= 0.1f)
+            pointerAngle = Mathf.Atan2(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
+            pointerPosition = new Vector3(Mathf.Cos(pointerAngle) * pointerRadius, 2, Mathf.Sin(pointerAngle) * pointerRadius);
+
+        }
+
+        //左スティックの方向に四角形のあたり判定を飛ばす
+        Collider[] targetList = Physics.OverlapBox(new Vector3((transform.position.x + (transform.position.x + pointerPosition.x)) / 2, transform.position.y, (transform.position.z + (transform.position.z + pointerPosition.z)) / 2),
+            new Vector3(transform.localScale.x, transform.localScale.y * 2, pointerRadius / 2),
+            Quaternion.Euler(0, (pointerAngle - 90), 0), targetLayer);
+        //transform.rotation = Quaternion.Euler(0, pointerAngle - 90, 0);
+
+        //1つ以上検知していれば
+        if (targetList.Length > 0)
+        {
+            //一番近いものを検索し、その位置にポインターを配置する
+            GameObject nearEnemy = targetList[0].gameObject;
+            foreach (var cx in targetList)
             {
-                pointerAngle = Mathf.Atan2(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
-                hookPointer.transform.localPosition = new Vector3(Mathf.Cos(pointerAngle) * pointerRadius, Mathf.Sin(pointerAngle) * pointerRadius, -1);
+                float length = Vector3.Distance(transform.position, cx.transform.position);
+                float nearLength = Vector3.Distance(transform.position, nearEnemy.transform.position);
+
+                if (length <= nearLength)
+                {
+                    nearEnemy = cx.gameObject;
+                }
             }
+            hookPointer.transform.position = nearEnemy.transform.position;
+            Color color = hookPointer.GetComponent<Renderer>().material.color;
+            color = Color.yellow;
+            hookPointer.GetComponent<Renderer>().material.color = color;
         }
         else
         {
-            //左スティックの方向にポインター配置
-            if (Mathf.Abs(Input.GetAxis("Vertical")) >= 0.1f || Mathf.Abs(Input.GetAxis("Horizontal")) >= 0.1f)
-            {
-                pointerAngle = Mathf.Atan2(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
-                pointerPosition = new Vector3(Mathf.Cos(pointerAngle) * pointerRadius, 2, Mathf.Sin(pointerAngle) * pointerRadius);
-
-            }
-
-            //左スティックの方向に四角形のあたり判定を飛ばす
-            Collider[] targetList = Physics.OverlapBox(new Vector3((transform.position.x + (transform.position.x + pointerPosition.x)) / 2, transform.position.y, (transform.position.z + (transform.position.z + pointerPosition.z)) / 2),
-                new Vector3(transform.localScale.x, transform.localScale.y * 2, pointerRadius / 2),
-                Quaternion.Euler(0, (pointerAngle - 90), 0), targetLayer);
-            //transform.rotation = Quaternion.Euler(0, pointerAngle - 90, 0);
-
-            //1つ以上検知していれば
-            if (targetList.Length > 0)
-            {
-                //一番近いものを検索し、その位置にポインターを配置する
-                GameObject nearEnemy = targetList[0].gameObject;
-                foreach (var cx in targetList)
-                {
-                    float length = Vector3.Distance(transform.position, cx.transform.position);
-                    float nearLength = Vector3.Distance(transform.position, nearEnemy.transform.position);
-
-                    if (length <= nearLength)
-                    {
-                        nearEnemy = cx.gameObject;
-                    }
-                }
-                hookPointer.transform.position = nearEnemy.transform.position;
-                Color color = hookPointer.GetComponent<Renderer>().material.color;
-                color = Color.yellow;
-                hookPointer.GetComponent<Renderer>().material.color = color;
-            }
-            else
-            {
-                hookPointer.transform.position = pointerPosition + transform.position;
-                Color color = hookPointer.GetComponent<Renderer>().material.color;
-                color = Color.white;
-                hookPointer.GetComponent<Renderer>().material.color = color;
-            }
+            hookPointer.transform.position = pointerPosition + transform.position;
+            Color color = hookPointer.GetComponent<Renderer>().material.color;
+            color = Color.white;
+            hookPointer.GetComponent<Renderer>().material.color = color;
         }
+        
         
     }
 
@@ -362,62 +333,46 @@ public class Player : MonoBehaviour
     /// フック射出
     /// </summary>
     void HookShot()
-    {
-        if (testMoveState == TestMoveState.SIDEVIEW)
+    {        
+        if (isHookShot && Input.GetButtonDown("Jump"))
         {
-            if (isHookShot && Input.GetButtonDown("Jump"))
-            {
-                //ポインターの位置に向かって射出
-                hook = Instantiate(originHook, transform.position, Quaternion.identity);
-                hook.GetComponent<Hook>().player = gameObject;
-                hook.GetComponent<Hook>().targetPosition = new Vector3(hookPointer.transform.position.x, hookPointer.transform.position.y, 0);//new Vector3(Mathf.Cos(angle) * shotRadius, Mathf.Sin(angle) * shotRadius, 0);
-                isHookShot = false;
-            }
+            //ポインターの位置に向かって射出
+            hook = Instantiate(originHook, transform.position+new Vector3(0,2,0), Quaternion.identity);
+            hook.GetComponent<Hook>().player = gameObject;
+            hook.GetComponent<Hook>().targetPosition = hookPointer.transform.position;
+            isHookShot = false;
+            anim.SetBool("isShot",true);
         }
-        else
-        {
-            if (isHookShot && Input.GetButtonDown("Jump"))
-            {
-                //ポインターの位置に向かって射出
-                hook = Instantiate(originHook, transform.position+new Vector3(0,2,0), Quaternion.identity);
-                hook.GetComponent<Hook>().player = gameObject;
-                hook.GetComponent<Hook>().targetPosition = hookPointer.transform.position;//new Vector3(Mathf.Cos(angle) * shotRadius, Mathf.Sin(angle) * shotRadius, 0);
-                isHookShot = false;
-                anim.SetBool("isShot",true);
-            }
-        }
+        
     }
 
-    /// <summary>
-    /// フック射出準備
-    /// </summary>
-    /// <param name="hook"></param>
-    public void HookSet(GameObject hook)
-    {
-        hitPosition = hook.transform.position;
-        hitDistance = Vector3.Distance(hook.transform.position, transform.position);
-        //gameObject.AddComponent<DistanceJoint2D>();
-        //GetComponent<DistanceJoint2D>().connectedAnchor = new Vector2(hitPosition.x, hitPosition.y);
-        //GetComponent<DistanceJoint2D>().distance = hitDistance;
-        playerState = PlayerState.HOOKMOVE;
-    }
+    ///// <summary>
+    ///// フック射出準備
+    ///// </summary>
+    ///// <param name="hook"></param>
+    //public void HookSet(GameObject hook)
+    //{
+    //    hitPosition = hook.transform.position;
+    //    hitDistance = Vector3.Distance(hook.transform.position, transform.position);
+    //    playerState = PlayerState.HOOKMOVE;
+    //}
 
-    /// <summary>
-    /// フック移動
-    /// </summary>
-    void HookMove()
-    {
-        Vector3 flyVelocity = (hitPosition - transform.position).normalized;
-        rigid.AddForce(flyVelocity * flySpeed);
-        //ボタン離せばフック切断
-        if (Input.GetButtonUp("Jump"))
-        {
-            //Destroy(GetComponent<DistanceJoint2D>());
-            hook.GetComponent<Hook>().hookState = HookState.RETURN;
-            playerState = PlayerState.HOOKRETURN;
-        }
-        //rigid.AddForce(new Vector3(Input.GetAxis("Horizontal") * 10, 0));
-    }
+    ///// <summary>
+    ///// フック移動
+    ///// </summary>
+    //void HookMove()
+    //{
+    //    Vector3 flyVelocity = (hitPosition - transform.position).normalized;
+    //    rigid.AddForce(flyVelocity * flySpeed);
+    //    //ボタン離せばフック切断
+    //    if (Input.GetButtonUp("Jump"))
+    //    {
+    //        //Destroy(GetComponent<DistanceJoint2D>());
+    //        hook.GetComponent<Hook>().hookState = HookState.RETURN;
+    //        playerState = PlayerState.HOOKRETURN;
+    //    }
+    //    //rigid.AddForce(new Vector3(Input.GetAxis("Horizontal") * 10, 0));
+    //}
 
     /// <summary>
     /// 回す準備
@@ -425,29 +380,19 @@ public class Player : MonoBehaviour
     /// <param name="m_CatchObject">回すオブジェクト</param>
     public void SwingSet(GameObject m_CatchObject)
     {
-        if (testSwingState == TestSwingState.SIDE)
-        {
-            catchObject = m_CatchObject;
-            catchObject.GetComponent<BoxCollider>().isTrigger = true;
-            catchObject.GetComponent<Rigidbody>().useGravity = false;
-            swingRadius = Vector3.Distance(transform.position, catchObject.transform.position);
-            if (swingRadius <= 1)
-                swingRadius = 1;
-            swingAngle = Mathf.Atan2(catchObject.transform.position.y - transform.position.y, catchObject.transform.position.x - transform.position.x) * 180 / Mathf.PI;
-            playerState = PlayerState.HOOKSWING;
-            swingSpeed = 0;
-            swing_Particle = Instantiate(origin_Swing_Particle,catchObject.transform.position,Quaternion.identity,catchObject.transform);
-        }
-        else
-        {
-            catchObject = m_CatchObject;
-            swingRadius = Vector3.Distance(transform.position, catchObject.transform.position);
-            if (swingRadius <= 1)
-                swingRadius = 1;
-            swingAngle = Mathf.Atan2(catchObject.transform.position.z - transform.position.z, catchObject.transform.position.x - transform.position.x) * 180 / Mathf.PI;
-            playerState = PlayerState.HOOKSWING;
-            swingSpeed = 0;
-        }
+        catchObject = m_CatchObject;
+        catchObject.GetComponent<BoxCollider>().isTrigger = true;
+        catchObject.GetComponent<Rigidbody>().useGravity = false;
+        catchObject.GetComponent<Enemy>().isFly = false;
+        catchObject.GetComponent<Enemy>().flyDeathTime = catchObject.GetComponent<Enemy>().originFlyDeathTime;
+        swingRadius = Vector3.Distance(transform.position, catchObject.transform.position);
+        if (swingRadius <= 1)
+            swingRadius = 1;
+        swingAngle = Mathf.Atan2(catchObject.transform.position.y - transform.position.y, catchObject.transform.position.x - transform.position.x) * 180 / Mathf.PI;
+        playerState = PlayerState.HOOKSWING;
+        swingSpeed = 0;
+        swing_Particle = Instantiate(origin_Swing_Particle,catchObject.transform.position,Quaternion.identity,catchObject.transform);
+        
     }
 
     /// <summary>
@@ -455,81 +400,66 @@ public class Player : MonoBehaviour
     /// </summary>
     void HookSwing()
     {
-        if (testSwingState == TestSwingState.SIDE)
+        //ボタン押している間
+        if (Input.GetButton("Jump"))
         {
-            //ボタン押している間
-            if (Input.GetButton("Jump"))
+            sp -= 0.1f;
+            if (sp <= 0)
+                sp = 0;
+            if (timing_Particle == null)
             {
-                sp -= 0.1f;
-                if (sp <= 0)
-                    sp = 0;
-                if (timing_Particle == null)
+                timing_Particle = Instantiate(origin_Timing_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
+            }
+            else
+            {
+                timingTime -= Time.deltaTime;
+                if (timingTime <= 0)
+                    timingTime = origin_TimingTime;
+                //ParticleSystem ps = timing_Particle.GetComponent<ParticleSystem>();
+                //ParticleSystem.Particle[] particles = new ParticleSystem.Particle[ps.particleCount];
+                //ps.GetParticles(particles);
+                if (timingTime <= 0.5f)
+                //if (particles[0].GetCurrentColor(ps).r == 255&&
+                //    particles[0].GetCurrentColor(ps).g == 125&&
+                //    particles[0].GetCurrentColor(ps).b == 0&&
+                //    particles[0].GetCurrentColor(ps).a == 255)
                 {
-                    timing_Particle = Instantiate(origin_Timing_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
+                    if (Input.GetButtonDown("Fire2"))
+                    {
+                        //Debug.Break();
+                        Instantiate(good_Timing_Particle,new Vector3(transform.position.x,transform.position.y + transform.localScale.y/2,transform.position.z),Quaternion.identity,transform);
+                        swingSpeed += swingButtonRate;
+                        Destroy(timing_Particle);
+                        timingTime = origin_TimingTime;
+                    }
                 }
                 else
                 {
-                    timingTime -= Time.deltaTime;
-                    if (timingTime <= 0)
+                    if(Input.GetButtonDown("Fire2"))
+                    {
+                        Instantiate(badTiming_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
+                        swingSpeed -= swingButtonRate;
+                        Destroy(timing_Particle);
                         timingTime = origin_TimingTime;
-                    //ParticleSystem ps = timing_Particle.GetComponent<ParticleSystem>();
-                    //ParticleSystem.Particle[] particles = new ParticleSystem.Particle[ps.particleCount];
-                    //ps.GetParticles(particles);
-                    if (timingTime <= 0.5f)
-                    //if (particles[0].GetCurrentColor(ps).r == 255&&
-                    //    particles[0].GetCurrentColor(ps).g == 125&&
-                    //    particles[0].GetCurrentColor(ps).b == 0&&
-                    //    particles[0].GetCurrentColor(ps).a == 255)
-                    {
-                        if (Input.GetButtonDown("Fire2"))
-                        {
-                            //Debug.Break();
-                            Instantiate(good_Timing_Particle,new Vector3(transform.position.x,transform.position.y + transform.localScale.y/2,transform.position.z),Quaternion.identity,transform);
-                            swingSpeed += swingButtonRate;
-                            Destroy(timing_Particle);
-                            timingTime = origin_TimingTime;
-                        }
-                    }
-                    else
-                    {
-                        if(Input.GetButtonDown("Fire2"))
-                        {
-                            Instantiate(badTiming_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
-                            swingSpeed -= swingButtonRate;
-                            Destroy(timing_Particle);
-                            timingTime = origin_TimingTime;
-                        }
                     }
                 }
+            }
                 
 
-                swingSpeed += swingSpeedRate;
+            swingSpeed += swingSpeedRate;
 
-                if (swingSpeed >= swingSpeedRange)
-                    swingSpeed = swingSpeedRange;
-                else if (swingSpeed <= 0)
-                    swingSpeed = 0;
+            if (swingSpeed >= swingSpeedRange)
+                swingSpeed = swingSpeedRange;
+            else if (swingSpeed <= 0)
+                swingSpeed = 0;
 
-                Enemy enemy = catchObject.GetComponent<Enemy>();
+            Enemy enemy = catchObject.GetComponent<Enemy>();
 
-                enemy.ThrowAttack = (int)(enemy.maxThrowAttack * swingSpeed / swingSpeedRange);
-                enemy.SwingAttack = (int)(enemy.maxSwingAttack * swingSpeed / swingSpeedRange);
+            enemy.ThrowAttack = (int)(enemy.maxThrowAttack * swingSpeed / swingSpeedRange);
+            enemy.SwingAttack = (int)(enemy.maxSwingAttack * swingSpeed / swingSpeedRange);
 
-                swingAngle += swingSpeed;
-                catchObject.transform.position = transform.position + new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180), 2, swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180));
-            }
-        }
-        else
-        {
-            //ボタン押している間
-            if (Input.GetButton("Jump"))
-            {
-                swingSpeed += swingSpeedRate;
-                if (swingSpeed >= swingSpeedRange)
-                    swingSpeed = swingSpeedRange;
-                swingAngle += swingSpeed;
-                catchObject.transform.position = transform.position + new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180), swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180), 0);
-            }
+            swingAngle += swingSpeed;
+            catchObject.transform.position = transform.position + new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180), 2, swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180));
         }
     }
 
@@ -538,32 +468,20 @@ public class Player : MonoBehaviour
     /// </summary>
     void ObjectThrow()
     {
-        if (testMoveState == TestMoveState.SIDEVIEW)
-        {
-            catchObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            catchObject.GetComponent<Rigidbody>().useGravity = false;
-            Vector3 throwVelocity = (hookPointer.transform.position - transform.position).normalized;
-            catchObject.transform.position = transform.position + throwVelocity;
-            throwVelocity.z = 0;
-            catchObject.GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
-            playerState = PlayerState.HOOKRETURN;
-        }
-        else
-        {
-            throwSpeed = swingSpeed * 400;
-            catchObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            catchObject.GetComponent<Rigidbody>().useGravity = false;
-            Vector3 throwVelocity = (hookPointer.transform.position - transform.position).normalized;
-            throwVelocity.y = 0;
-            catchObject.transform.position = new Vector3(transform.position.x + throwVelocity.x*2, 3, transform.position.z + throwVelocity.z*2);
-            catchObject.GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
-            playerState = PlayerState.HOOKRETURN;
-            //catchObject.GetComponent<BoxCollider>().isTrigger = false;
-            catchObject.gameObject.layer = 15;
-            Destroy(swing_Particle);
-            catchObject.GetComponent<Enemy>().isFly = true;
-            timingTime = origin_TimingTime;
-        }
+        throwSpeed = swingSpeed * 400;
+        catchObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        catchObject.GetComponent<Rigidbody>().useGravity = false;
+        Vector3 throwVelocity = (hookPointer.transform.position - transform.position).normalized;
+        throwVelocity.y = 0;
+        catchObject.transform.position = new Vector3(transform.position.x + throwVelocity.x*2, 3, transform.position.z + throwVelocity.z*2);
+        catchObject.GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
+        playerState = PlayerState.HOOKRETURN;
+        //catchObject.GetComponent<BoxCollider>().isTrigger = false;
+        catchObject.gameObject.layer = 15;
+        Destroy(swing_Particle);
+        catchObject.GetComponent<Enemy>().isFly = true;
+        timingTime = origin_TimingTime;
+        
     }
 
     /// <summary>

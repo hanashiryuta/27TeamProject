@@ -102,6 +102,8 @@ MonoBehaviour:
   targetPosition: {x: 0, y: 0, z: 0}
   moveSpeed: 0.5
   hookState: 0
+  origin_ArmLine: {fileID: 1494568136389474, guid: 6566ca3ed64711b489a18edf07c91869,
+    type: 2}
 --- !u!135 &135644352477861518
 SphereCollider:
   m_ObjectHideFlags: 1

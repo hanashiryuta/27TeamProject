@@ -95,7 +95,9 @@ public class Enemy : MonoBehaviour {
     Vector3 currentPosition;
     Vector3 previousePositoin;
 
-    float flyDeathTime = 2.0f;
+    public float originFlyDeathTime = 2.0f;
+    [HideInInspector]
+    public float flyDeathTime;
     [HideInInspector]
     public bool isFly;
 
@@ -140,6 +142,7 @@ public class Enemy : MonoBehaviour {
                 break;
         }
         GUITime = origin_GUITime;
+        flyDeathTime = originFlyDeathTime;
     }
 
     // Update is called once per frame
