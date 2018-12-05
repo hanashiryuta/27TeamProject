@@ -43,6 +43,8 @@ public class Hook : MonoBehaviour {
 
     LineRenderer armLine;
 
+    string hookInput = "Hook";
+
     // Use this for initialization
     void Start () {
         //移動方向設定
@@ -139,7 +141,7 @@ public class Hook : MonoBehaviour {
         {
 
             //当たった時にボタン押していたら
-            if (Input.GetButton("Jump"))
+            if (Input.GetButton(hookInput))
             {
                 //キャッチ処理
                 hookState = HookState.CATCH;

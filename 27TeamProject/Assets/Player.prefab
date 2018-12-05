@@ -512,7 +512,7 @@ MonoBehaviour:
   isHookShot: 1
   hitPosition: {x: 0, y: 0, z: 0}
   hitDistance: 0
-  swingSpeed: 0.2
+  swingSpeed: 0.5
   swingSpeedRange: 10
   swingSpeedRate: 0.01
   throwSpeed: 4000
@@ -528,8 +528,6 @@ MonoBehaviour:
     type: 2}
   badTiming_Particle: {fileID: 1096071843622702, guid: 93df2532b1437714aa9b755cedc69efd,
     type: 2}
-  testSwingState: 0
-  testMoveState: 1
   targetLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -539,6 +537,7 @@ MonoBehaviour:
   spBar: {fileID: 114801651790407884}
   origin_Swing_Particle: {fileID: 1845615675441322, guid: 5ccf8a215f0440947a7748b52a8b0e89,
     type: 2}
+  swingState: 1
 --- !u!114 &114801651790407884
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -10,19 +10,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-
-public enum TestSwingState
-{
-    SIDE,
-    FRONT,
-}
-
-public enum TestMoveState
-{
-    SIDEVIEW,
-    TOPVIEW
-}
-
 /// <summary>
 /// プレイヤー状態
 /// </summary>
@@ -101,11 +88,7 @@ public class Player : MonoBehaviour
     GameObject timing_Particle = null;
     public GameObject good_Timing_Particle;
     public GameObject badTiming_Particle;
-
-    //デバッグ用変数
-    public TestSwingState testSwingState;
-    public TestMoveState testMoveState;
-
+    
     //ポインター用レイヤー
     public LayerMask targetLayer;
 
@@ -125,6 +108,17 @@ public class Player : MonoBehaviour
     GameObject swing_Particle;
 
     bool isDamege;
+
+    string shotInput = "Hook";
+    string timingInput = "Fire2";
+
+    public enum SwingState
+    {
+        TRIGGERSWING,
+        STICKSWING,
+    }
+
+    public SwingState swingState;
 
     // Use this for initialization
     void Start()
@@ -195,7 +189,7 @@ public class Player : MonoBehaviour
                         anim.SetBool("isCatch", true);
                         HookSwing();
                     }
-                    if ((Input.GetButtonUp("Jump") || sp <= 0))
+                    if ((Input.GetButtonUp(shotInput) || sp <= 0))
                     {
                         Destroy(timing_Particle);
                         anim.SetBool("isCatch", false);
@@ -249,7 +243,7 @@ public class Player : MonoBehaviour
         //if (testMoveState == TestMoveState.SIDEVIEW)
         //{
         //Bボタンでジャンプ
-        if (isJumpFlag && Input.GetButtonDown("Fire2"))
+        if (isJumpFlag && Input.GetButtonDown(timingInput))
         {
             isJumpFlag = false;
             rigid.AddForce(Vector2.up * jumpPower);
@@ -334,7 +328,7 @@ public class Player : MonoBehaviour
     /// </summary>
     void HookShot()
     {        
-        if (isHookShot && Input.GetButtonDown("Jump"))
+        if (isHookShot && Input.GetButtonDown(shotInput))
         {
             //ポインターの位置に向かって射出
             hook = Instantiate(originHook, transform.position+new Vector3(0,2,0), Quaternion.identity);
@@ -395,63 +389,137 @@ public class Player : MonoBehaviour
         
     }
 
+    float currentAngle = 0;
+    float previouseAngle = 0;
+    float setAngle = 0;
+
     /// <summary>
     /// フック振り回し
     /// </summary>
     void HookSwing()
     {
-        //ボタン押している間
-        if (Input.GetButton("Jump"))
+        if (swingState == SwingState.TRIGGERSWING)
+        {
+            //ボタン押している間
+            if (Input.GetButton(shotInput))
+            {
+                sp -= 0.1f;
+                if (sp <= 0)
+                    sp = 0;
+                if (timing_Particle == null)
+                {
+                    timing_Particle = Instantiate(origin_Timing_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
+                }
+                else
+                {
+                    timingTime -= Time.deltaTime;
+                    if (timingTime <= 0)
+                        timingTime = origin_TimingTime;
+                    //ParticleSystem ps = timing_Particle.GetComponent<ParticleSystem>();
+                    //ParticleSystem.Particle[] particles = new ParticleSystem.Particle[ps.particleCount];
+                    //ps.GetParticles(particles);
+                    if (timingTime <= 0.5f)
+                    //if (particles[0].GetCurrentColor(ps).r == 255&&
+                    //    particles[0].GetCurrentColor(ps).g == 125&&
+                    //    particles[0].GetCurrentColor(ps).b == 0&&
+                    //    particles[0].GetCurrentColor(ps).a == 255)
+                    {
+                        if (Input.GetButtonDown(timingInput))
+                        {
+                            //Debug.Break();
+                            Instantiate(good_Timing_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
+                            swingSpeed += swingButtonRate;
+                            Destroy(timing_Particle);
+                            timingTime = origin_TimingTime;
+                        }
+                    }
+                    else
+                    {
+                        if (Input.GetButtonDown(timingInput))
+                        {
+                            Instantiate(badTiming_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
+                            swingSpeed -= swingButtonRate;
+                            Destroy(timing_Particle);
+                            timingTime = origin_TimingTime;
+                        }
+                    }
+                }
+
+
+                swingSpeed += swingSpeedRate;
+
+                if (swingSpeed >= swingSpeedRange)
+                    swingSpeed = swingSpeedRange;
+                else if (swingSpeed <= 0)
+                    swingSpeed = 0;
+
+                Enemy enemy = catchObject.GetComponent<Enemy>();
+
+                enemy.ThrowAttack = (int)(enemy.maxThrowAttack * swingSpeed / swingSpeedRange);
+                enemy.SwingAttack = (int)(enemy.maxSwingAttack * swingSpeed / swingSpeedRange);
+
+                swingAngle += swingSpeed;
+                catchObject.transform.position = transform.position + new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180), 2, swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180));
+            }
+        }
+        else
         {
             sp -= 0.1f;
             if (sp <= 0)
                 sp = 0;
-            if (timing_Particle == null)
-            {
-                timing_Particle = Instantiate(origin_Timing_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
-            }
-            else
-            {
-                timingTime -= Time.deltaTime;
-                if (timingTime <= 0)
-                    timingTime = origin_TimingTime;
-                //ParticleSystem ps = timing_Particle.GetComponent<ParticleSystem>();
-                //ParticleSystem.Particle[] particles = new ParticleSystem.Particle[ps.particleCount];
-                //ps.GetParticles(particles);
-                if (timingTime <= 0.5f)
-                //if (particles[0].GetCurrentColor(ps).r == 255&&
-                //    particles[0].GetCurrentColor(ps).g == 125&&
-                //    particles[0].GetCurrentColor(ps).b == 0&&
-                //    particles[0].GetCurrentColor(ps).a == 255)
-                {
-                    if (Input.GetButtonDown("Fire2"))
-                    {
-                        //Debug.Break();
-                        Instantiate(good_Timing_Particle,new Vector3(transform.position.x,transform.position.y + transform.localScale.y/2,transform.position.z),Quaternion.identity,transform);
-                        swingSpeed += swingButtonRate;
-                        Destroy(timing_Particle);
-                        timingTime = origin_TimingTime;
-                    }
-                }
-                else
-                {
-                    if(Input.GetButtonDown("Fire2"))
-                    {
-                        Instantiate(badTiming_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
-                        swingSpeed -= swingButtonRate;
-                        Destroy(timing_Particle);
-                        timingTime = origin_TimingTime;
-                    }
-                }
-            }
-                
 
-            swingSpeed += swingSpeedRate;
+            currentAngle = Mathf.Abs(Mathf.Atan2(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal")) * 180.0f / Mathf.PI);
+
+            if (Input.GetAxis("Vertical") > 0)
+            {
+                if (currentAngle > previouseAngle)
+                {
+                    if (setAngle < 0)
+                        setAngle = 0;
+                    setAngle += Mathf.Abs(currentAngle - previouseAngle);
+                }
+                else if (currentAngle < previouseAngle)
+                {
+                    if (setAngle > 0)
+                        setAngle = 0;
+                    setAngle -= Mathf.Abs(currentAngle - previouseAngle);
+                }
+            }
+            else if(Input.GetAxis("Vertical") < 0)
+            {
+                if (currentAngle > previouseAngle)
+                {
+                    if (setAngle > 0)
+                        setAngle = 0;
+                    setAngle -= Mathf.Abs(currentAngle - previouseAngle);
+                }
+                else if (currentAngle < previouseAngle)
+                {
+                    if (setAngle < 0)
+                        setAngle = 0;
+                    setAngle += Mathf.Abs(currentAngle - previouseAngle);
+                }
+            }
+            
+            if(setAngle >= 360)
+            {
+                setAngle = 0;
+                swingSpeed += swingButtonRate;
+                Instantiate(good_Timing_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
+                Debug.Log("左回転");
+            }
+            else if (setAngle <= -360)
+            {
+                setAngle = 0;
+                swingSpeed -= swingButtonRate;
+                Instantiate(badTiming_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
+                Debug.Log("右回転");
+            }
 
             if (swingSpeed >= swingSpeedRange)
                 swingSpeed = swingSpeedRange;
-            else if (swingSpeed <= 0)
-                swingSpeed = 0;
+            else if (swingSpeed <= -swingSpeedRange)
+                swingSpeed = -swingSpeedRange;
 
             Enemy enemy = catchObject.GetComponent<Enemy>();
 
@@ -460,7 +528,10 @@ public class Player : MonoBehaviour
 
             swingAngle += swingSpeed;
             catchObject.transform.position = transform.position + new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180), 2, swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180));
+
+            previouseAngle = currentAngle;
         }
+        
     }
 
     /// <summary>
