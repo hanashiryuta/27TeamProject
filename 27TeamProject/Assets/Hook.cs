@@ -36,7 +36,7 @@ public class Hook : MonoBehaviour {
     [HideInInspector]
     public HookState hookState = HookState.MOVE;
     //つかんだオブジェクト
-    GameObject catchObject;
+    public GameObject catchObject;
 
 	// Use this for initialization
 	void Start () {
