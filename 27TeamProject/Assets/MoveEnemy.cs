@@ -19,7 +19,8 @@ public class MoveEnemy : Enemy {
         }
         else
         {
-            //Blow();
+            Blow();
         }
 	}
+    
 }

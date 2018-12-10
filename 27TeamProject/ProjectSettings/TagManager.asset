@@ -10,6 +10,11 @@ TagManager:
   - Rightblock
   - WarpGate1
   - Rock
+  - Slap_Circle
+  - WaveManager
+  - IronBlock
+  - PaulEnemyUnder
+  - PaulEnemy
   layers:
   - Default
   - TransparentFX
@@ -28,10 +33,10 @@ TagManager:
   - Pointer
   - ThrowEnemy
   - Particle
-  - 
-  - 
-  - 
-  - 
+  - Slap_Circle
+  - SlapEnemy
+  - IronBlock
+  - StageWall
   - 
   - 
   - 

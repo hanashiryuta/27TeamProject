@@ -53,7 +53,7 @@ public class AttackEnemy : Enemy {
         }
         else
         {
-            //Blow();
+            Blow();
         }
 	}
 }
