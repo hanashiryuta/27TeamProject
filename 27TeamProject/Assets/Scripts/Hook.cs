@@ -38,8 +38,15 @@ public class Hook : MonoBehaviour {
     //つかんだオブジェクト
     GameObject catchObject;
 
-	// Use this for initialization
-	void Start () {
+    public GameObject origin_ArmLine;
+    GameObject player_ArmLine;
+
+    LineRenderer armLine;
+
+    string hookInput = "Hook";
+
+    // Use this for initialization
+    void Start () {
         //移動方向設定
         hookVelocity = targetPosition - transform.position;
         Vector3 scale = transform.localScale;
@@ -49,10 +56,13 @@ public class Hook : MonoBehaviour {
         else
             scale.x = -1;
         transform.localScale = scale;
+        LineSet();
 	}
 
     void FixedUpdate()
     {
+        armLine.SetPosition(0, player.transform.position + new Vector3(0, 2, 0));
+        armLine.SetPosition(1, transform.position);
         //フック状態で変化
         switch (hookState)
         {
@@ -107,7 +117,14 @@ public class Hook : MonoBehaviour {
     {
         player.GetComponent<Player>().isHookShot = true;
         player.GetComponent<Player>().playerState = PlayerState.NORMALMOVE;
+        Destroy(player_ArmLine);
         Destroy(gameObject);
+    }
+
+    void LineSet()
+    {
+        player_ArmLine = Instantiate(origin_ArmLine);
+        armLine = player_ArmLine.GetComponent<LineRenderer>();
     }
 
     private void OnTriggerEnter(Collider collision)
@@ -124,7 +141,7 @@ public class Hook : MonoBehaviour {
         {
 
             //当たった時にボタン押していたら
-            if (Input.GetButton("Jump"))
+            if (Input.GetButton(hookInput))
             {
                 //キャッチ処理
                 hookState = HookState.CATCH;

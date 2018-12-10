@@ -95,9 +95,14 @@ public class Enemy : MonoBehaviour {
     Vector3 currentPosition;
     Vector3 previousePositoin;
 
-    float flyDeathTime = 2.0f;
+    public float originFlyDeathTime = 2.0f;
+    [HideInInspector]
+    public float flyDeathTime;
     [HideInInspector]
     public bool isFly;
+
+    [HideInInspector]
+    public EnemySpawnManager enemySpawnManager;
 
     public virtual void Awake()
     {
@@ -140,6 +145,7 @@ public class Enemy : MonoBehaviour {
                 break;
         }
         GUITime = origin_GUITime;
+        flyDeathTime = originFlyDeathTime;
     }
 
     // Update is called once per frame
@@ -159,10 +165,7 @@ public class Enemy : MonoBehaviour {
             flyDeathTime -= Time.deltaTime;
         if ((hp < 1 || Mathf.Abs(transform.position.z) > 50) || !waveManager.isWave || flyDeathTime < 0)
         {
-            Instantiate(origin_Death_Particle, transform.position, Quaternion.identity);
-            if (waveManager.isWave)
-                waveManager.enemyDeathNum++;
-            Destroy(this.gameObject);
+            DeathAction();
         }
         if (isSlap)
             Slap();
@@ -186,6 +189,16 @@ public class Enemy : MonoBehaviour {
 
         if (isSlap)
             Slap();
+    }
+
+    void DeathAction()
+    {
+        Instantiate(origin_Death_Particle, transform.position, Quaternion.identity);
+        if (waveManager.isWave)
+            waveManager.enemyDeathNum++;
+        enemySpawnManager.enemyCount--;
+        Destroy(this.gameObject);
+
     }
 
     private void Slap()
