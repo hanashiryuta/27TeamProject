@@ -56,3 +56,4 @@ MonoBehaviour:
   SpawnEnemy: {fileID: 1841510535242180, guid: f44b4d110776a8e40a105d3491e1b8ae, type: 2}
   SpawnLimit: 10
   SpawnCount: 0
+  waveManager: {fileID: 0}

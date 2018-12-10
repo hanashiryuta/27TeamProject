@@ -30,9 +30,9 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     float speed; //移動スピード
     [SerializeField]
-    int inputHp; //HPの初期設定用
+    public int inputHp; //HPの初期設定用
     [SerializeField]
-    int hp; //処理で使用するHP変数
+    public int hp; //処理で使用するHP変数
 
     Vector3 velosity;
 
@@ -44,8 +44,7 @@ public class Enemy : MonoBehaviour
     LayerMask layerMask; //Boxcastで使用するレイヤー指定用
     [SerializeField]
     GameObject hook; //フック
-    [SerializeField]
-    float BlowOffSpeed; //吹き飛ぶスピード
+    public float BlowOffSpeed; //吹き飛ぶスピード
     [HideInInspector]
     public bool isHook; //フックに捕まっているかの判定
 
@@ -78,10 +77,13 @@ public class Enemy : MonoBehaviour
 
     public GameObject origin_Damege_Particle;
     public GameObject origin_Death_Particle;
+    
+    public float angleZ;
 
     float angleX;
-    Vector3 PosBlow;
 
+    [HideInInspector]
+    public Vector3 PosBlow;
     float throwSetTime = 1;
     float throwTime;
 
@@ -96,9 +98,14 @@ public class Enemy : MonoBehaviour
     Vector3 currentPosition;
     Vector3 previousePositoin;
 
-    float flyDeathTime = 2.0f;
+    public float originFlyDeathTime = 2.0f;
+    [HideInInspector]
+    public float flyDeathTime;
     [HideInInspector]
     public bool isFly;
+
+    [HideInInspector]
+    public EnemySpawnManager enemySpawnManager;
 
     public virtual void Awake()
     {
@@ -124,11 +131,12 @@ public class Enemy : MonoBehaviour
         hp = inputHp;
         isHook = true;
         BlowMode = false;
-        angleX = transform.rotation.x;
+        angleZ = transform.rotation.x;
         status = Status.NORMAL;
         ThisEnemyLayer = LayerMask.NameToLayer("Enemy");
         CatchEnemyLayer = LayerMask.NameToLayer("CatchEnemy");
         ThrowEnemyLayer = LayerMask.NameToLayer("ThrowEnemy");
+
         switch (mode)
         {
             case MoveMode.HORIZONTAL:
@@ -141,12 +149,14 @@ public class Enemy : MonoBehaviour
                 velosity = new Vector3(1, 0, 0);
                 break;
         }
+
         GUITime = origin_GUITime;
+        flyDeathTime = originFlyDeathTime;
     }
 
     // Update is called once per frame
     public virtual void Update()
-    {
+    {   
         if (isGUIDraw)
         {
             GUITime -= Time.deltaTime;
@@ -161,15 +171,10 @@ public class Enemy : MonoBehaviour
             flyDeathTime -= Time.deltaTime;
         if ((hp < 1 || Mathf.Abs(transform.position.z) > 50) || !waveManager.isWave || flyDeathTime < 0)
         {
-            Instantiate(origin_Death_Particle, transform.position, Quaternion.identity);
-            if (waveManager.isWave)
-                waveManager.enemyDeathNum++;
-            Destroy(this.gameObject);
+            DeathAction();
         }
         if (isSlap)
             Slap();
-
-
         switch (status)
         {
             case Status.DAMEGE:
@@ -185,9 +190,16 @@ public class Enemy : MonoBehaviour
                 BoxCast();
                 break;
         }
+    }
 
-        if (isSlap)
-            Slap();
+    void DeathAction()
+    {
+        Instantiate(origin_Death_Particle, transform.position, Quaternion.identity);
+        if (waveManager.isWave)
+            waveManager.enemyDeathNum++;
+        enemySpawnManager.enemyCount--;
+        Destroy(this.gameObject);
+
     }
 
     private void Slap()
@@ -239,7 +251,7 @@ public class Enemy : MonoBehaviour
 
         if (direction.x > 0)
         {
-            scale.x *= -1;
+            scale.x *= 1;
         }
         transform.localScale = scale;
 
@@ -273,12 +285,26 @@ public class Enemy : MonoBehaviour
         transform.position += normalpos * speed;
     }
 
-    public void Blow()
-    {
+    public virtual void Blow()
+    {   
         Vector3 normal = Vector3.Normalize(PosBlow);
         transform.position += new Vector3(BlowOffSpeed * normal.x, BlowOffSpeed, BlowOffSpeed * normal.z);
-        angleX += 10;
-        transform.rotation = Quaternion.Euler(0, 0, angleX);
+        angleZ += 10;
+        transform.rotation = Quaternion.Euler(0, 0, angleZ);
+    }
+    public virtual void ThrowSet(float throwSpeed, Vector3 throwVelocity)
+    {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            GetComponent<Rigidbody>().velocity = Vector3.zero;
+            GetComponent<Rigidbody>().useGravity = false;
+            transform.position = new Vector3(transform.position.x + throwVelocity.x * 2, 3, transform.position.z + throwVelocity.z * 2);
+            GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
+        }
+        gameObject.layer = ThrowEnemyLayer;
+        GetComponent<BoxCollider>().isTrigger = false;
+        GetComponent<Enemy>().isFly = true;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -288,6 +314,7 @@ public class Enemy : MonoBehaviour
             Vector3 slapVelocity = transform.position - collision.gameObject.transform.position;
             GetComponent<Rigidbody>().AddForce(slapVelocity.normalized * 400);
         }
+
         if (collision.gameObject.CompareTag("Player"))
         {
             animator.SetTrigger("isAttack");
@@ -301,12 +328,10 @@ public class Enemy : MonoBehaviour
         {
             GUIText = other.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
             isGUIDraw = true;
-            hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
             Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
-            if (hp <= 5)
-            {
-                TriggerSet(other);
-            }
+            
+            TriggerSet(other);
+            
         }
 
         if (other.gameObject.layer == ThrowEnemyLayer)
@@ -355,12 +380,16 @@ public class Enemy : MonoBehaviour
 
     public virtual void TriggerSet(Collider other)
     {
-        BlowMode = true;
-        GetComponent<Rigidbody>().useGravity = false;
-        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX;
-        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationY;
-        PosBlow = transform.position - other.transform.position;
+        hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
+        if (hp <= 5)
+        {
+            BlowMode = true;
+            GetComponent<Rigidbody>().useGravity = false;
+            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX;
+            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationY;
+            PosBlow = transform.position - other.transform.position;
+        }
     }
 
     Vector2 GUIPosition;
