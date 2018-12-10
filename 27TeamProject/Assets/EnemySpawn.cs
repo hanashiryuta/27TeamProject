@@ -18,8 +18,8 @@ public class EnemySpawn : MonoBehaviour {
     public GameObject SpawnEnemy;
     [SerializeField]
     public int SpawnLimit;
-    [SerializeField]
-    int SpawnCount;
+    [HideInInspector]
+    public int SpawnCount;
 
     [HideInInspector]
     public List<float> spawnRate;
@@ -30,7 +30,8 @@ public class EnemySpawn : MonoBehaviour {
 
     List<GameObject> spawnList;
 
-    GameObject waveManager;
+    [HideInInspector]
+    public GameObject waveManager;
 
 	// Use this for initialization
 	public virtual void Start () {
@@ -46,7 +47,7 @@ public class EnemySpawn : MonoBehaviour {
         }
 	}
 	
-	public virtualvoid Update () {
+	public virtual void Update () {
         if (waveManager.GetComponent<WaveManager>().isWave&&enemySpawnManager.isSpawn)
         {
             SpawnTime -= Time.deltaTime;
