@@ -36,8 +36,8 @@ TagManager:
   - SlapEnemy
   - IronBlock
   - StageWall
-  - 
-  - 
+  - PaulEnemy
+  - LaserObject
   - 
   - 
   - 

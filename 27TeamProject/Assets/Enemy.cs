@@ -177,11 +177,13 @@ public class Enemy : MonoBehaviour {
                 if(throwTime < 0)
                 {
                     status = Status.NORMAL;
+                    transform.rotation = Quaternion.Euler(new Vector3(0, 0, -30));
                 }
 
                 break;
 
             case Status.NORMAL:
+                //transform.rotation = Quaternion.Euler(new Vector3(0, 0, -15));
                 BoxCast();
                 break;
         }
@@ -195,7 +197,8 @@ public class Enemy : MonoBehaviour {
 
     void BoxCast()
     {
-        origin = transform.position + velosity * transform.localScale.x / 2;
+        origin = transform.position + (velosity * Mathf.Abs(transform.localScale.x) / 2);
+        boxcastRange = new Vector3(Math.Abs(transform.localScale.x), Math.Abs(transform.localScale.y), Math.Abs(transform.localScale.z));
         hitList = Physics.BoxCastAll(origin, boxcastRange, -transform.up, Quaternion.identity, transform.lossyScale.y, layerMask);
         Debug.DrawRay(origin, -transform.up);
 
@@ -314,6 +317,7 @@ public class Enemy : MonoBehaviour {
             status = Status.DAMEGE;
             throwTime = throwSetTime;
             Physics.IgnoreCollision(other.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
+            TriggerSetRotate();
         }
     }
 
@@ -335,6 +339,11 @@ public class Enemy : MonoBehaviour {
             GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationY;
             PosBlow = transform.position - other.transform.position;
         }
+    }
+
+    public virtual void TriggerSetRotate()
+    {
+        transform.rotation = Quaternion.Euler(new Vector3(0, 0, 30));
     }
 
     Vector2 GUIPosition;
