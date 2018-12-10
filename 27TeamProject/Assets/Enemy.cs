@@ -101,6 +101,9 @@ public class Enemy : MonoBehaviour {
     [HideInInspector]
     public bool isFly;
 
+    [HideInInspector]
+    public EnemySpawnManager enemySpawnManager;
+
     public virtual void Awake()
     {
         //mode = MoveMode.RANDOMMOVE;
@@ -162,10 +165,7 @@ public class Enemy : MonoBehaviour {
             flyDeathTime -= Time.deltaTime;
         if ((hp < 1 || Mathf.Abs(transform.position.z) > 50) || !waveManager.isWave || flyDeathTime < 0)
         {
-            Instantiate(origin_Death_Particle, transform.position, Quaternion.identity);
-            if (waveManager.isWave)
-                waveManager.enemyDeathNum++;
-            Destroy(this.gameObject);
+            DeathAction();
         }
         if (isSlap)
             Slap();
@@ -189,6 +189,16 @@ public class Enemy : MonoBehaviour {
 
         if (isSlap)
             Slap();
+    }
+
+    void DeathAction()
+    {
+        Instantiate(origin_Death_Particle, transform.position, Quaternion.identity);
+        if (waveManager.isWave)
+            waveManager.enemyDeathNum++;
+        enemySpawnManager.enemyCount--;
+        Destroy(this.gameObject);
+
     }
 
     private void Slap()
