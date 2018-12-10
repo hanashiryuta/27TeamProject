@@ -84,7 +84,6 @@ public class Enemy : MonoBehaviour
 
     [HideInInspector]
     public Vector3 PosBlow;
-    
     float throwSetTime = 1;
     float throwTime;
 
@@ -175,7 +174,7 @@ public class Enemy : MonoBehaviour
             DeathAction();
         }
         if (isSlap)
-            Slap
+            Slap();
         switch (status)
         {
             case Status.DAMEGE:
@@ -293,7 +292,6 @@ public class Enemy : MonoBehaviour
         angleZ += 10;
         transform.rotation = Quaternion.Euler(0, 0, angleZ);
     }
-
     public virtual void ThrowSet(float throwSpeed, Vector3 throwVelocity)
     {
         Rigidbody rb = GetComponent<Rigidbody>();
@@ -346,8 +344,34 @@ public class Enemy : MonoBehaviour
             throwTime = throwSetTime;
             Physics.IgnoreCollision(other.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
         }
+       // MaxSpeedEnemy(other);
     }
 
+    public virtual void MaxSpeedEnemy(Collider other)
+    {
+        if (other.gameObject.layer == CatchEnemyLayer)
+        {
+            GUIText = other.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
+            isGUIDraw = true;
+            hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
+            Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
+            if (hp <= 5)
+            {
+                TriggerSet(other);
+            }
+        }
+
+        if (other.gameObject.layer == ThrowEnemyLayer)
+        {
+            GUIText = other.gameObject.GetComponent<Enemy>().ThrowAttack.ToString();
+            isGUIDraw = true;
+            hp -= other.gameObject.GetComponent<Enemy>().ThrowAttack;
+            Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
+            status = Status.DAMEGE;
+            throwTime = throwSetTime;
+            Physics.IgnoreCollision(other.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
+        }
+    }
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.layer == ThrowEnemyLayer)

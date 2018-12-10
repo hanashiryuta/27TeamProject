@@ -141,7 +141,7 @@ public class Hook : MonoBehaviour {
         {
 
             //当たった時にボタン押していたら
-            if (Input.GetButton(hookInput))
+            if (Input.GetButton(hookInput)&&catchObject == null)
             {
                 //キャッチ処理
                 hookState = HookState.CATCH;
@@ -151,12 +151,12 @@ public class Hook : MonoBehaviour {
                collision.gameObject.layer = 12;
                collision.GetComponent<Enemy>().isHook = false;
             }
-            //押していなければ
-            else
-            {
-                catchObject = collision.gameObject;
-                hookState = HookState.ATTACK;
-            }
+            ////押していなければ
+            //else
+            //{
+            //    catchObject = collision.gameObject;
+            //    hookState = HookState.ATTACK;
+            //}
         }
 
         //岩に当たったら
