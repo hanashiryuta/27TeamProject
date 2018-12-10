@@ -106,8 +106,13 @@ MonoBehaviour:
     type: 2}
   origin_Death_Particle: {fileID: 1424774110854730, guid: 58a5f048cb2bdda438cd7659b9d09afb,
     type: 2}
+  angleZ: 0
+  PosBlow: {x: 0, y: 0, z: 0}
   animator: {fileID: 0}
+  originFlyDeathTime: 2
+  flyDeathTime: 0
   isFly: 0
+  enemySpawnManager: {fileID: 0}
   GUIFont: {fileID: 0}
   origin_GUITime: 0.5
   stickingCount: 0
@@ -147,8 +152,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 6
-  m_Sprite: {fileID: 21300000, guid: e8d9ee69ec1bd4f49ad5d31e53897df4, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: ceece9ef95f54b64ab14fb5108bd0432, type: 3}
+  m_Color: {r: 0, g: 1, b: 0.03224635, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
