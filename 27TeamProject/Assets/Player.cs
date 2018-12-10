@@ -523,8 +523,8 @@ public class Player : MonoBehaviour
 
             Enemy enemy = catchObject.GetComponent<Enemy>();
 
-            enemy.ThrowAttack = (int)(enemy.maxThrowAttack * Mathf.Abs(swingSpeed) / swingSpeedRange);
-            enemy.SwingAttack = (int)(enemy.maxSwingAttack * Mathf.Abs(swingSpeed) / swingSpeedRange);
+            enemy.ThrowAttack = (int)(enemy.maxThrowAttack * swingSpeed / swingSpeedRange);
+            enemy.SwingAttack = (int)(enemy.maxSwingAttack * swingSpeed / swingSpeedRange);
 
             swingAngle += swingSpeed;
             catchObject.transform.position = transform.position + new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180), 2, swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180));
@@ -539,7 +539,7 @@ public class Player : MonoBehaviour
     /// </summary>
     void ObjectThrow()
     {
-        throwSpeed = Mathf.Abs(swingSpeed) * 400;
+        throwSpeed = swingSpeed * 400;
         catchObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
         catchObject.GetComponent<Rigidbody>().useGravity = false;
         Vector3 throwVelocity = (hookPointer.transform.position - transform.position).normalized;

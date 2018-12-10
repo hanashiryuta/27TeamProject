@@ -20,48 +20,28 @@ public class EnemySpawn : MonoBehaviour {
     int SpawnLimit;
     [SerializeField]
     int SpawnCount;
-
-    [HideInInspector]
-    public List<float> spawnRate;
-    [HideInInspector]
-    public List<GameObject> enemyList;
-    [HideInInspector]
-    public EnemySpawnManager enemySpawnManager;
-
-    List<GameObject> spawnList;
-
+    
     GameObject waveManager;
 
 	// Use this for initialization
 	void Start () {
-        spawnList = new List<GameObject>();
         SpawnTime = SpawnSetTime;
         waveManager = GameObject.FindGameObjectWithTag("WaveManager");
-        for (int r = 0; r < spawnRate.Count; r++)
-        {
-            for(int i = 0; i <= spawnRate[r]; i++)
-            {
-                spawnList.Add(enemyList[r]);
-            }
-        }
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if (waveManager.GetComponent<WaveManager>().isWave&&enemySpawnManager.isSpawn)
+        if (waveManager.GetComponent<WaveManager>().isWave)
         {
             SpawnTime -= Time.deltaTime;
             if(SpawnTime < 0)
             {
                 if(SpawnCount < SpawnLimit)
                 {
-                    int rand = Random.Range(0, 11);
-                    GameObject enemy = Instantiate(spawnList[rand], transform.position, Quaternion.identity);
+                    GameObject enemy = Instantiate(SpawnEnemy, transform.position, Quaternion.identity);
                     enemy.GetComponent<Enemy>().waveManager = waveManager.GetComponent<WaveManager>();
-                    enemy.GetComponent<Enemy>().enemySpawnManager = enemySpawnManager;
                     SpawnTime = SpawnSetTime;
                     SpawnCount++;
-                    enemySpawnManager.enemyCount++;
                 }
             }
         }
