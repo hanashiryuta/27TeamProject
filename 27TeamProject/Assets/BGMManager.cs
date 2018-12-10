@@ -35,8 +35,5 @@ public class BGMManager : MonoBehaviour {
             audioSource.clip = bgmList[1];
         }
         audioSource.Play();
-    }
-	
-    
-    
+    }   
 }

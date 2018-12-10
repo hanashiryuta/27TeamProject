@@ -126,3 +126,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 0.03
   inputHp: 100
+  hp: 0
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  hook: {fileID: 0}
+  BlowOffSpeed: 0
+  isHook: 0
+  BlowMode: 0
+  maxThrowAttack: 0
+  maxSwingAttack: 0
+  ThrowAttack: 0
+  SwingAttack: 0
+  mode: 0
+  ChaseRange: 0
+  slap_Circle: {fileID: 0}
+  enemy3: {fileID: 0}
+  isSlap: 0
+  waveManager: {fileID: 0}
+  origin_Damege_Particle: {fileID: 0}
+  origin_Death_Particle: {fileID: 0}
+  animator: {fileID: 0}
+  originFlyDeathTime: 2
+  flyDeathTime: 0
+  isFly: 0
+  enemySpawnManager: {fileID: 0}
+  GUIFont: {fileID: 0}
+  origin_GUITime: 0.5
