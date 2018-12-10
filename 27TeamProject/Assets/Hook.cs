@@ -36,7 +36,7 @@ public class Hook : MonoBehaviour {
     [HideInInspector]
     public HookState hookState = HookState.MOVE;
     //つかんだオブジェクト
-    GameObject catchObject;
+    public GameObject catchObject;
 
     public GameObject origin_ArmLine;
     GameObject player_ArmLine;
