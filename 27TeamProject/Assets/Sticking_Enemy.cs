@@ -34,8 +34,10 @@ public class Sticking_Enemy : Enemy
 
         if (!isHook)
         {
-            if (hit.gameObject.CompareTag("Enemy"))
+            if (hit.gameObject.GetComponent<Enemy>().isSticking == true)
             {
+
+
                 if (stickingCount <= countMax)
                 {
                     //親にくっつく
@@ -47,7 +49,7 @@ public class Sticking_Enemy : Enemy
                         Destroy(rb);
                         //GetComponent<BoxCollider>().isTrigger = false;
                     }
-                   
+
                     // rb.useGravity = false;
                     // //Freeze固定
                     // rb.constraints = RigidbodyConstraints.FreezeRotation;
@@ -57,8 +59,9 @@ public class Sticking_Enemy : Enemy
 
                 }
                 stickingCount++;
-                
+
                 //GetComponent<BoxCollider>().isTrigger = false;
+
             }
         }
     }
@@ -67,12 +70,12 @@ public class Sticking_Enemy : Enemy
     {
         base.ThrowSet(throwSpeed, throwVelocity);
         for (int i = 0; i < child.Count; i++)
-        {           
+        {
             child[i].layer = 15;
             child[i].GetComponent<BoxCollider>().isTrigger = false;
-           
+
         }
-        
+
 
     }
 

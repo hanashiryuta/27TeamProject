@@ -48,6 +48,12 @@ public class Enemy : MonoBehaviour
     [HideInInspector]
     public bool isHook; //フックに捕まっているかの判定
 
+    [HideInInspector]
+    public bool isCatch = true;
+
+    [HideInInspector]
+    public bool isSticking = true;
+
     public bool BlowMode; //吹き飛ぶ前と後の切り替え用
 
     public int maxThrowAttack;
@@ -66,8 +72,6 @@ public class Enemy : MonoBehaviour
     float x, z;
 
     public GameObject slap_Circle;
-
-    public GameObject enemy3;
 
     [HideInInspector]
     public bool isSlap;
@@ -192,7 +196,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void DeathAction()
+    public virtual void DeathAction()
     {
         Instantiate(origin_Death_Particle, transform.position, Quaternion.identity);
         if (waveManager.isWave)
