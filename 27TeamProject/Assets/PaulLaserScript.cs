@@ -13,7 +13,7 @@ public class PaulLaserScript : Enemy {
     [SerializeField]
     float time;
     [SerializeField]
-    float speed;
+    float LaserSpeed;
 
     LineRenderer lineRenderer;
     
@@ -31,6 +31,8 @@ public class PaulLaserScript : Enemy {
 
     int PlayerLayer;
     int EnemyLayer;
+
+    public Animator anim;
 
     public override void Awake()
     {
@@ -65,6 +67,8 @@ public class PaulLaserScript : Enemy {
 
         float HP = (float)hp / (float)inputHp;
 
+        anim.SetBool("isBool", isLaser);
+
         if(HP < blowHP)
         {
             PaulList[blowcount].GetComponent<PaulEnemy>().GetMasterBlow = true;
@@ -84,12 +88,17 @@ public class PaulLaserScript : Enemy {
                 isLaser = true;
                 lineRenderer.SetPosition(0, LaserStart.transform.position);
             }
+
+            if (time < 1 && time > 0)
+            {
+                anim.SetTrigger("isTriggerLaser");
+            }
         }
         else
         {
             lineRenderer.enabled = true;
             LaserCollider.SetActive(true);
-            LaserEnd.transform.position -= new Vector3(0, 0, speed);
+            LaserEnd.transform.position -= new Vector3(0, 0, LaserSpeed);
 
             lineRenderer.SetPosition(1, LaserEnd.transform.position);
             LaserColliderSet();

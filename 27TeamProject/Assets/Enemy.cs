@@ -101,6 +101,9 @@ public class Enemy : MonoBehaviour {
     [HideInInspector]
     public bool isFly;
 
+
+    float animAngle = 180;
+
     public virtual void Awake()
     {
         //mode = MoveMode.RANDOMMOVE;
@@ -246,11 +249,10 @@ public class Enemy : MonoBehaviour {
 
         Vector3 scale = transform.localScale;
         scale.x = Mathf.Abs(scale.x);
-        
         if (direction.x > 0)
         {
             //scale.x *= -1;
-            transform.rotation = Quaternion.Euler(0, 180, 0);
+            transform.rotation = Quaternion.Euler(0, animAngle * Vector3.Normalize(direction).x, 0);
         }
         transform.localScale = scale;
 
