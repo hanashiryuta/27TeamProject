@@ -62,8 +62,9 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     float ChaseRange; //Player追跡距離
 
+    [SerializeField]
     GameObject[] wavewall;
-    float x, z;
+    public float x, z;
 
     public GameObject slap_Circle;
 
@@ -121,8 +122,8 @@ public class Enemy : MonoBehaviour
             mode = MoveMode.PLAYERCHASE;
         }
         wavewall = GameObject.FindGameObjectsWithTag("IronBlock");
-        x = UnityEngine.Random.Range(wavewall[1].transform.position.x - 1, wavewall[3].transform.position.x + 1);
-        z = UnityEngine.Random.Range(wavewall[1].transform.position.z + 1, wavewall[2].transform.position.z - 1);
+        x = UnityEngine.Random.Range(wavewall[0].transform.position.x - 1, wavewall[3].transform.position.x + 1);
+        z = UnityEngine.Random.Range(wavewall[0].transform.position.z + 1, wavewall[1].transform.position.z - 1);
     }
 
     // Use this for initialization
@@ -182,11 +183,13 @@ public class Enemy : MonoBehaviour
                 if (throwTime < 0)
                 {
                     status = Status.NORMAL;
+                    transform.rotation = Quaternion.Euler(new Vector3(0, 0, -30));
                 }
 
                 break;
 
             case Status.NORMAL:
+                //transform.rotation = Quaternion.Euler(new Vector3(0, 0, -15));
                 BoxCast();
                 break;
         }
@@ -210,9 +213,18 @@ public class Enemy : MonoBehaviour
 
     void BoxCast()
     {
-        origin = transform.position + velosity * transform.localScale.x / 2;
+        origin = transform.position + new Vector3(transform.localScale.x * velosity.x, transform.localScale.y * velosity.y, transform.localScale.z * velosity.z) / 2;
+        //boxcastRange = transform.localScale / 2;
         hitList = Physics.BoxCastAll(origin, boxcastRange, -transform.up, Quaternion.identity, transform.lossyScale.y, layerMask);
         Debug.DrawRay(origin, -transform.up);
+        
+        //RaycastHit hit;
+        //var isHit = Physics.BoxCast(origin, boxcastRange, -transform.up, out hit, transform.rotation);
+        //if (isHit)
+        //{
+        //    Gizmos.DrawRay(origin, -transform.up * hit.distance);
+        //    Gizmos.DrawWireCube(origin + -transform.up * hit.distance, boxcastRange);
+        //}
 
         int groundcount = 0;
         foreach (var hl in hitList)
@@ -222,6 +234,7 @@ public class Enemy : MonoBehaviour
                 groundcount++;
             }
         }
+
         if (groundcount == 0)
         {
             velosity *= -1;
@@ -248,10 +261,11 @@ public class Enemy : MonoBehaviour
 
         Vector3 scale = transform.localScale;
         scale.x = Mathf.Abs(scale.x);
-
+        
         if (direction.x > 0)
         {
-            scale.x *= 1;
+            //scale.x *= -1;
+            transform.rotation = Quaternion.Euler(0, 180, 0);
         }
         transform.localScale = scale;
 
@@ -275,13 +289,15 @@ public class Enemy : MonoBehaviour
 
     void RandomMove()
     {
-        Vector3 pos = new Vector3(x, 0.0f, z) - transform.position;
-        Vector3 normalpos = Vector3.Normalize(pos);
-        if ((pos.z < 0.1f && pos.z > -0.1f) || (pos.x < 0.1f && pos.x > -0.1f))
+        Vector3 pos = new Vector3(x, transform.position.y, z) - transform.position;
+        float distance = Vector3.Distance(new Vector3(x, transform.position.y, z), transform.position);
+        if (Math.Abs(distance) < 0.1f)
         {
-            x = UnityEngine.Random.Range(wavewall[1].transform.position.x - 1, wavewall[3].transform.position.x + 1);
-            z = UnityEngine.Random.Range(wavewall[1].transform.position.z + 1, wavewall[2].transform.position.z - 1);
+            x = UnityEngine.Random.Range(wavewall[0].transform.position.x - 1, wavewall[3].transform.position.x + 1);
+            z = UnityEngine.Random.Range(wavewall[0].transform.position.z + 1, wavewall[1].transform.position.z - 1);
         }
+        pos = new Vector3(x, transform.position.y, z) - transform.position;
+        Vector3 normalpos = Vector3.Normalize(pos);
         transform.position += normalpos * speed;
     }
 
@@ -343,6 +359,7 @@ public class Enemy : MonoBehaviour
             status = Status.DAMEGE;
             throwTime = throwSetTime;
             Physics.IgnoreCollision(other.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
+            TriggerSetRotate();
         }
        // MaxSpeedEnemy(other);
     }
@@ -390,6 +407,11 @@ public class Enemy : MonoBehaviour
             GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationY;
             PosBlow = transform.position - other.transform.position;
         }
+    }
+
+    public virtual void TriggerSetRotate()
+    {
+        transform.rotation = Quaternion.Euler(new Vector3(0, 0, 30));
     }
 
     Vector2 GUIPosition;
