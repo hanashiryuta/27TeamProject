@@ -31,13 +31,32 @@ public class Sticking_Enemy : Enemy
 
     void OnTriggerEnter(Collider hit)
     {
+        if (hit.gameObject.layer == CatchEnemyLayer)
+        {
+            GUIText = hit.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
+            isGUIDraw = true;
+            Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
+
+            TriggerSet(hit);
+
+        }
+
+        if (hit.gameObject.layer == ThrowEnemyLayer)
+        {
+            GUIText = hit.gameObject.GetComponent<Enemy>().ThrowAttack.ToString();
+            isGUIDraw = true;
+            hp -= hit.gameObject.GetComponent<Enemy>().ThrowAttack;
+            Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
+            status = Status.DAMEGE;
+            throwTime = throwSetTime;
+            Physics.IgnoreCollision(hit.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
+            TriggerSetRotate();
+        }
 
         if (!isHook)
         {
-            if (hit.gameObject.GetComponent<Enemy>().isSticking == true)
+            if (hit.gameObject.CompareTag("Enemy") && hit.gameObject.GetComponent<Enemy>().isSticking == true)
             {
-
-
                 if (stickingCount <= countMax)
                 {
                     //親にくっつく
@@ -73,7 +92,6 @@ public class Sticking_Enemy : Enemy
         {
             child[i].layer = 15;
             child[i].GetComponent<BoxCollider>().isTrigger = false;
-
         }
 
 
@@ -85,5 +103,12 @@ public class Sticking_Enemy : Enemy
         base.Update();
         if (isHook)
             Move();
+        for(int i = 0; i < child.Count; i++)
+        {
+            if(child[i] == null)
+            {
+                child.Remove(child[i]);
+            }
+        }
     }
 }

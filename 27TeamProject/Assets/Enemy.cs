@@ -18,7 +18,7 @@ public enum MoveMode
     RANDOMMOVE,
 }
 
-enum Status
+public enum Status
 {
     NORMAL,
     DAMEGE,
@@ -89,14 +89,14 @@ public class Enemy : MonoBehaviour
 
     [HideInInspector]
     public Vector3 PosBlow;
-    float throwSetTime = 1;
-    float throwTime;
+    protected float throwSetTime = 1;
+    protected float throwTime;
 
-    Status status;
+    protected Status status;
 
-    int ThisEnemyLayer;
-    int CatchEnemyLayer;
-    int ThrowEnemyLayer;
+    protected int ThisEnemyLayer;
+    protected int CatchEnemyLayer;
+    protected int ThrowEnemyLayer;
 
     public Animator animator;
 
@@ -324,7 +324,7 @@ public class Enemy : MonoBehaviour
             GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
         }
         gameObject.layer = ThrowEnemyLayer;
-        GetComponent<BoxCollider>().isTrigger = false;
+        GetComponent<BoxCollider>().isTrigger = true;
         GetComponent<Enemy>().isFly = true;
     }
 
@@ -338,8 +338,13 @@ public class Enemy : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Player"))
         {
-            animator.SetTrigger("isAttack");
+            AttackAnime();
         }
+
+    }
+
+    public virtual void AttackAnime()
+    {
 
     }
 
@@ -419,13 +424,13 @@ public class Enemy : MonoBehaviour
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, 30));
     }
 
-    Vector2 GUIPosition;
+    protected Vector2 GUIPosition;
     public Font GUIFont;
-    bool isGUIDraw;
-    float GUITextArpha = 1.0f;
-    string GUIText;
+    protected bool isGUIDraw;
+    protected float GUITextArpha = 1.0f;
+    protected string GUIText;
     public float origin_GUITime = 0.5f;
-    float GUITime;
+    protected float GUITime;
 
     private void TextDraw(Vector2 position, int fontSize, Color color, string text, float arpha)
     {

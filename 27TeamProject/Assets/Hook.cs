@@ -45,6 +45,9 @@ public class Hook : MonoBehaviour {
 
     string hookInput = "Hook";
 
+    [HideInInspector]
+    public float targetDistance;
+
     // Use this for initialization
     void Start () {
         //移動方向設定
@@ -93,7 +96,7 @@ public class Hook : MonoBehaviour {
     private void Move()
     {
         transform.position += hookVelocity.normalized * moveSpeed;
-        if (Vector3.Distance(targetPosition, transform.position) <= 0.2f)
+        if (Vector3.Distance(transform.position,player.transform.position) >= targetDistance)
         {
             hookState = HookState.RETURN;
             player.GetComponent<Player>().playerState = PlayerState.HOOKRETURN;

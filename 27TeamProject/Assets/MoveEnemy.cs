@@ -28,4 +28,9 @@ public class MoveEnemy : Enemy
         }
     }
 
+    public override void AttackAnime()
+    {
+        animator.SetTrigger("isAttack");
+    }
+
 }
