@@ -79,7 +79,7 @@ public class PaulLaserScript : Enemy {
             time -= Time.deltaTime;
             if(time < 0)
             {
-                LaserEnd.transform.position = new Vector3(PaulList[blowcount].transform.position.x, PaulList[blowcount].transform.position.y, PaulList[blowcount].transform.position.z);
+                LaserEnd.transform.position = new Vector3(PaulList[blowcount].transform.position.x, 0.05f, PaulList[blowcount].transform.position.z);
                 time = setTime;
                 isLaser = true;
                 lineRenderer.SetPosition(0, LaserStart.transform.position);
@@ -95,7 +95,7 @@ public class PaulLaserScript : Enemy {
             LaserColliderSet();
             if (LaserEnd.transform.position.z < -30)
             {
-                LaserEnd.transform.position = new Vector3(PaulList[blowcount].transform.position.x, PaulList[blowcount].transform.position.y, PaulList[blowcount].transform.position.z + 1);
+                LaserEnd.transform.position = new Vector3(PaulList[blowcount].transform.position.x, 0.05f, PaulList[blowcount].transform.position.z + 1);
                 isLaser = false;
                 lineRenderer.enabled = false;
                 LaserCollider.SetActive(false);
