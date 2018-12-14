@@ -77,22 +77,22 @@ public class WaveManager : MonoBehaviour
         //    time -= Time.deltaTime;
         //    if (time <= 0)
         //    {
-        Vector3 CreatePoint = new Vector3(x, y, transform.position.z - 8);
+        Vector3 CreatePoint = new Vector3(x, y, transform.position.z - 10);
         //if (count == max)
         {
             Instantiate(WaveBlock, CreatePoint, Quaternion.identity);
         }
-        Vector3 CreatePoint2 = new Vector3(x, y, transform.position.z + 10);
+        Vector3 CreatePoint2 = new Vector3(x, y, transform.position.z + 8);
         //if (count == max)
         {
             Instantiate(WaveBlock, CreatePoint2, Quaternion.Euler(0,-90,0));
         }
-        Vector3 CreatePoint3 = new Vector3(ix, y, transform.position.z +10);
+        Vector3 CreatePoint3 = new Vector3(ix, y, transform.position.z +8);
         //if (count == max)
         {
             Instantiate(WaveBlock, CreatePoint3, Quaternion.Euler(0, -180, 0));
         }
-        Vector3 CreatePoint4 = new Vector3(ix, y, transform.position.z -8);
+        Vector3 CreatePoint4 = new Vector3(ix, y, transform.position.z -10);
         //if (count == max)
         {
             Instantiate(WaveBlock, CreatePoint4, Quaternion.Euler(0, -270, 0));

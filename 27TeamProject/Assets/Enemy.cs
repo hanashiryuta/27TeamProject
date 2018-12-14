@@ -24,7 +24,8 @@ enum Status
     DAMEGE,
 }
 
-public class Enemy : MonoBehaviour {
+public class Enemy : MonoBehaviour
+{
 
     [SerializeField]
     float speed; //移動スピード
@@ -46,9 +47,9 @@ public class Enemy : MonoBehaviour {
     public float BlowOffSpeed; //吹き飛ぶスピード
     [HideInInspector]
     public bool isHook; //フックに捕まっているかの判定
-    
+
     public bool BlowMode; //吹き飛ぶ前と後の切り替え用
-    
+
     public int maxThrowAttack;
     public int maxSwingAttack;
 
@@ -80,9 +81,10 @@ public class Enemy : MonoBehaviour {
     
     public float angleZ;
 
+    float angleX;
+
     [HideInInspector]
     public Vector3 PosBlow;
-    
     float throwSetTime = 1;
     float throwTime;
 
@@ -91,15 +93,20 @@ public class Enemy : MonoBehaviour {
     int ThisEnemyLayer;
     int CatchEnemyLayer;
     int ThrowEnemyLayer;
-    
+
     public Animator animator;
 
     Vector3 currentPosition;
     Vector3 previousePositoin;
 
-    float flyDeathTime = 2.0f;
+    public float originFlyDeathTime = 2.0f;
+    [HideInInspector]
+    public float flyDeathTime;
     [HideInInspector]
     public bool isFly;
+
+    [HideInInspector]
+    public EnemySpawnManager enemySpawnManager;
 
     public virtual void Awake()
     {
@@ -110,7 +117,7 @@ public class Enemy : MonoBehaviour {
         {
             mode = MoveMode.RANDOMMOVE;
         }
-        else if(random == 1)
+        else if (random == 1)
         {
             mode = MoveMode.PLAYERCHASE;
         }
@@ -120,7 +127,8 @@ public class Enemy : MonoBehaviour {
     }
 
     // Use this for initialization
-    public virtual void Start () {
+    public virtual void Start()
+    {
         hp = inputHp;
         isHook = true;
         BlowMode = false;
@@ -144,6 +152,7 @@ public class Enemy : MonoBehaviour {
         }
 
         GUITime = origin_GUITime;
+        flyDeathTime = originFlyDeathTime;
     }
 
     // Update is called once per frame
@@ -163,19 +172,15 @@ public class Enemy : MonoBehaviour {
             flyDeathTime -= Time.deltaTime;
         if ((hp < 1 || Mathf.Abs(transform.position.z) > 50) || !waveManager.isWave || flyDeathTime < 0)
         {
-            Instantiate(origin_Death_Particle, transform.position, Quaternion.identity);
-            if (waveManager.isWave)
-                waveManager.enemyDeathNum++;
-            Destroy(this.gameObject);
+            DeathAction();
         }
         if (isSlap)
             Slap();
-        
         switch (status)
         {
             case Status.DAMEGE:
                 throwTime -= Time.deltaTime;
-                if(throwTime < 0)
+                if (throwTime < 0)
                 {
                     status = Status.NORMAL;
                     transform.rotation = Quaternion.Euler(new Vector3(0, 0, -30));
@@ -188,6 +193,16 @@ public class Enemy : MonoBehaviour {
                 BoxCast();
                 break;
         }
+    }
+
+    void DeathAction()
+    {
+        Instantiate(origin_Death_Particle, transform.position, Quaternion.identity);
+        if (waveManager.isWave)
+            waveManager.enemyDeathNum++;
+        enemySpawnManager.enemyCount--;
+        Destroy(this.gameObject);
+
     }
 
     private void Slap()
@@ -256,7 +271,7 @@ public class Enemy : MonoBehaviour {
 
         previousePositoin = currentPosition;
     }
-    
+
     void PlayerShaseMove()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -293,7 +308,21 @@ public class Enemy : MonoBehaviour {
         angleZ += 10;
         transform.rotation = Quaternion.Euler(0, 0, angleZ);
     }
-    
+    public virtual void ThrowSet(float throwSpeed, Vector3 throwVelocity)
+    {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            GetComponent<Rigidbody>().velocity = Vector3.zero;
+            GetComponent<Rigidbody>().useGravity = false;
+            transform.position = new Vector3(transform.position.x + throwVelocity.x * 2, 3, transform.position.z + throwVelocity.z * 2);
+            GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
+        }
+        gameObject.layer = ThrowEnemyLayer;
+        GetComponent<BoxCollider>().isTrigger = false;
+        GetComponent<Enemy>().isFly = true;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Slap_Circle"))
@@ -322,7 +351,7 @@ public class Enemy : MonoBehaviour {
         }
 
         if (other.gameObject.layer == ThrowEnemyLayer)
-        {        
+        {
             GUIText = other.gameObject.GetComponent<Enemy>().ThrowAttack.ToString();
             isGUIDraw = true;
             hp -= other.gameObject.GetComponent<Enemy>().ThrowAttack;
@@ -332,14 +361,40 @@ public class Enemy : MonoBehaviour {
             Physics.IgnoreCollision(other.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
             TriggerSetRotate();
         }
+       // MaxSpeedEnemy(other);
     }
 
+    public virtual void MaxSpeedEnemy(Collider other)
+    {
+        if (other.gameObject.layer == CatchEnemyLayer)
+        {
+            GUIText = other.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
+            isGUIDraw = true;
+            hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
+            Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
+            if (hp <= 5)
+            {
+                TriggerSet(other);
+            }
+        }
+
+        if (other.gameObject.layer == ThrowEnemyLayer)
+        {
+            GUIText = other.gameObject.GetComponent<Enemy>().ThrowAttack.ToString();
+            isGUIDraw = true;
+            hp -= other.gameObject.GetComponent<Enemy>().ThrowAttack;
+            Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
+            status = Status.DAMEGE;
+            throwTime = throwSetTime;
+            Physics.IgnoreCollision(other.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
+        }
+    }
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.layer == ThrowEnemyLayer)
             Physics.IgnoreCollision(other.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>(), false);
     }
-    
+
     public virtual void TriggerSet(Collider other)
     {
         hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
@@ -370,7 +425,7 @@ public class Enemy : MonoBehaviour {
     private void TextDraw(Vector2 position, int fontSize, Color color, string text, float arpha)
     {
         GUIStyle guiStyle = new GUIStyle();
-        GUIStyleState styleState = new GUIStyleState();        
+        GUIStyleState styleState = new GUIStyleState();
         guiStyle.font = GUIFont;
         guiStyle.fontSize = fontSize;
         styleState.textColor = color;
