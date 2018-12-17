@@ -11,6 +11,9 @@ using UnityEngine;
 public class Big_Enemy : Enemy
 {
 
+    public GameObject origin_Star_Particle;
+    GameObject star_Particle;
+
     // Update is called once per frame
     public override void Update()
     {
@@ -19,6 +22,8 @@ public class Big_Enemy : Enemy
         {
             isCatch = true;
             base.Update();
+            if (star_Particle == null)
+                star_Particle = Instantiate(origin_Star_Particle, transform.position + new Vector3(0,2,0), Quaternion.identity, transform);
         }
         else if (hp > 40)
         {
@@ -30,13 +35,12 @@ public class Big_Enemy : Enemy
         }
     }
 
-    public override void DeathAction()
-    {
+    //public override void DeathAction()
+    //{
+    //    if (gameObject.layer == 15 && hp == 0)
+    //    {
+    //        base.DeathAction();
+    //    }      
 
-        if (gameObject.layer == 15 && hp == 0)
-        {
-            base.DeathAction();
-        }      
-
-    }
+    //}
 }

@@ -1022,6 +1022,8 @@ MonoBehaviour:
   enemyList: []
   enemySpawnManager: {fileID: 0}
   waveManager: {fileID: 0}
+  origin_Spawn_Particle: {fileID: 1773085424974958, guid: 27032da6152f86d49b66005ff5cd8d2b,
+    type: 2}
 --- !u!114 &114249608440650312
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1042,6 +1044,8 @@ MonoBehaviour:
   enemyList: []
   enemySpawnManager: {fileID: 0}
   waveManager: {fileID: 0}
+  origin_Spawn_Particle: {fileID: 1773085424974958, guid: 27032da6152f86d49b66005ff5cd8d2b,
+    type: 2}
 --- !u!114 &114251174838959478
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1268,6 +1272,8 @@ MonoBehaviour:
   enemyList: []
   enemySpawnManager: {fileID: 0}
   waveManager: {fileID: 0}
+  origin_Spawn_Particle: {fileID: 1773085424974958, guid: 27032da6152f86d49b66005ff5cd8d2b,
+    type: 2}
 --- !u!114 &114690361061259960
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1326,6 +1332,8 @@ MonoBehaviour:
   enemyList: []
   enemySpawnManager: {fileID: 0}
   waveManager: {fileID: 0}
+  origin_Spawn_Particle: {fileID: 1773085424974958, guid: 27032da6152f86d49b66005ff5cd8d2b,
+    type: 2}
 --- !u!114 &114798569655131266
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1362,6 +1370,8 @@ MonoBehaviour:
   enemyList: []
   enemySpawnManager: {fileID: 0}
   waveManager: {fileID: 0}
+  origin_Spawn_Particle: {fileID: 1773085424974958, guid: 27032da6152f86d49b66005ff5cd8d2b,
+    type: 2}
 --- !u!114 &114809556954162978
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1442,6 +1452,8 @@ MonoBehaviour:
   enemyList: []
   enemySpawnManager: {fileID: 0}
   waveManager: {fileID: 0}
+  origin_Spawn_Particle: {fileID: 1773085424974958, guid: 27032da6152f86d49b66005ff5cd8d2b,
+    type: 2}
 --- !u!114 &114981917209457898
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -148,6 +148,9 @@ MonoBehaviour:
   SwingAttack: 10
   mode: 0
   ChaseRange: 0
+  wavewall: []
+  x: 0
+  z: 0
   slap_Circle: {fileID: 1774002166212886, guid: fbd1550471567d647b8e952fcc435f58,
     type: 2}
   isSlap: 0
@@ -165,6 +168,8 @@ MonoBehaviour:
   enemySpawnManager: {fileID: 0}
   GUIFont: {fileID: 12800000, guid: d7d5b71cb41044c43bffbb0141fd35ae, type: 3}
   origin_GUITime: 0.5
+  origin_Star_Particle: {fileID: 1101927297335514, guid: 52fe255b569ddad4383dc5f06664c9f9,
+    type: 2}
 --- !u!212 &212319044100128930
 SpriteRenderer:
   m_ObjectHideFlags: 1
