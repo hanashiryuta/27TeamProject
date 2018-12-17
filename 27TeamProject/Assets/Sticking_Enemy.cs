@@ -45,20 +45,12 @@ public class Sticking_Enemy : Enemy
                     if (rb != null && transform.parent == null)
                     {
                         Destroy(rb);
-                        //GetComponent<BoxCollider>().isTrigger = false;
                     }
-                   
-                    // rb.useGravity = false;
-                    // //Freeze固定
-                    // rb.constraints = RigidbodyConstraints.FreezeRotation;
-                    //// rb.velocity = Vector3.zero;
 
                     child.Add(hit.gameObject);
 
                 }
                 stickingCount++;
-                
-                //GetComponent<BoxCollider>().isTrigger = false;
             }
         }
     }
@@ -67,13 +59,10 @@ public class Sticking_Enemy : Enemy
     {
         base.ThrowSet(throwSpeed, throwVelocity);
         for (int i = 0; i < child.Count; i++)
-        {           
+        {
             child[i].layer = 15;
             child[i].GetComponent<BoxCollider>().isTrigger = false;
-           
         }
-        
-
     }
 
     //更新

@@ -135,6 +135,7 @@ public class WaveManager : MonoBehaviour
                 isWave = false;
             }
         }
+        
         if(waveCount > 3)
         {
             isSceneChange = true;
