@@ -115,6 +115,8 @@ public class Enemy : MonoBehaviour
 
     public float playerSP;//プレイヤーが消費するSP
 
+    public bool moveStop;
+
     public virtual void Awake()
     {
         //mode = MoveMode.RANDOMMOVE;
@@ -159,6 +161,9 @@ public class Enemy : MonoBehaviour
         }
 
         GUITime = origin_GUITime;
+
+        moveStop = false;
+        throwTime = throwSetTime;
         flyDeathTime = originFlyDeathTime;
     }
 
@@ -189,15 +194,15 @@ public class Enemy : MonoBehaviour
                 throwTime -= Time.deltaTime;
                 if (throwTime < 0)
                 {
+                    throwTime = throwSetTime;
+                    transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+                    moveStop = !moveStop;
                     status = Status.NORMAL;
-                    transform.rotation = Quaternion.Euler(new Vector3(0, 0, -30));
                 }
-
                 break;
 
             case Status.NORMAL:
-                //transform.rotation = Quaternion.Euler(new Vector3(0, 0, -15));
-                BoxCast();
+                if(mode != MoveMode.RANDOMMOVE) BoxCast();
                 break;
         }
     }
@@ -225,14 +230,6 @@ public class Enemy : MonoBehaviour
         hitList = Physics.BoxCastAll(origin, boxcastRange, -transform.up, Quaternion.identity, transform.lossyScale.y, layerMask);
         Debug.DrawRay(origin, -transform.up);
         
-        //RaycastHit hit;
-        //var isHit = Physics.BoxCast(origin, boxcastRange, -transform.up, out hit, transform.rotation);
-        //if (isHit)
-        //{
-        //    Gizmos.DrawRay(origin, -transform.up * hit.distance);
-        //    Gizmos.DrawWireCube(origin + -transform.up * hit.distance, boxcastRange);
-        //}
-
         int groundcount = 0;
         foreach (var hl in hitList)
         {
@@ -250,6 +247,8 @@ public class Enemy : MonoBehaviour
 
     public void Move()
     {
+        if (moveStop) return;
+
         if (mode == MoveMode.RANDOMMOVE)
         {
             RandomMove();
@@ -267,13 +266,18 @@ public class Enemy : MonoBehaviour
         Vector3 direction = currentPosition - previousePositoin;
 
         Vector3 scale = transform.localScale;
+        Quaternion rota = transform.rotation;
         scale.x = Mathf.Abs(scale.x);
+        rota.y = 0;
+
         if (direction.x > 0)
         {
             //scale.x *= -1;
-            transform.rotation = Quaternion.Euler(0, animAngle * Vector3.Normalize(direction).x, 0);
+            //transform.rotation = Quaternion.Euler(0, animAngle * -1, 0);
+            rota.y = 180;
         }
         transform.localScale = scale;
+        transform.rotation = rota;
 
         previousePositoin = currentPosition;
     }
@@ -350,13 +354,16 @@ public class Enemy : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider other)
-    {
+    {   
         if (other.gameObject.layer == CatchEnemyLayer)
         {
             GUIText = other.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
             isGUIDraw = true;
             Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
-            
+            status = Status.DAMEGE;
+            TriggerSetRotate();
+            moveStop = !moveStop;
+
             TriggerSet(other);
             
         }
@@ -368,9 +375,9 @@ public class Enemy : MonoBehaviour
             hp -= other.gameObject.GetComponent<Enemy>().ThrowAttack;
             Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
             status = Status.DAMEGE;
-            throwTime = throwSetTime;
-            Physics.IgnoreCollision(other.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
             TriggerSetRotate();
+            moveStop = !moveStop;
+            Physics.IgnoreCollision(other.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
         }
        // MaxSpeedEnemy(other);
     }
@@ -422,7 +429,7 @@ public class Enemy : MonoBehaviour
 
     public virtual void TriggerSetRotate()
     {
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, 30));
+        transform.rotation = Quaternion.Euler(new Vector3(0, 0, -30));
     }
 
     protected Vector2 GUIPosition;

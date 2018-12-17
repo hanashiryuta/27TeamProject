@@ -34,6 +34,11 @@ public class PaulLaserScript : Enemy {
 
     public Animator anim;
 
+    public float setAnimTime;
+    float animTime;
+
+    public GameObject LaserAnimObject;
+
     public override void Awake()
     {
         
@@ -60,6 +65,8 @@ public class PaulLaserScript : Enemy {
         ColliderRotate = 0;
         PlayerLayer = LayerMask.NameToLayer("Player");
         EnemyLayer = LayerMask.NameToLayer("Enemy");
+
+        LaserAnimObject.SetActive(false);
     }
 
     public override void Update () {
@@ -67,7 +74,9 @@ public class PaulLaserScript : Enemy {
 
         float HP = (float)hp / (float)inputHp;
 
-        anim.SetBool("isBool", isLaser);
+        if (LaserAnimObject.activeInHierarchy) anim.SetBool("isBool", !isLaser);
+         
+        animTime = setAnimTime;
 
         if(HP < blowHP)
         {
@@ -89,8 +98,9 @@ public class PaulLaserScript : Enemy {
                 lineRenderer.SetPosition(0, LaserStart.transform.position);
             }
 
-            if (time < 1 && time > 0)
+            if (time < animTime && time > 1)
             {
+                LaserAnimObject.SetActive(true);
                 anim.SetTrigger("isTriggerLaser");
             }
         }
@@ -108,6 +118,7 @@ public class PaulLaserScript : Enemy {
                 isLaser = false;
                 lineRenderer.enabled = false;
                 LaserCollider.SetActive(false);
+                LaserAnimObject.SetActive(false);
             }
         }
 	}
@@ -141,5 +152,10 @@ public class PaulLaserScript : Enemy {
                 other.GetComponent<Enemy>().hp -= 20;
             }
         }
+    }
+
+    public override void TriggerSetRotate()
+    {
+        
     }
 }

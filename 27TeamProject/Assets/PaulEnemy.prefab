@@ -1238,6 +1238,8 @@ MonoBehaviour:
   LaserStart: {fileID: 1630739040187656}
   LaserCollider: {fileID: 1068772007872810}
   anim: {fileID: 95674495931318720}
+  setAnimTime: 2
+  LaserAnimObject: {fileID: 1649829125866238}
 --- !u!114 &114287174963209270
 MonoBehaviour:
   m_ObjectHideFlags: 1
