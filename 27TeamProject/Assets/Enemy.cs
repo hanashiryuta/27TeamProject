@@ -100,9 +100,10 @@ public class Enemy : MonoBehaviour {
     float flyDeathTime = 2.0f;
     [HideInInspector]
     public bool isFly;
-
-
+    
     float animAngle = 180;
+
+    public bool moveStop;
 
     public virtual void Awake()
     {
@@ -147,6 +148,9 @@ public class Enemy : MonoBehaviour {
         }
 
         GUITime = origin_GUITime;
+
+        moveStop = false;
+        throwTime = throwSetTime;
     }
 
     // Update is called once per frame
@@ -180,14 +184,14 @@ public class Enemy : MonoBehaviour {
                 throwTime -= Time.deltaTime;
                 if(throwTime < 0)
                 {
+                    throwTime = throwSetTime;
+                    transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+                    moveStop = !moveStop;
                     status = Status.NORMAL;
-                    transform.rotation = Quaternion.Euler(new Vector3(0, 0, -30));
                 }
-
                 break;
 
             case Status.NORMAL:
-                //transform.rotation = Quaternion.Euler(new Vector3(0, 0, -15));
                 if(mode != MoveMode.RANDOMMOVE) BoxCast();
                 break;
         }
@@ -223,6 +227,8 @@ public class Enemy : MonoBehaviour {
 
     public void Move()
     {
+        if (moveStop) return;
+
         if (mode == MoveMode.RANDOMMOVE)
         {
             RandomMove();
@@ -309,13 +315,16 @@ public class Enemy : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other)
-    {
+    {   
         if (other.gameObject.layer == CatchEnemyLayer)
         {
             GUIText = other.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
             isGUIDraw = true;
             Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
-            
+            status = Status.DAMEGE;
+            TriggerSetRotate();
+            moveStop = !moveStop;
+
             TriggerSet(other);
             
         }
@@ -327,9 +336,9 @@ public class Enemy : MonoBehaviour {
             hp -= other.gameObject.GetComponent<Enemy>().ThrowAttack;
             Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
             status = Status.DAMEGE;
-            throwTime = throwSetTime;
-            Physics.IgnoreCollision(other.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
             TriggerSetRotate();
+            moveStop = !moveStop;
+            Physics.IgnoreCollision(other.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
         }
     }
 
@@ -355,7 +364,7 @@ public class Enemy : MonoBehaviour {
 
     public virtual void TriggerSetRotate()
     {
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, 30));
+        transform.rotation = Quaternion.Euler(new Vector3(0, 0, -30));
     }
 
     Vector2 GUIPosition;

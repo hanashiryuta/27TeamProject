@@ -15,7 +15,7 @@ public class MoveEnemy : Enemy {
         base.Update();
         if (!BlowMode)
         {
-            if(isHook) Move();
+            if (isHook) Move();
         }
         else
         {

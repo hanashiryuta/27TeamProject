@@ -153,4 +153,9 @@ public class PaulLaserScript : Enemy {
             }
         }
     }
+
+    public override void TriggerSetRotate()
+    {
+        
+    }
 }
