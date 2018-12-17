@@ -108,11 +108,12 @@ public class Enemy : MonoBehaviour
     public float flyDeathTime;
     [HideInInspector]
     public bool isFly;
-
-
+    
     float animAngle = 180;
     [HideInInspector]
     public EnemySpawnManager enemySpawnManager;
+
+    public float playerSP;//プレイヤーが消費するSP
 
     public virtual void Awake()
     {

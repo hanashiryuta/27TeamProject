@@ -68,7 +68,7 @@ public class EnemySpawn : MonoBehaviour {
                 if(SpawnCount < SpawnLimit)
                 {
                     int rand = Random.Range(0, spawnList.Count);
-                    GameObject enemy = Instantiate(spawnList[rand], transform.position, Quaternion.identity);
+                    GameObject enemy = Instantiate(spawnList[rand], transform.position + new Vector3(0, spawnList[rand].transform.localScale.y / 2,0), Quaternion.identity);
                     enemy.GetComponent<Enemy>().waveManager = waveManager.GetComponent<WaveManager>();
                     enemy.GetComponent<Enemy>().enemySpawnManager = enemySpawnManager;
                     SpawnTime = SpawnSetTime;

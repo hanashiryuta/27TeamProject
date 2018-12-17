@@ -318,8 +318,7 @@ public class Player : MonoBehaviour
             Color color = hookPointer.GetComponent<Renderer>().material.color;
             color = Color.white;
             hookPointer.GetComponent<Renderer>().material.color = color;
-        }
-        
+        }       
         
     }
 
