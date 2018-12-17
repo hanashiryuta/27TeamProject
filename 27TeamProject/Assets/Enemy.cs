@@ -18,7 +18,7 @@ public enum MoveMode
     RANDOMMOVE,
 }
 
-enum Status
+public enum Status
 {
     NORMAL,
     DAMEGE,
@@ -48,6 +48,12 @@ public class Enemy : MonoBehaviour
     [HideInInspector]
     public bool isHook; //フックに捕まっているかの判定
 
+    [HideInInspector]
+    public bool isCatch = true;
+
+    [HideInInspector]
+    public bool isSticking = true;
+
     public bool BlowMode; //吹き飛ぶ前と後の切り替え用
 
     public int maxThrowAttack;
@@ -62,12 +68,11 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     float ChaseRange; //Player追跡距離
 
+    [SerializeField]
     GameObject[] wavewall;
-    float x, z;
+    public float x, z;
 
     public GameObject slap_Circle;
-
-    public GameObject enemy3;
 
     [HideInInspector]
     public bool isSlap;
@@ -84,14 +89,14 @@ public class Enemy : MonoBehaviour
 
     [HideInInspector]
     public Vector3 PosBlow;
-    float throwSetTime = 1;
-    float throwTime;
+    protected float throwSetTime = 1;
+    protected float throwTime;
 
-    Status status;
+    protected Status status;
 
-    int ThisEnemyLayer;
-    int CatchEnemyLayer;
-    int ThrowEnemyLayer;
+    protected int ThisEnemyLayer;
+    protected int CatchEnemyLayer;
+    protected int ThrowEnemyLayer;
 
     public Animator animator;
 
@@ -103,9 +108,14 @@ public class Enemy : MonoBehaviour
     public float flyDeathTime;
     [HideInInspector]
     public bool isFly;
-
+    
+    float animAngle = 180;
     [HideInInspector]
     public EnemySpawnManager enemySpawnManager;
+
+    public float playerSP;//プレイヤーが消費するSP
+
+    public bool moveStop;
 
     public virtual void Awake()
     {
@@ -121,8 +131,8 @@ public class Enemy : MonoBehaviour
             mode = MoveMode.PLAYERCHASE;
         }
         wavewall = GameObject.FindGameObjectsWithTag("IronBlock");
-        x = UnityEngine.Random.Range(wavewall[1].transform.position.x - 1, wavewall[3].transform.position.x + 1);
-        z = UnityEngine.Random.Range(wavewall[1].transform.position.z + 1, wavewall[2].transform.position.z - 1);
+        x = UnityEngine.Random.Range(wavewall[0].transform.position.x - 1, wavewall[3].transform.position.x + 1);
+        z = UnityEngine.Random.Range(wavewall[0].transform.position.z + 1, wavewall[1].transform.position.z - 1);
     }
 
     // Use this for initialization
@@ -151,6 +161,9 @@ public class Enemy : MonoBehaviour
         }
 
         GUITime = origin_GUITime;
+
+        moveStop = false;
+        throwTime = throwSetTime;
         flyDeathTime = originFlyDeathTime;
     }
 
@@ -181,18 +194,20 @@ public class Enemy : MonoBehaviour
                 throwTime -= Time.deltaTime;
                 if (throwTime < 0)
                 {
+                    throwTime = throwSetTime;
+                    transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+                    moveStop = !moveStop;
                     status = Status.NORMAL;
                 }
-
                 break;
 
             case Status.NORMAL:
-                BoxCast();
+                if(mode != MoveMode.RANDOMMOVE) BoxCast();
                 break;
         }
     }
 
-    void DeathAction()
+    public virtual void DeathAction()
     {
         Instantiate(origin_Death_Particle, transform.position, Quaternion.identity);
         if (waveManager.isWave)
@@ -210,10 +225,11 @@ public class Enemy : MonoBehaviour
 
     void BoxCast()
     {
-        origin = transform.position + velosity * transform.localScale.x / 2;
+        origin = transform.position + new Vector3(transform.localScale.x * velosity.x, transform.localScale.y * velosity.y, transform.localScale.z * velosity.z) / 2;
+        //boxcastRange = transform.localScale / 2;
         hitList = Physics.BoxCastAll(origin, boxcastRange, -transform.up, Quaternion.identity, transform.lossyScale.y, layerMask);
         Debug.DrawRay(origin, -transform.up);
-
+        
         int groundcount = 0;
         foreach (var hl in hitList)
         {
@@ -222,6 +238,7 @@ public class Enemy : MonoBehaviour
                 groundcount++;
             }
         }
+
         if (groundcount == 0)
         {
             velosity *= -1;
@@ -230,6 +247,8 @@ public class Enemy : MonoBehaviour
 
     public void Move()
     {
+        if (moveStop) return;
+
         if (mode == MoveMode.RANDOMMOVE)
         {
             RandomMove();
@@ -247,13 +266,18 @@ public class Enemy : MonoBehaviour
         Vector3 direction = currentPosition - previousePositoin;
 
         Vector3 scale = transform.localScale;
+        Quaternion rota = transform.rotation;
         scale.x = Mathf.Abs(scale.x);
+        rota.y = 0;
 
         if (direction.x > 0)
         {
-            scale.x *= 1;
+            //scale.x *= -1;
+            //transform.rotation = Quaternion.Euler(0, animAngle * -1, 0);
+            rota.y = 180;
         }
         transform.localScale = scale;
+        transform.rotation = rota;
 
         previousePositoin = currentPosition;
     }
@@ -275,13 +299,15 @@ public class Enemy : MonoBehaviour
 
     void RandomMove()
     {
-        Vector3 pos = new Vector3(x, 0.0f, z) - transform.position;
-        Vector3 normalpos = Vector3.Normalize(pos);
-        if ((pos.z < 0.1f && pos.z > -0.1f) || (pos.x < 0.1f && pos.x > -0.1f))
+        Vector3 pos = new Vector3(x, transform.position.y, z) - transform.position;
+        float distance = Vector3.Distance(new Vector3(x, transform.position.y, z), transform.position);
+        if (Math.Abs(distance) < 0.1f)
         {
-            x = UnityEngine.Random.Range(wavewall[1].transform.position.x - 1, wavewall[3].transform.position.x + 1);
-            z = UnityEngine.Random.Range(wavewall[1].transform.position.z + 1, wavewall[2].transform.position.z - 1);
+            x = UnityEngine.Random.Range(wavewall[0].transform.position.x - 1, wavewall[3].transform.position.x + 1);
+            z = UnityEngine.Random.Range(wavewall[0].transform.position.z + 1, wavewall[1].transform.position.z - 1);
         }
+        pos = new Vector3(x, transform.position.y, z) - transform.position;
+        Vector3 normalpos = Vector3.Normalize(pos);
         transform.position += normalpos * speed;
     }
 
@@ -303,7 +329,7 @@ public class Enemy : MonoBehaviour
             GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
         }
         gameObject.layer = ThrowEnemyLayer;
-        GetComponent<BoxCollider>().isTrigger = false;
+        GetComponent<BoxCollider>().isTrigger = true;
         GetComponent<Enemy>().isFly = true;
     }
 
@@ -317,19 +343,27 @@ public class Enemy : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Player"))
         {
-            animator.SetTrigger("isAttack");
+            AttackAnime();
         }
 
     }
 
-    private void OnTriggerEnter(Collider other)
+    public virtual void AttackAnime()
     {
+
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {   
         if (other.gameObject.layer == CatchEnemyLayer)
         {
             GUIText = other.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
             isGUIDraw = true;
             Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
-            
+            status = Status.DAMEGE;
+            TriggerSetRotate();
+            moveStop = !moveStop;
+
             TriggerSet(other);
             
         }
@@ -341,7 +375,8 @@ public class Enemy : MonoBehaviour
             hp -= other.gameObject.GetComponent<Enemy>().ThrowAttack;
             Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
             status = Status.DAMEGE;
-            throwTime = throwSetTime;
+            TriggerSetRotate();
+            moveStop = !moveStop;
             Physics.IgnoreCollision(other.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
         }
        // MaxSpeedEnemy(other);
@@ -392,13 +427,18 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    Vector2 GUIPosition;
+    public virtual void TriggerSetRotate()
+    {
+        transform.rotation = Quaternion.Euler(new Vector3(0, 0, -30));
+    }
+
+    protected Vector2 GUIPosition;
     public Font GUIFont;
-    bool isGUIDraw;
-    float GUITextArpha = 1.0f;
-    string GUIText;
+    protected bool isGUIDraw;
+    protected float GUITextArpha = 1.0f;
+    protected string GUIText;
     public float origin_GUITime = 0.5f;
-    float GUITime;
+    protected float GUITime;
 
     private void TextDraw(Vector2 position, int fontSize, Color color, string text, float arpha)
     {

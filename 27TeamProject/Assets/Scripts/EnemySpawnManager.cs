@@ -18,19 +18,26 @@ public class EnemySpawnManager : MonoBehaviour {
     public float enemyCount;
     public int enemyRange;
 
+    public WaveManager waveManager;
+
     // Use this for initialization
     void Awake () {
+        RateSet();
+    }
+
+    public void RateSet()
+    {
         pointRate = new List<List<float>>();
 
         TextAsset file;
-        file = Resources.Load("enemyRate/" + GameObject.Find("Nametransprot").GetComponent<Name>().stagename) as TextAsset;
+        file = Resources.Load("enemyRate/" + GameObject.Find("Nametransprot").GetComponent<Name>().stagename + "-" + waveManager.waveCount) as TextAsset;
         StringReader reader = new StringReader(file.text);
 
         while (reader.Peek() > -1)
         {
             string[] line = reader.ReadLine().Split(',');
             List<float> lineList = new List<float>();
-            for(int i = 0; i < line.Length; i++)
+            for (int i = 0; i < line.Length; i++)
             {
                 lineList.Add(float.Parse(line[i]));
             }
@@ -43,6 +50,7 @@ public class EnemySpawnManager : MonoBehaviour {
             enemySpawn.spawnRate = pointRate[i];
             enemySpawn.enemyList = enemyList;
             enemySpawn.enemySpawnManager = this;
+            enemySpawn.RateSet(waveManager);
         }
     }
 

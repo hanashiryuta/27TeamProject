@@ -31,10 +31,31 @@ public class Sticking_Enemy : Enemy
 
     void OnTriggerEnter(Collider hit)
     {
+        if (hit.gameObject.layer == CatchEnemyLayer)
+        {
+            GUIText = hit.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
+            isGUIDraw = true;
+            Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
+
+            TriggerSet(hit);
+
+        }
+
+        if (hit.gameObject.layer == ThrowEnemyLayer)
+        {
+            GUIText = hit.gameObject.GetComponent<Enemy>().ThrowAttack.ToString();
+            isGUIDraw = true;
+            hp -= hit.gameObject.GetComponent<Enemy>().ThrowAttack;
+            Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
+            status = Status.DAMEGE;
+            throwTime = throwSetTime;
+            Physics.IgnoreCollision(hit.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
+            TriggerSetRotate();
+        }
 
         if (!isHook)
         {
-            if (hit.gameObject.CompareTag("Enemy"))
+            if (hit.gameObject.CompareTag("Enemy") && hit.gameObject.GetComponent<Enemy>().isSticking == true)
             {
                 if (stickingCount <= countMax)
                 {
@@ -47,10 +68,16 @@ public class Sticking_Enemy : Enemy
                         Destroy(rb);
                     }
 
+                    // rb.useGravity = false;
+                    // //Freeze固定
+                    // rb.constraints = RigidbodyConstraints.FreezeRotation;
+                    //// rb.velocity = Vector3.zero;
+
                     child.Add(hit.gameObject);
 
                 }
                 stickingCount++;
+                //GetComponent<BoxCollider>().isTrigger = false;
             }
         }
     }
@@ -71,5 +98,12 @@ public class Sticking_Enemy : Enemy
         base.Update();
         if (isHook)
             Move();
+        for(int i = 0; i < child.Count; i++)
+        {
+            if(child[i] == null)
+            {
+                child.Remove(child[i]);
+            }
+        }
     }
 }

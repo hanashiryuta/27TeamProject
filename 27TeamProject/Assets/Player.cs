@@ -318,8 +318,7 @@ public class Player : MonoBehaviour
             Color color = hookPointer.GetComponent<Renderer>().material.color;
             color = Color.white;
             hookPointer.GetComponent<Renderer>().material.color = color;
-        }
-        
+        }       
         
     }
 
@@ -334,6 +333,7 @@ public class Player : MonoBehaviour
             hook = Instantiate(originHook, transform.position+new Vector3(0,2,0), Quaternion.identity);
             hook.GetComponent<Hook>().player = gameObject;
             hook.GetComponent<Hook>().targetPosition = hookPointer.transform.position;
+            hook.GetComponent<Hook>().targetDistance = Vector3.Distance(hookPointer.transform.position, transform.position);
             isHookShot = false;
             anim.SetBool("isShot",true);
         }

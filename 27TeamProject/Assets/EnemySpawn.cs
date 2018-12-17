@@ -31,37 +31,51 @@ public class EnemySpawn : MonoBehaviour {
     List<GameObject> spawnList;
 
     [HideInInspector]
-    public GameObject waveManager;
+    public WaveManager waveManager;
+
+    public GameObject origin_Spawn_Particle;
+    GameObject spawn_Particle;
 
 	// Use this for initialization
 	public virtual void Start () {
+        
+	}
+
+    public void RateSet(WaveManager waveManager)
+    {
         spawnList = new List<GameObject>();
         SpawnTime = SpawnSetTime;
-        waveManager = GameObject.FindGameObjectWithTag("WaveManager");
+        this.waveManager = waveManager;
         for (int r = 0; r < spawnRate.Count; r++)
         {
-            for(int i = 0; i <= spawnRate[r]; i++)
+            for (int i = 0; i < spawnRate[r]; i++)
             {
                 spawnList.Add(enemyList[r]);
             }
         }
-	}
+    }
 	
 	public virtual void Update () {
         if (waveManager.GetComponent<WaveManager>().isWave&&enemySpawnManager.isSpawn)
         {
             SpawnTime -= Time.deltaTime;
+            if(SpawnTime < 2 && spawn_Particle == null)
+            {
+                spawn_Particle = Instantiate(origin_Spawn_Particle, transform.position, Quaternion.identity, transform);
+            }
             if(SpawnTime < 0)
             {
                 if(SpawnCount < SpawnLimit)
                 {
-                    int rand = Random.Range(0, 11);
-                    GameObject enemy = Instantiate(spawnList[rand], transform.position, Quaternion.identity);
+                    int rand = Random.Range(0, spawnList.Count);
+                    GameObject enemy = Instantiate(spawnList[rand], transform.position + new Vector3(0, spawnList[rand].transform.localScale.y / 2,0), Quaternion.identity);
                     enemy.GetComponent<Enemy>().waveManager = waveManager.GetComponent<WaveManager>();
                     enemy.GetComponent<Enemy>().enemySpawnManager = enemySpawnManager;
                     SpawnTime = SpawnSetTime;
                     SpawnCount++;
                     enemySpawnManager.enemyCount++;
+                    Destroy(spawn_Particle);
+                    spawn_Particle = null;
                 }
             }
         }

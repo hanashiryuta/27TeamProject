@@ -1,0 +1,162 @@
+fileFormatVersion: 2
+guid: 8bbb369e7359b4645a4972c2bdd5af55
+timeCreated: 1543213049
+licenseType: Pro
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: leserX_1
+    21300002: leserX_2
+    21300004: leserX_3
+    21300006: leserX_0
+    21300008: leserX_4
+  externalObjects: {}
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -1
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: leserX_1
+      rect:
+        serializedVersion: 2
+        x: 1500.7502
+        y: 1178.7062
+        width: 726.041
+        height: 727.718
+      alignment: 9
+      pivot: {x: 0.47827825, y: 0.51502615}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: leserX_2
+      rect:
+        serializedVersion: 2
+        x: 2413.134
+        y: 892.9045
+        width: 917.209
+        height: 932.30096
+      alignment: 9
+      pivot: {x: 0.5210001, y: 0.52300227}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: leserX_3
+      rect:
+        serializedVersion: 2
+        x: 1618.2687
+        y: 295.7604
+        width: 533.19617
+        height: 506.36563
+      alignment: 9
+      pivot: {x: 0.48243305, y: 0.44284126}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: leserX_0
+      rect:
+        serializedVersion: 2
+        x: 202.98819
+        y: 1087.9031
+        width: 900.4397
+        height: 841.7478
+      alignment: 9
+      pivot: {x: 0.50976413, y: 0.5727332}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: leserX_4
+      rect:
+        serializedVersion: 2
+        x: 422.81372
+        y: 109.014595
+        width: 744.48706
+        height: 742.8101
+      alignment: 9
+      pivot: {x: 0.48447633, y: 0.5243405}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    outline: []
+    physicsShape: []
+  spritePackingTag: 
+  userData: 101136049631339
+  assetBundleName: 
+  assetBundleVariant: 

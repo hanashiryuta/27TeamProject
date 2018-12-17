@@ -62,4 +62,9 @@ public class PaulEnemy : Enemy {
             PosBlow = transform.position - other.transform.position;
         }
     }
+
+    public override void TriggerSetRotate()
+    {
+        
+    }
 }
