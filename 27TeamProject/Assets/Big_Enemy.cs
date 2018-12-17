@@ -28,6 +28,10 @@ public class Big_Enemy : Enemy
         else if (hp > 40)
         {
             isCatch = false;
+            if (!waveManager.isWave)
+            {
+                DeathAction();
+            }
             if (!BlowMode)
             {
                 if (isHook) Move();
