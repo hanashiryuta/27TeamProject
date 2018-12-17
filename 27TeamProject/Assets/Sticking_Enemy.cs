@@ -36,6 +36,9 @@ public class Sticking_Enemy : Enemy
             GUIText = hit.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
             isGUIDraw = true;
             Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
+            status = Status.DAMEGE;
+            TriggerSetRotate();
+            moveStop = !moveStop;
 
             TriggerSet(hit);
 
@@ -48,7 +51,8 @@ public class Sticking_Enemy : Enemy
             hp -= hit.gameObject.GetComponent<Enemy>().ThrowAttack;
             Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
             status = Status.DAMEGE;
-            throwTime = throwSetTime;
+            TriggerSetRotate();
+            moveStop = !moveStop;
             Physics.IgnoreCollision(hit.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
             TriggerSetRotate();
         }

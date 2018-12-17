@@ -383,31 +383,31 @@ public class Enemy : MonoBehaviour
        // MaxSpeedEnemy(other);
     }
 
-    public virtual void MaxSpeedEnemy(Collider other)
-    {
-        if (other.gameObject.layer == CatchEnemyLayer)
-        {
-            GUIText = other.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
-            isGUIDraw = true;
-            hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
-            Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
-            if (hp <= 5)
-            {
-                TriggerSet(other);
-            }
-        }
+    //public virtual void MaxSpeedEnemy(Collider other)
+    //{
+    //    if (other.gameObject.layer == CatchEnemyLayer)
+    //    {
+    //        GUIText = other.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
+    //        isGUIDraw = true;
+    //        hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
+    //        Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
+    //        if (hp <= 5)
+    //        {
+    //            TriggerSet(other);
+    //        }
+    //    }
 
-        if (other.gameObject.layer == ThrowEnemyLayer)
-        {
-            GUIText = other.gameObject.GetComponent<Enemy>().ThrowAttack.ToString();
-            isGUIDraw = true;
-            hp -= other.gameObject.GetComponent<Enemy>().ThrowAttack;
-            Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
-            status = Status.DAMEGE;
-            throwTime = throwSetTime;
-            Physics.IgnoreCollision(other.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
-        }
-    }
+    //    if (other.gameObject.layer == ThrowEnemyLayer)
+    //    {
+    //        GUIText = other.gameObject.GetComponent<Enemy>().ThrowAttack.ToString();
+    //        isGUIDraw = true;
+    //        hp -= other.gameObject.GetComponent<Enemy>().ThrowAttack;
+    //        Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
+    //        status = Status.DAMEGE;
+    //        throwTime = throwSetTime;
+    //        Physics.IgnoreCollision(other.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
+    //    }
+    //}
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.layer == ThrowEnemyLayer)

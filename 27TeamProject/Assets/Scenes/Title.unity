@@ -984,9 +984,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c69517bf28daca3479a7a44ca26bbc38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgmList:
-  - {fileID: 8300000, guid: e72da17fc6e19a447b300dbc009a69d9, type: 3}
-  - {fileID: 8300000, guid: 16303164ea2c6c74885fe2f4c6bc8691, type: 3}
+  bgmList: []
 --- !u!1 &1893593383
 GameObject:
   m_ObjectHideFlags: 0
