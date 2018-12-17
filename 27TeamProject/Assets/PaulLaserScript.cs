@@ -81,6 +81,7 @@ public class PaulLaserScript : Enemy {
         if(HP < blowHP)
         {
             PaulList[blowcount].GetComponent<PaulEnemy>().GetMasterBlow = true;
+            hp = (int)((float)inputHp * blowHP);
             blowHP -= 0.25f;
             blowcount++;
         }

@@ -83,7 +83,7 @@ public class Enemy : MonoBehaviour {
     [HideInInspector]
     public Vector3 PosBlow;
     
-    float throwSetTime = 1;
+    public float throwSetTime;
     float throwTime;
 
     Status status;
