@@ -66,7 +66,6 @@ public class Sticking_Enemy : Enemy
                     if (rb != null && transform.parent == null)
                     {
                         Destroy(rb);
-                        //GetComponent<BoxCollider>().isTrigger = false;
                     }
 
                     // rb.useGravity = false;
@@ -78,9 +77,7 @@ public class Sticking_Enemy : Enemy
 
                 }
                 stickingCount++;
-
                 //GetComponent<BoxCollider>().isTrigger = false;
-
             }
         }
     }
@@ -93,8 +90,6 @@ public class Sticking_Enemy : Enemy
             child[i].layer = 15;
             child[i].GetComponent<BoxCollider>().isTrigger = false;
         }
-
-
     }
 
     //更新

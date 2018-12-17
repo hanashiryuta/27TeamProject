@@ -139,6 +139,7 @@ public class WaveManager : MonoBehaviour
                 enemySpawnManager.RateSet();
             }
         }
+        
         if(waveCount > 3)
         {
             isSceneChange = true;
