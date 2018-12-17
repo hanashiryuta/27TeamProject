@@ -1481,7 +1481,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &1931366248
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1580,9 +1580,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23c4bef184fd9184f909d84208df08cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hp: 10
   moveSpeed: 5
   moveForceMultiplier: 50
   jumpPower: 300
+  playerState: 0
+  originHook: {fileID: 0}
+  hookPointer: {fileID: 0}
+  pointerRadius: 0
+  shotRadius: 0
+  isHookShot: 1
+  hitPosition: {x: 0, y: 0, z: 0}
+  hitDistance: 0
+  swingSpeed: 0
+  swingSpeedRange: 0
+  swingSpeedRate: 0
+  throwSpeed: 0
+  flySpeed: 0
+  slapSpeed: 0
+  slap_Particle: {fileID: 0}
+  origin_TimingTime: 0
+  timingTime: 0
+  swingButtonRate: 0
+  origin_Timing_Particle: {fileID: 0}
+  good_Timing_Particle: {fileID: 0}
+  badTiming_Particle: {fileID: 0}
+  testSwingState: 0
+  testMoveState: 0
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1001 &2146643576
 Prefab:
   m_ObjectHideFlags: 0

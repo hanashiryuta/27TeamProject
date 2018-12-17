@@ -53,7 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpawnSetTime: 10
   SpawnTime: 0
-  SpawnEnemy: {fileID: 1239241153488046, guid: 070d2b41dc59b994eb400ee054f367c7, type: 2}
-  SpawnLimit: 1
+  SpawnEnemy: {fileID: 1809161476772550, guid: 98f87cde642a46848981c162ca4d89f9, type: 2}
+  SpawnLimit: 0
   SpawnCount: 0
   waveManager: {fileID: 0}

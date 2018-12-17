@@ -53,6 +53,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpawnSetTime: 3
   SpawnTime: 0
-  SpawnEnemy: {fileID: 1000943937109094, guid: 96ed7e7d73a0a9f4b844843f98dce0b1, type: 2}
+  SpawnEnemy: {fileID: 1447667295648964, guid: 63a4a4fc9650fe641be71883cd4174be, type: 2}
   SpawnLimit: 20
   SpawnCount: 0
