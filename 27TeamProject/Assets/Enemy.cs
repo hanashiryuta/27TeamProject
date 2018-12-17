@@ -83,8 +83,8 @@ public class Enemy : MonoBehaviour {
     [HideInInspector]
     public Vector3 PosBlow;
     
-    public float throwSetTime;
-    float throwTime;
+    public float DamageSetTime;
+    float DamageTime;
 
     Status status;
 
@@ -150,7 +150,7 @@ public class Enemy : MonoBehaviour {
         GUITime = origin_GUITime;
 
         moveStop = false;
-        throwTime = throwSetTime;
+        DamageTime = DamageSetTime;
     }
 
     // Update is called once per frame
@@ -181,10 +181,10 @@ public class Enemy : MonoBehaviour {
         switch (status)
         {
             case Status.DAMEGE:
-                throwTime -= Time.deltaTime;
-                if(throwTime < 0)
+                DamageTime -= Time.deltaTime;
+                if(DamageTime < 0)
                 {
-                    throwTime = throwSetTime;
+                    DamageTime = DamageSetTime;
                     transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
                     moveStop = !moveStop;
                     status = Status.NORMAL;
