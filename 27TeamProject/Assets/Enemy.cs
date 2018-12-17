@@ -188,7 +188,7 @@ public class Enemy : MonoBehaviour {
 
             case Status.NORMAL:
                 //transform.rotation = Quaternion.Euler(new Vector3(0, 0, -15));
-                BoxCast();
+                if(mode != MoveMode.RANDOMMOVE) BoxCast();
                 break;
         }
     }
@@ -206,14 +206,6 @@ public class Enemy : MonoBehaviour {
         hitList = Physics.BoxCastAll(origin, boxcastRange, -transform.up, Quaternion.identity, transform.lossyScale.y, layerMask);
         Debug.DrawRay(origin, -transform.up);
         
-        //RaycastHit hit;
-        //var isHit = Physics.BoxCast(origin, boxcastRange, -transform.up, out hit, transform.rotation);
-        //if (isHit)
-        //{
-        //    Gizmos.DrawRay(origin, -transform.up * hit.distance);
-        //    Gizmos.DrawWireCube(origin + -transform.up * hit.distance, boxcastRange);
-        //}
-
         int groundcount = 0;
         foreach (var hl in hitList)
         {
@@ -248,13 +240,18 @@ public class Enemy : MonoBehaviour {
         Vector3 direction = currentPosition - previousePositoin;
 
         Vector3 scale = transform.localScale;
+        Quaternion rota = transform.rotation;
         scale.x = Mathf.Abs(scale.x);
+        rota.y = 0;
+
         if (direction.x > 0)
         {
             //scale.x *= -1;
-            transform.rotation = Quaternion.Euler(0, animAngle * Vector3.Normalize(direction).x, 0);
+            //transform.rotation = Quaternion.Euler(0, animAngle * -1, 0);
+            rota.y = 180;
         }
         transform.localScale = scale;
+        transform.rotation = rota;
 
         previousePositoin = currentPosition;
     }
