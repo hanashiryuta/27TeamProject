@@ -168,7 +168,7 @@ public class Enemy : MonoBehaviour {
 
         if (isFly)
             flyDeathTime -= Time.deltaTime;
-        if ((hp < 1 || Mathf.Abs(transform.position.z) > 50) || !waveManager.isWave || flyDeathTime < 0)
+        if ((/*hp < 1 ||*/ Mathf.Abs(transform.position.z) > 50) || !waveManager.isWave || flyDeathTime < 0)
         {
             Instantiate(origin_Death_Particle, transform.position, Quaternion.identity);
             if (waveManager.isWave)
@@ -339,6 +339,7 @@ public class Enemy : MonoBehaviour {
             TriggerSetRotate();
             moveStop = !moveStop;
             Physics.IgnoreCollision(other.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
+            TriggerSet(other);
         }
     }
 
@@ -351,7 +352,7 @@ public class Enemy : MonoBehaviour {
     public virtual void TriggerSet(Collider other)
     {
         hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
-        if (hp <= 5)
+        if (hp <= 0)
         {
             BlowMode = true;
             GetComponent<Rigidbody>().useGravity = false;
