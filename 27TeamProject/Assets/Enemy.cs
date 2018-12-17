@@ -89,9 +89,9 @@ public class Enemy : MonoBehaviour
 
     [HideInInspector]
     public Vector3 PosBlow;
-    protected float throwSetTime = 1;
-    protected float throwTime;
-
+    
+    public float DamageSetTime;
+    float DamageTime;
     protected Status status;
 
     protected int ThisEnemyLayer;
@@ -163,7 +163,7 @@ public class Enemy : MonoBehaviour
         GUITime = origin_GUITime;
 
         moveStop = false;
-        throwTime = throwSetTime;
+        DamageTime = DamageSetTime;
         flyDeathTime = originFlyDeathTime;
     }
 
@@ -191,10 +191,10 @@ public class Enemy : MonoBehaviour
         switch (status)
         {
             case Status.DAMEGE:
-                throwTime -= Time.deltaTime;
-                if (throwTime < 0)
+                DamageTime -= Time.deltaTime;
+                if(DamageTime < 0)
                 {
-                    throwTime = throwSetTime;
+                    DamageTime = DamageSetTime;
                     transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
                     moveStop = !moveStop;
                     status = Status.NORMAL;
