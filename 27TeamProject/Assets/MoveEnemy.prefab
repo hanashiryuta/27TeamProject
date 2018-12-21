@@ -146,6 +146,9 @@ MonoBehaviour:
   SwingAttack: 5
   mode: 0
   ChaseRange: 10
+  wavewall: []
+  x: 0
+  z: 0
   slap_Circle: {fileID: 1774002166212886, guid: fbd1550471567d647b8e952fcc435f58,
     type: 2}
   enemy3: {fileID: 0}
@@ -155,8 +158,12 @@ MonoBehaviour:
     type: 2}
   origin_Death_Particle: {fileID: 1424774110854730, guid: 58a5f048cb2bdda438cd7659b9d09afb,
     type: 2}
+  angleZ: 0
+  PosBlow: {x: 0, y: 0, z: 0}
+  DamageSetTime: 0.5
   animator: {fileID: 95719171232007388}
   isFly: 0
+  moveStop: 0
   GUIFont: {fileID: 12800000, guid: d7d5b71cb41044c43bffbb0141fd35ae, type: 3}
   origin_GUITime: 0.5
 --- !u!212 &212229978006262312
