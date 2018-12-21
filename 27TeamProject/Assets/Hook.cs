@@ -36,10 +36,20 @@ public class Hook : MonoBehaviour {
     [HideInInspector]
     public HookState hookState = HookState.MOVE;
     //つかんだオブジェクト
-    GameObject catchObject;
+    public GameObject catchObject;
 
-	// Use this for initialization
-	void Start () {
+    public GameObject origin_ArmLine;
+    GameObject player_ArmLine;
+
+    LineRenderer armLine;
+
+    string hookInput = "Hook";
+
+    [HideInInspector]
+    public float targetDistance;
+
+    // Use this for initialization
+    void Start () {
         //移動方向設定
         hookVelocity = targetPosition - transform.position;
         Vector3 scale = transform.localScale;
@@ -49,10 +59,13 @@ public class Hook : MonoBehaviour {
         else
             scale.x = -1;
         transform.localScale = scale;
+        LineSet();
 	}
 
     void FixedUpdate()
     {
+        armLine.SetPosition(0, player.transform.position + new Vector3(0, 2, 0));
+        armLine.SetPosition(1, transform.position);
         //フック状態で変化
         switch (hookState)
         {
@@ -83,7 +96,7 @@ public class Hook : MonoBehaviour {
     private void Move()
     {
         transform.position += hookVelocity.normalized * moveSpeed;
-        if (Vector3.Distance(targetPosition, transform.position) <= 0.2f)
+        if (Vector3.Distance(transform.position,player.transform.position) >= targetDistance)
         {
             hookState = HookState.RETURN;
             player.GetComponent<Player>().playerState = PlayerState.HOOKRETURN;
@@ -107,7 +120,14 @@ public class Hook : MonoBehaviour {
     {
         player.GetComponent<Player>().isHookShot = true;
         player.GetComponent<Player>().playerState = PlayerState.NORMALMOVE;
+        Destroy(player_ArmLine);
         Destroy(gameObject);
+    }
+
+    void LineSet()
+    {
+        player_ArmLine = Instantiate(origin_ArmLine);
+        armLine = player_ArmLine.GetComponent<LineRenderer>();
     }
 
     private void OnTriggerEnter(Collider collision)
@@ -120,7 +140,30 @@ public class Hook : MonoBehaviour {
         //    player.GetComponent<Player>().HookSet(gameObject);
         //}
         //敵に当たったら
-        if (collision.gameObject.CompareTag("Enemy") && hookState == HookState.MOVE)
+        if (collision.gameObject.CompareTag("Enemy") && hookState == HookState.MOVE && collision.gameObject.GetComponent<Enemy>().isCatch)
+        {
+
+            //当たった時にボタン押していたら
+            if (Input.GetButton(hookInput)&&catchObject == null)
+            {
+                //キャッチ処理
+                hookState = HookState.CATCH;
+                catchObject = collision.gameObject;
+                player.GetComponent<Player>().SwingSet(collision.gameObject);
+                
+               collision.gameObject.layer = 12;
+               collision.GetComponent<Enemy>().isHook = false;
+            }
+            ////押していなければ
+            //else
+            //{
+            //    catchObject = collision.gameObject;
+            //    hookState = HookState.ATTACK;
+            //}
+        }
+
+        //岩に当たったら
+        if (collision.gameObject.CompareTag("Rock") && hookState == HookState.MOVE)
         {
 
             //当たった時にボタン押していたら
@@ -130,9 +173,9 @@ public class Hook : MonoBehaviour {
                 hookState = HookState.CATCH;
                 catchObject = collision.gameObject;
                 player.GetComponent<Player>().SwingSet(collision.gameObject);
-                
-               collision.gameObject.layer = 12;
-               collision.GetComponent<Enemy>().isHook = false;
+
+                collision.gameObject.layer = 12;
+                collision.GetComponent<Rock>().isHook = false;
             }
             //押していなければ
             else

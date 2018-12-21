@@ -11,22 +11,103 @@ using UnityEngine;
 public class Sticking_Enemy : Enemy
 {
 
+    //くっつく数
+    public int stickingCount;
+
+    //くっつく最大値
+    int countMax;
+
+    public List<GameObject> child;
+
+    //初期化
+    public override void Start()
+    {
+        base.Start();
+
+        stickingCount = 0;
+
+        countMax = 5;
+    }
+
     void OnTriggerEnter(Collider hit)
     {
+        if (hit.gameObject.layer == CatchEnemyLayer)
+        {
+            GUIText = hit.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
+            isGUIDraw = true;
+            Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
+            status = Status.DAMEGE;
+            TriggerSetRotate();
+            moveStop = !moveStop;
+
+            TriggerSet(hit);
+
+        }
+
+        if (hit.gameObject.layer == ThrowEnemyLayer)
+        {
+            GUIText = hit.gameObject.GetComponent<Enemy>().ThrowAttack.ToString();
+            isGUIDraw = true;
+            hp -= hit.gameObject.GetComponent<Enemy>().ThrowAttack;
+            Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
+            status = Status.DAMEGE;
+            TriggerSetRotate();
+            moveStop = !moveStop;
+            Physics.IgnoreCollision(hit.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
+            TriggerSetRotate();
+        }
+
         if (!isHook)
         {
-            Rigidbody rb = GetComponent<Rigidbody>();
-            if (hit.gameObject.CompareTag("Enemy"))
+            if (hit.gameObject.CompareTag("Enemy") && hit.gameObject.GetComponent<Enemy>().isSticking == true)
             {
-                hit.gameObject.transform.parent = this.transform;
-                rb.constraints = RigidbodyConstraints.FreezeAll;
+                if (stickingCount <= countMax)
+                {
+                    //親にくっつく
+                    hit.gameObject.transform.parent = this.transform;
+                    hit.GetComponent<Enemy>().isHook = false;
+                    Rigidbody rb = hit.GetComponent<Rigidbody>();
+                    if (rb != null && transform.parent == null)
+                    {
+                        Destroy(rb);
+                    }
+
+                    // rb.useGravity = false;
+                    // //Freeze固定
+                    // rb.constraints = RigidbodyConstraints.FreezeRotation;
+                    //// rb.velocity = Vector3.zero;
+
+                    child.Add(hit.gameObject);
+
+                }
+                stickingCount++;
+                //GetComponent<BoxCollider>().isTrigger = false;
             }
         }
     }
+    //
+    public override void ThrowSet(float throwSpeed, Vector3 throwVelocity)
+    {
+        base.ThrowSet(throwSpeed, throwVelocity);
+        for (int i = 0; i < child.Count; i++)
+        {
+            child[i].layer = 15;
+            child[i].GetComponent<BoxCollider>().isTrigger = false;
+        }
+    }
 
+    //更新
     public override void Update()
     {
         base.Update();
-        Move();
+        if (isHook)
+            Move();
+        for(int i = 0; i < child.Count; i++)
+        {
+            if(child[i] == null)
+            {
+                child.Remove(child[i]);
+            }
+        }
     }
 }
