@@ -247,10 +247,12 @@ MonoBehaviour:
     type: 2}
   angleZ: 0
   PosBlow: {x: 0, y: 0, z: 0}
+  DamageSetTime: 0.5
   animator: {fileID: 95719171232007388}
   originFlyDeathTime: 2
   flyDeathTime: 0
   isFly: 0
+  moveStop: 0
   enemySpawnManager: {fileID: 0}
   GUIFont: {fileID: 12800000, guid: d7d5b71cb41044c43bffbb0141fd35ae, type: 3}
   origin_GUITime: 0.5

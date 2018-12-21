@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 4259486375487304}
   - component: {fileID: 114213060401451594}
   - component: {fileID: 120206844403316014}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: PaulEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -320,7 +320,7 @@ GameObject:
   - component: {fileID: 4662023196527900}
   - component: {fileID: 114997213000893494}
   - component: {fileID: 65493303669106598}
-  m_Layer: 0
+  m_Layer: 22
   m_Name: LaserEnd
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1167,6 +1167,7 @@ MonoBehaviour:
     type: 2}
   angleZ: 0
   PosBlow: {x: 0, y: 0, z: 0}
+  DamageSetTime: 0
   animator: {fileID: 0}
   originFlyDeathTime: 2
   flyDeathTime: 0
@@ -1219,6 +1220,7 @@ MonoBehaviour:
     type: 2}
   angleZ: 0
   PosBlow: {x: 0, y: 0, z: 0}
+  DamageSetTime: 0.5
   animator: {fileID: 0}
   originFlyDeathTime: 2
   flyDeathTime: 0
@@ -1233,7 +1235,7 @@ MonoBehaviour:
   - {fileID: 4421224003611856}
   - {fileID: 4972654225065534}
   - {fileID: 4652751131346360}
-  count: 0
+  listCount: 0
   setTime: 20
   time: 0
   LaserSpeed: 0.65
@@ -1305,6 +1307,7 @@ MonoBehaviour:
     type: 2}
   angleZ: 0
   PosBlow: {x: 0, y: 0, z: 0}
+  DamageSetTime: 0
   animator: {fileID: 0}
   originFlyDeathTime: 2
   flyDeathTime: 0
@@ -1376,6 +1379,7 @@ MonoBehaviour:
     type: 2}
   angleZ: 0
   PosBlow: {x: 0, y: 0, z: 0}
+  DamageSetTime: 0
   animator: {fileID: 0}
   originFlyDeathTime: 2
   flyDeathTime: 0
@@ -1428,6 +1432,7 @@ MonoBehaviour:
     type: 2}
   angleZ: 0
   PosBlow: {x: 0, y: 0, z: 0}
+  DamageSetTime: 0
   animator: {fileID: 0}
   originFlyDeathTime: 2
   flyDeathTime: 0
