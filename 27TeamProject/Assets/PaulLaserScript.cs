@@ -6,8 +6,7 @@ public class PaulLaserScript : Enemy {
 
     [SerializeField]
     public Transform[] PaulList;
-    //public int childCount;
-    public int listCount;
+    public int count;
 
     [SerializeField]
     float setTime;
@@ -49,7 +48,7 @@ public class PaulLaserScript : Enemy {
     {
         base.Start();
         lineRenderer = GetComponent<LineRenderer>();
-        //childCount = transform.childCount;
+        count = transform.childCount;
         
         lineRenderer.enabled = false;
         time = setTime;
@@ -68,41 +67,24 @@ public class PaulLaserScript : Enemy {
         EnemyLayer = LayerMask.NameToLayer("Enemy");
 
         LaserAnimObject.SetActive(false);
-
-        listCount = PaulList.Length;
     }
 
     public override void Update () {
-        int nullcount = 0;
-        foreach (var pl in PaulList)
-        {
-            if(pl == null)
-            {
-                nullcount++;
-            }
-        }
-        
-        if (nullcount == 4)
-        {
-            Destroy(gameObject);
-        }
+        base.Update();
 
         float HP = (float)hp / (float)inputHp;
 
-        if (HP < blowHP)
+        if (LaserAnimObject.activeInHierarchy) anim.SetBool("isBool", !isLaser);
+         
+        animTime = setAnimTime;
+
+        if(HP < blowHP)
         {
             PaulList[blowcount].GetComponent<PaulEnemy>().GetMasterBlow = true;
             hp = (int)((float)inputHp * blowHP);
             blowHP -= 0.25f;
             blowcount++;
         }
-        
-        base.Update();
-
-        if (LaserAnimObject == null) return;
-        if (LaserAnimObject.activeInHierarchy) anim.SetBool("isBool", !isLaser);
-         
-        animTime = setAnimTime;
         
         if (!isLaser)
         {
