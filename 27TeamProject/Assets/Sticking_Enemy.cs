@@ -19,6 +19,11 @@ public class Sticking_Enemy : Enemy
 
     public List<GameObject> child;
 
+    public override void Awake()
+    {
+        
+    }
+
     //初期化
     public override void Start()
     {
