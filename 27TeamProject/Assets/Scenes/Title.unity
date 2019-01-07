@@ -575,6 +575,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectButton: {fileID: 133662939}
+  fade: {fileID: 1616306969}
 --- !u!4 &393489262
 Transform:
   m_ObjectHideFlags: 0
@@ -946,30 +947,6 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 114913927854254862, guid: f76b08ef4bdd5794eb8dabe76f690750,
-        type: 2}
-      propertyPath: m_Color.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 224751351540751218, guid: f76b08ef4bdd5794eb8dabe76f690750,
-        type: 2}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 224751351540751218, guid: f76b08ef4bdd5794eb8dabe76f690750,
-        type: 2}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 224751351540751218, guid: f76b08ef4bdd5794eb8dabe76f690750,
-        type: 2}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1847951463204698, guid: f76b08ef4bdd5794eb8dabe76f690750, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f76b08ef4bdd5794eb8dabe76f690750, type: 2}
   m_IsPrefabAsset: 0
@@ -1119,6 +1096,12 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 433307986687f7b4fbd41900194ca53d, type: 3}
   - {fileID: 8300000, guid: 5b2fed38c0331854b8fc0421c988b687, type: 3}
   - {fileID: 8300000, guid: 998e7076b8bd1074db7001063ef968ad, type: 3}
+--- !u!114 &1616306969 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114227839428074558, guid: f76b08ef4bdd5794eb8dabe76f690750,
+    type: 2}
+  m_PrefabInternal: {fileID: 1216838842}
+  m_Script: {fileID: 11500000, guid: ab4eec6881d71ea4a851143e3948175d, type: 3}
 --- !u!1 &1893593383
 GameObject:
   m_ObjectHideFlags: 0

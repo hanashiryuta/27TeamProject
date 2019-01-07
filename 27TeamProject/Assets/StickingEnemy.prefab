@@ -221,7 +221,7 @@ MonoBehaviour:
   hp: 0
   layerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 8388608
   hook: {fileID: 1345325903641440, guid: 38efe2a7165f6d447a685850c1279a71, type: 2}
   BlowOffSpeed: 0.5
   isHook: 0
@@ -232,7 +232,7 @@ MonoBehaviour:
   maxSwingAttack: 10
   ThrowAttack: 20
   SwingAttack: 5
-  mode: 0
+  mode: 1
   ChaseRange: 10
   wavewall: []
   x: 0
@@ -255,6 +255,10 @@ MonoBehaviour:
   enemySpawnManager: {fileID: 0}
   playerSP: 0.1
   moveStop: 0
+  isEscape: 0
+  EscapeSpeed: 0
+  setEscapeDelayTime: 0
+  EscapeDilayTime: 0
   debug: 
   seList:
   - {fileID: 8300000, guid: 7f14b6bd95d45c043969d9d86f316c80, type: 3}

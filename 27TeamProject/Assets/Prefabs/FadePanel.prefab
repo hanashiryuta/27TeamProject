@@ -41,7 +41,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fadeSpeed: 0.01
-  isFade: 0
+  fadeState: 0
+  isSceneEnd: 0
+  nextScene: Select
 --- !u!114 &114913927854254862
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -84,7 +86,7 @@ RectTransform:
   m_GameObject: {fileID: 1847951463204698}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0

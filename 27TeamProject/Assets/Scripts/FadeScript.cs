@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public enum FadeState
 {
@@ -18,6 +19,8 @@ public class FadeScript : MonoBehaviour {
     public FadeState fadeState = FadeState.STARTFADE;
 
     public bool isSceneEnd;
+
+    public string nextScene;
 
 	// Use this for initialization
 	void Start () {
@@ -41,6 +44,8 @@ public class FadeScript : MonoBehaviour {
                 break;
             case FadeState.ENDFADE:
                 color.a += fadeSpeed;
+                if(color.a >= 1)
+                SceneManager.LoadScene(nextScene);
                 break;
         }
 

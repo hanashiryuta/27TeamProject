@@ -1175,6 +1175,10 @@ MonoBehaviour:
   enemySpawnManager: {fileID: 0}
   playerSP: 0
   moveStop: 0
+  isEscape: 0
+  EscapeSpeed: 0
+  setEscapeDelayTime: 0
+  EscapeDilayTime: 0
   debug: 
   seList: []
   GUIFont: {fileID: 12800000, guid: d7d5b71cb41044c43bffbb0141fd35ae, type: 3}
@@ -1196,7 +1200,7 @@ MonoBehaviour:
   hp: 0
   layerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 8388608
   hook: {fileID: 0}
   BlowOffSpeed: 0
   isHook: 0
@@ -1230,6 +1234,10 @@ MonoBehaviour:
   enemySpawnManager: {fileID: 0}
   playerSP: 0
   moveStop: 0
+  isEscape: 0
+  EscapeSpeed: 0
+  setEscapeDelayTime: 0
+  EscapeDilayTime: 0
   debug: 
   seList:
   - {fileID: 8300000, guid: 7f14b6bd95d45c043969d9d86f316c80, type: 3}
@@ -1322,6 +1330,10 @@ MonoBehaviour:
   enemySpawnManager: {fileID: 0}
   playerSP: 0
   moveStop: 0
+  isEscape: 0
+  EscapeSpeed: 0
+  setEscapeDelayTime: 0
+  EscapeDilayTime: 0
   debug: 
   seList: []
   GUIFont: {fileID: 12800000, guid: d7d5b71cb41044c43bffbb0141fd35ae, type: 3}
@@ -1396,6 +1408,10 @@ MonoBehaviour:
   enemySpawnManager: {fileID: 0}
   playerSP: 0
   moveStop: 0
+  isEscape: 0
+  EscapeSpeed: 0
+  setEscapeDelayTime: 0
+  EscapeDilayTime: 0
   debug: 
   seList: []
   GUIFont: {fileID: 12800000, guid: d7d5b71cb41044c43bffbb0141fd35ae, type: 3}
@@ -1451,6 +1467,10 @@ MonoBehaviour:
   enemySpawnManager: {fileID: 0}
   playerSP: 0
   moveStop: 0
+  isEscape: 0
+  EscapeSpeed: 0
+  setEscapeDelayTime: 0
+  EscapeDilayTime: 0
   debug: 
   seList: []
   GUIFont: {fileID: 12800000, guid: d7d5b71cb41044c43bffbb0141fd35ae, type: 3}
