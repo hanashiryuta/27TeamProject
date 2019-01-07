@@ -9,46 +9,46 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1342348618934276}
+  m_RootGameObject: {fileID: 1748233591890930}
   m_IsPrefabAsset: 1
---- !u!1 &1342348618934276
+--- !u!1 &1748233591890930
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4671804608020914}
-  - component: {fileID: 212096960891034548}
-  - component: {fileID: 114158054148343856}
-  - component: {fileID: 54849338952076048}
-  - component: {fileID: 65477985550790530}
-  m_Layer: 0
-  m_Name: Boss
-  m_TagString: Untagged
+  - component: {fileID: 4268839236263518}
+  - component: {fileID: 212506666412617044}
+  - component: {fileID: 114346539367117058}
+  - component: {fileID: 54952120001892088}
+  - component: {fileID: 65156802765627368}
+  m_Layer: 9
+  m_Name: rock
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4671804608020914
+--- !u!4 &4268839236263518
 Transform:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1342348618934276}
+  m_GameObject: {fileID: 1748233591890930}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.1, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 1}
+  m_LocalPosition: {x: -1.108, y: 0, z: 10.31}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &54849338952076048
+--- !u!54 &54952120001892088
 Rigidbody:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1342348618934276}
+  m_GameObject: {fileID: 1748233591890930}
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
@@ -58,35 +58,62 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!65 &65477985550790530
+--- !u!65 &65156802765627368
 BoxCollider:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1342348618934276}
+  m_GameObject: {fileID: 1748233591890930}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.16, y: 0.16, z: 0.2}
+  m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114158054148343856
+--- !u!114 &114346539367117058
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1342348618934276}
+  m_GameObject: {fileID: 1748233591890930}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6e3b734f55ad2f43b3942bc4468c3b1, type: 3}
+  m_Script: {fileID: 11500000, guid: e5f66091ac1ea1342a15a4142f4a075a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!212 &212096960891034548
+  speed: 0.03
+  inputHp: 10
+  hp: 0
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  hook: {fileID: 1345325903641440, guid: 38efe2a7165f6d447a685850c1279a71, type: 2}
+  BlowOffSpeed: 0.5
+  isHook: 0
+  BlowMode: 0
+  maxThrowAttack: 20
+  maxSwingAttack: 5
+  ThrowAttack: 20
+  SwingAttack: 5
+  mode: 0
+  ChaseRange: 0
+  slap_Circle: {fileID: 0}
+  enemy3: {fileID: 0}
+  isSlap: 0
+  waveManager: {fileID: 0}
+  origin_Damege_Particle: {fileID: 0}
+  origin_Death_Particle: {fileID: 0}
+  animator: {fileID: 0}
+  isFly: 0
+  GUIFont: {fileID: 0}
+  origin_GUITime: 0.5
+  m_power: 600
+--- !u!212 &212506666412617044
 SpriteRenderer:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1342348618934276}
+  m_GameObject: {fileID: 1748233591890930}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -96,7 +123,7 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -116,8 +143,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 0.9811321, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: e8d9ee69ec1bd4f49ad5d31e53897df4, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

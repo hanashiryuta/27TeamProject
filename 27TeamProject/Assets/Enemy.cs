@@ -101,6 +101,11 @@ public class Enemy : MonoBehaviour {
 
     public virtual void Awake()
     {
+        AwakeSub();
+    }
+
+    public virtual void AwakeSub()
+    {
         //mode = MoveMode.RANDOMMOVE;
         //mode = Enum.GetValues(typeof(MoveMode)).Cast<MoveMode>().OrderBy(c => UnityEngine.Random.Range(0, 3)).FirstOrDefault();
         int random = UnityEngine.Random.Range(0, 2);
@@ -108,7 +113,7 @@ public class Enemy : MonoBehaviour {
         {
             mode = MoveMode.RANDOMMOVE;
         }
-        else if(random == 1)
+        else if (random == 1)
         {
             mode = MoveMode.PLAYERCHASE;
         }
@@ -119,6 +124,11 @@ public class Enemy : MonoBehaviour {
 
     // Use this for initialization
     public virtual void Start () {
+        StartSub();
+    }
+
+    public virtual void StartSub()
+    {
         hp = inputHp;
         isHook = true;
         BlowMode = false;
@@ -145,6 +155,11 @@ public class Enemy : MonoBehaviour {
     // Update is called once per frame
     public virtual void Update()
     {
+        UpdateSub();
+    }
+
+    public virtual void UpdateSub()
+    {
         if (isGUIDraw)
         {
             GUITime -= Time.deltaTime;
@@ -167,12 +182,12 @@ public class Enemy : MonoBehaviour {
         if (isSlap)
             Slap();
 
-        
+
         switch (status)
         {
             case Status.DAMEGE:
                 throwTime -= Time.deltaTime;
-                if(throwTime < 0)
+                if (throwTime < 0)
                 {
                     status = Status.NORMAL;
                 }
@@ -295,6 +310,11 @@ public class Enemy : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
+        TriggerAction(other);
+    }
+
+    public virtual void TriggerAction(Collider other)
+    {
         if (other.gameObject.layer == CatchEnemyLayer)
         {
             GUIText = other.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
@@ -308,7 +328,7 @@ public class Enemy : MonoBehaviour {
         }
 
         if (other.gameObject.layer == ThrowEnemyLayer)
-        {        
+        {
             GUIText = other.gameObject.GetComponent<Enemy>().ThrowAttack.ToString();
             isGUIDraw = true;
             hp -= other.gameObject.GetComponent<Enemy>().ThrowAttack;
