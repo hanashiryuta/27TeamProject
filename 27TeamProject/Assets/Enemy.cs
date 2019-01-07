@@ -12,10 +12,11 @@ using System.Linq;
 
 public enum MoveMode
 {
-    VERTICAL,
     HORIZONTAL,
     PLAYERCHASE,
     RANDOMMOVE,
+    VERTICAL,
+    ESCAPE,
 }
 
 public enum Status
@@ -117,6 +118,10 @@ public class Enemy : MonoBehaviour
 
     public bool moveStop;
 
+    public bool isEscape;
+    public float EscapeSpeed;
+    public float setEscapeDelayTime;
+    public float EscapeDilayTime;
     public string debug;
 
     public List<AudioClip> seList;
@@ -129,7 +134,8 @@ public class Enemy : MonoBehaviour
         int random = UnityEngine.Random.Range(0, 2);
         if (random == 0)
         {
-            mode = MoveMode.RANDOMMOVE;
+            //mode = MoveMode.RANDOMMOVE;
+            mode = MoveMode.HORIZONTAL;
         }
         else if (random == 1)
         {
@@ -163,6 +169,9 @@ public class Enemy : MonoBehaviour
             case MoveMode.PLAYERCHASE:
                 velosity = new Vector3(1, 0, 0);
                 break;
+            case MoveMode.ESCAPE:
+                velosity = new Vector3(1, 0, 0);
+                break;
         }
 
         GUITime = origin_GUITime;
@@ -170,8 +179,9 @@ public class Enemy : MonoBehaviour
         moveStop = false;
         DamageTime = DamageSetTime;
         flyDeathTime = originFlyDeathTime;
-
         seAudio = gameObject.AddComponent<AudioSource>();
+        isEscape = false;
+        EscapeDilayTime = setEscapeDelayTime;
     }
 
     // Update is called once per frame
@@ -261,9 +271,14 @@ public class Enemy : MonoBehaviour
             RandomMove();
         }
 
+        if(mode == MoveMode.ESCAPE)
+        {
+            EscapeMove();
+        }
+
         if (mode == MoveMode.PLAYERCHASE)
         {
-            PlayerShaseMove();
+            PlayerChaseMove();
         }
         else
         {
@@ -289,7 +304,7 @@ public class Enemy : MonoBehaviour
         previousePositoin = currentPosition;
     }
 
-    void PlayerShaseMove()
+    void PlayerChaseMove()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Vector3 pos = player.transform.position - transform.position;
@@ -316,6 +331,32 @@ public class Enemy : MonoBehaviour
         pos = new Vector3(x, transform.position.y, z) - transform.position;
         Vector3 normalpos = Vector3.Normalize(pos);
         transform.position += normalpos * speed;
+    }
+
+    void EscapeMove()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        Vector3 pos = player.transform.position - transform.position;
+        Vector3 normalpos = Vector3.Normalize(pos);
+        if (Mathf.Abs(pos.x) < ChaseRange && Mathf.Abs(pos.z) < ChaseRange)
+        {
+            isEscape = true;
+        }
+
+        if (isEscape)
+        {
+            EscapeDilayTime -= Time.deltaTime;
+        }
+        else
+        {
+            transform.position += velosity * speed;
+        }
+
+        if(EscapeDilayTime < 0)
+        {
+            normalpos = new Vector3(normalpos.x, 0, 0);
+            transform.position += -normalpos * EscapeSpeed;
+        }
     }
 
     public virtual void Blow()
@@ -391,34 +432,8 @@ public class Enemy : MonoBehaviour
 
             TriggerSet(other);
         }
-       // MaxSpeedEnemy(other);
     }
 
-    //public virtual void MaxSpeedEnemy(Collider other)
-    //{
-    //    if (other.gameObject.layer == CatchEnemyLayer)
-    //    {
-    //        GUIText = other.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
-    //        isGUIDraw = true;
-    //        hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
-    //        Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
-    //        if (hp <= 5)
-    //        {
-    //            TriggerSet(other);
-    //        }
-    //    }
-
-    //    if (other.gameObject.layer == ThrowEnemyLayer)
-    //    {
-    //        GUIText = other.gameObject.GetComponent<Enemy>().ThrowAttack.ToString();
-    //        isGUIDraw = true;
-    //        hp -= other.gameObject.GetComponent<Enemy>().ThrowAttack;
-    //        Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
-    //        status = Status.DAMEGE;
-    //        throwTime = throwSetTime;
-    //        Physics.IgnoreCollision(other.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
-    //    }
-    //}
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.layer == ThrowEnemyLayer)
