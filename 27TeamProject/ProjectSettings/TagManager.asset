@@ -39,8 +39,8 @@ TagManager:
   - StageWall
   - PaulEnemy
   - LaserObject
+  - Ground
   - Warning
-  - 
   - 
   - 
   - 

@@ -184,6 +184,7 @@ public class Enemy : MonoBehaviour
 
         if (isFly)
             flyDeathTime -= Time.deltaTime;
+
         if ((/*hp < 1 ||*/ Mathf.Abs(transform.position.z) > 50) || !waveManager.isWave || flyDeathTime < 0)
         {
             DeathAction();
