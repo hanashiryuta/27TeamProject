@@ -98,6 +98,7 @@ public class Player : MonoBehaviour
     float damegeTime;
 
     public float sp;
+    float spLossRange = 0.1f;
     float maxHP;
     float maxSP;
 
@@ -120,6 +121,10 @@ public class Player : MonoBehaviour
 
     public SwingState swingState;
 
+    public Gradient firstColor;
+    public Gradient secondColor;
+    public Gradient rainbow;
+
     // Use this for initialization
     void Start()
     {
@@ -136,6 +141,24 @@ public class Player : MonoBehaviour
     {
         hpBar.fillAmount = hp / maxHP;
         spBar.fillAmount = sp / maxSP;
+
+        if (hp < maxHP * 3 / 10)
+        {
+            hpBar.color = Color.red;
+        }
+        else
+        {
+            spBar.color = Color.white;
+        }
+
+        if (sp < maxSP * 3 / 10)
+        {
+            spBar.color = Color.red;
+        }
+        else
+        {
+            spBar.color = Color.white;
+        }
 
         damegeTime -= Time.deltaTime;
         if (damegeTime <= 0)
@@ -398,140 +421,92 @@ public class Player : MonoBehaviour
     /// </summary>
     void HookSwing()
     {
-        if (swingState == SwingState.TRIGGERSWING)
+        spLossRange = catchObject.GetComponent<Enemy>().playerSP;
+        sp -= spLossRange;
+        if (sp <= 0)
+            sp = 0;
+
+        currentAngle = Mathf.Abs(Mathf.Atan2(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal")) * 180.0f / Mathf.PI);
+
+        if (Input.GetAxis("Vertical") > 0)
         {
-            //ボタン押している間
-            if (Input.GetButton(shotInput))
+            if (currentAngle > previouseAngle)
             {
-                sp -= 0.1f;
-                if (sp <= 0)
-                    sp = 0;
-                if (timing_Particle == null)
-                {
-                    timing_Particle = Instantiate(origin_Timing_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
-                }
-                else
-                {
-                    timingTime -= Time.deltaTime;
-                    if (timingTime <= 0)
-                        timingTime = origin_TimingTime;
-                    //ParticleSystem ps = timing_Particle.GetComponent<ParticleSystem>();
-                    //ParticleSystem.Particle[] particles = new ParticleSystem.Particle[ps.particleCount];
-                    //ps.GetParticles(particles);
-                    if (timingTime <= 0.5f)
-                    //if (particles[0].GetCurrentColor(ps).r == 255&&
-                    //    particles[0].GetCurrentColor(ps).g == 125&&
-                    //    particles[0].GetCurrentColor(ps).b == 0&&
-                    //    particles[0].GetCurrentColor(ps).a == 255)
-                    {
-                        if (Input.GetButtonDown(timingInput))
-                        {
-                            //Debug.Break();
-                            Instantiate(good_Timing_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
-                            swingSpeed += swingButtonRate;
-                            Destroy(timing_Particle);
-                            timingTime = origin_TimingTime;
-                        }
-                    }
-                    else
-                    {
-                        if (Input.GetButtonDown(timingInput))
-                        {
-                            Instantiate(badTiming_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
-                            swingSpeed -= swingButtonRate;
-                            Destroy(timing_Particle);
-                            timingTime = origin_TimingTime;
-                        }
-                    }
-                }
-
-
-                swingSpeed += swingSpeedRate;
-
-                if (swingSpeed >= swingSpeedRange)
-                    swingSpeed = swingSpeedRange;
-                else if (swingSpeed <= 0)
-                    swingSpeed = 0;
-
-                Enemy enemy = catchObject.GetComponent<Enemy>();
-
-                enemy.ThrowAttack = (int)(enemy.maxThrowAttack * swingSpeed / swingSpeedRange);
-                enemy.SwingAttack = (int)(enemy.maxSwingAttack * swingSpeed / swingSpeedRange);
-
-                swingAngle += swingSpeed;
-                catchObject.transform.position = transform.position + new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180), 2, swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180));
+                if (setAngle < 0)
+                    setAngle = 0;
+                setAngle += Mathf.Abs(currentAngle - previouseAngle);
+            }
+            else if (currentAngle < previouseAngle)
+            {
+                if (setAngle > 0)
+                    setAngle = 0;
+                setAngle -= Mathf.Abs(currentAngle - previouseAngle);
             }
         }
-        else
+        else if(Input.GetAxis("Vertical") < 0)
         {
-            sp -= 0.1f;
-            if (sp <= 0)
-                sp = 0;
-
-            currentAngle = Mathf.Abs(Mathf.Atan2(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal")) * 180.0f / Mathf.PI);
-
-            if (Input.GetAxis("Vertical") > 0)
+            if (currentAngle > previouseAngle)
             {
-                if (currentAngle > previouseAngle)
-                {
-                    if (setAngle < 0)
-                        setAngle = 0;
-                    setAngle += Mathf.Abs(currentAngle - previouseAngle);
-                }
-                else if (currentAngle < previouseAngle)
-                {
-                    if (setAngle > 0)
-                        setAngle = 0;
-                    setAngle -= Mathf.Abs(currentAngle - previouseAngle);
-                }
+                if (setAngle > 0)
+                    setAngle = 0;
+                setAngle -= Mathf.Abs(currentAngle - previouseAngle);
             }
-            else if(Input.GetAxis("Vertical") < 0)
+            else if (currentAngle < previouseAngle)
             {
-                if (currentAngle > previouseAngle)
-                {
-                    if (setAngle > 0)
-                        setAngle = 0;
-                    setAngle -= Mathf.Abs(currentAngle - previouseAngle);
-                }
-                else if (currentAngle < previouseAngle)
-                {
-                    if (setAngle < 0)
-                        setAngle = 0;
-                    setAngle += Mathf.Abs(currentAngle - previouseAngle);
-                }
+                if (setAngle < 0)
+                    setAngle = 0;
+                setAngle += Mathf.Abs(currentAngle - previouseAngle);
             }
+        }
             
-            if(setAngle >= 360)
-            {
-                setAngle = 0;
-                swingSpeed += swingButtonRate;
-                Instantiate(good_Timing_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
-                Debug.Log("左回転");
-            }
-            else if (setAngle <= -360)
-            {
-                setAngle = 0;
-                swingSpeed -= swingButtonRate;
-                Instantiate(badTiming_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
-                Debug.Log("右回転");
-            }
-
-            if (swingSpeed >= swingSpeedRange)
-                swingSpeed = swingSpeedRange;
-            else if (swingSpeed <= -swingSpeedRange)
-                swingSpeed = -swingSpeedRange;
-
-            Enemy enemy = catchObject.GetComponent<Enemy>();
-
-            enemy.ThrowAttack = (int)(enemy.maxThrowAttack * Mathf.Abs(swingSpeed) / swingSpeedRange);
-            enemy.SwingAttack = (int)(enemy.maxSwingAttack * Mathf.Abs(swingSpeed) / swingSpeedRange);
-
-            swingAngle += swingSpeed;
-            catchObject.transform.position = transform.position + new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180), 2, swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180));
-
-            previouseAngle = currentAngle;
+        if(setAngle >= 360)
+        {
+            setAngle = 0;
+            swingSpeed += swingButtonRate;
+            Instantiate(good_Timing_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
+            Debug.Log("左回転");
         }
-        
+        else if (setAngle <= -360)
+        {
+            setAngle = 0;
+            swingSpeed -= swingButtonRate;
+            Instantiate(badTiming_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
+            Debug.Log("右回転");
+        }
+
+        Gradient particleColor = firstColor;
+        if (Mathf.Abs(swingSpeed) >= swingSpeedRange / 3)
+            {
+            if (Mathf.Abs(swingSpeed) >= swingSpeedRange * 2 / 3)
+            {
+                Debug.Log("rainbow");
+                particleColor = rainbow;
+            }
+            else
+            {
+                Debug.Log("blue");
+                particleColor = secondColor;
+            }
+        }
+
+        ParticleSystem.MainModule mains = swing_Particle.GetComponent<ParticleSystem>().main;
+
+        mains.startColor = particleColor;
+
+        if (swingSpeed >= swingSpeedRange)
+            swingSpeed = swingSpeedRange;
+        else if (swingSpeed <= -swingSpeedRange)
+            swingSpeed = -swingSpeedRange;
+
+        Enemy enemy = catchObject.GetComponent<Enemy>();
+
+        enemy.ThrowAttack = (int)(enemy.maxThrowAttack * Mathf.Abs(swingSpeed) / swingSpeedRange);
+        enemy.SwingAttack = (int)(enemy.maxSwingAttack * Mathf.Abs(swingSpeed) / swingSpeedRange);
+
+        swingAngle += swingSpeed;
+        catchObject.transform.position = transform.position + new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180), 2, swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180));
+
+        previouseAngle = currentAngle;        
     }
 
     /// <summary>

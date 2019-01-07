@@ -117,6 +117,8 @@ public class Enemy : MonoBehaviour
 
     public bool moveStop;
 
+    public string debug;
+
     public virtual void Awake()
     {
         //mode = MoveMode.RANDOMMOVE;
@@ -359,6 +361,7 @@ public class Enemy : MonoBehaviour
         {
             GUIText = other.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
             isGUIDraw = true;
+            hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
             Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
             status = Status.DAMEGE;
             TriggerSetRotate();
@@ -416,7 +419,6 @@ public class Enemy : MonoBehaviour
 
     public virtual void TriggerSet(Collider other)
     {
-        hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
         if (hp <= 0)
         {
             BlowMode = true;
