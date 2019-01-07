@@ -1019,9 +1019,9 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: e72da17fc6e19a447b300dbc009a69d9, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.8
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -1114,7 +1114,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c69517bf28daca3479a7a44ca26bbc38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgmList: []
+  bgmList:
+  - {fileID: 8300000, guid: e72da17fc6e19a447b300dbc009a69d9, type: 3}
+  - {fileID: 8300000, guid: 433307986687f7b4fbd41900194ca53d, type: 3}
+  - {fileID: 8300000, guid: 5b2fed38c0331854b8fc0421c988b687, type: 3}
+  - {fileID: 8300000, guid: 998e7076b8bd1074db7001063ef968ad, type: 3}
 --- !u!1 &1893593383
 GameObject:
   m_ObjectHideFlags: 0

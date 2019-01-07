@@ -30,6 +30,7 @@ public class MoveEnemy : Enemy
 
     public override void AttackAnime()
     {
+        base.AttackAnime();
         animator.SetTrigger("isAttack");
     }
 

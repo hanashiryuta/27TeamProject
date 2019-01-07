@@ -256,6 +256,10 @@ MonoBehaviour:
   playerSP: 0.1
   moveStop: 0
   debug: 
+  seList:
+  - {fileID: 8300000, guid: 7f14b6bd95d45c043969d9d86f316c80, type: 3}
+  - {fileID: 8300000, guid: b5154001c23302a4192e1df5a7b0731f, type: 3}
+  - {fileID: 8300000, guid: b0a58e306aa6e064b8bef927985220fd, type: 3}
   GUIFont: {fileID: 12800000, guid: d7d5b71cb41044c43bffbb0141fd35ae, type: 3}
   origin_GUITime: 0.5
   stickingCount: 0
