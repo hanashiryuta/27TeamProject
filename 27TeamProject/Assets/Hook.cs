@@ -140,7 +140,7 @@ public class Hook : MonoBehaviour {
         //    player.GetComponent<Player>().HookSet(gameObject);
         //}
         //敵に当たったら
-        if (collision.gameObject.CompareTag("Enemy") && hookState == HookState.MOVE && collision.gameObject.GetComponent<Enemy>().isHook)
+        if (collision.gameObject.CompareTag("Enemy") && hookState == HookState.MOVE && collision.gameObject.GetComponent<Enemy>().isHook && collision.gameObject.GetComponent<Enemy>().isCatch)
         {
 
             //当たった時にボタン押していたら

@@ -124,6 +124,12 @@ public class Player : MonoBehaviour
     public Gradient firstColor;
     public Gradient secondColor;
     public Gradient rainbow;
+    
+    public List<AudioClip> seList;
+    AudioSource seAudio;
+
+    float originSeTime = 0.5f;
+    float seTime;
 
     // Use this for initialization
     void Start()
@@ -135,6 +141,7 @@ public class Player : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         maxHP = hp;
         maxSP = sp;
+        seAudio = GetComponent<AudioSource>();
     }
 
     private void FixedUpdate()
@@ -268,6 +275,7 @@ public class Player : MonoBehaviour
         //Bボタンでジャンプ
         if (isJumpFlag && Input.GetButtonDown(timingInput))
         {
+            seAudio.PlayOneShot(seList[0]);
             isJumpFlag = false;
             rigid.AddForce(Vector2.up * jumpPower);
         }
@@ -359,6 +367,7 @@ public class Player : MonoBehaviour
             hook.GetComponent<Hook>().targetDistance = Vector3.Distance(hookPointer.transform.position, transform.position);
             isHookShot = false;
             anim.SetBool("isShot",true);
+            seAudio.PlayOneShot(seList[3]);
         }
         
     }
@@ -506,6 +515,13 @@ public class Player : MonoBehaviour
         swingAngle += swingSpeed;
         catchObject.transform.position = transform.position + new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180), 2, swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180));
 
+        seTime += Time.deltaTime;
+        if(seTime >= originSeTime)
+        {
+            seTime = 0;
+            seAudio.PlayOneShot(seList[2]);
+        }
+
         previouseAngle = currentAngle;        
     }
 
@@ -514,20 +530,21 @@ public class Player : MonoBehaviour
     /// </summary>
     void ObjectThrow()
     {
-            throwSpeed = Mathf.Abs(swingSpeed) * 400;
-            //catchObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            //catchObject.GetComponent<Rigidbody>().useGravity = false;
-            Vector3 throwVelocity = (hookPointer.transform.position - transform.position).normalized;
-            throwVelocity.y = 0;
-            catchObject.GetComponent<Enemy>().ThrowSet(throwSpeed,throwVelocity);
-            //catchObject.transform.position = new Vector3(transform.position.x + throwVelocity.x*2, 3, transform.position.z + throwVelocity.z*2);
-            //catchObject.GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
-            playerState = PlayerState.HOOKRETURN;
-            //catchObject.GetComponent<BoxCollider>().isTrigger = false;
-            //catchObject.gameObject.layer = 15;
-            Destroy(swing_Particle);
-            //catchObject.GetComponent<Enemy>().isFly = true;
-            timingTime = origin_TimingTime;
+        throwSpeed = Mathf.Abs(swingSpeed) * 400;
+        //catchObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        //catchObject.GetComponent<Rigidbody>().useGravity = false;
+        Vector3 throwVelocity = (hookPointer.transform.position - transform.position).normalized;
+        throwVelocity.y = 0;
+        catchObject.GetComponent<Enemy>().ThrowSet(throwSpeed,throwVelocity);
+        //catchObject.transform.position = new Vector3(transform.position.x + throwVelocity.x*2, 3, transform.position.z + throwVelocity.z*2);
+        //catchObject.GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
+        playerState = PlayerState.HOOKRETURN;
+        //catchObject.GetComponent<BoxCollider>().isTrigger = false;
+        //catchObject.gameObject.layer = 15;
+        Destroy(swing_Particle);
+        //catchObject.GetComponent<Enemy>().isFly = true;
+        timingTime = origin_TimingTime;
+        seAudio.PlayOneShot(seList[1]);
     }
 
     /// <summary>

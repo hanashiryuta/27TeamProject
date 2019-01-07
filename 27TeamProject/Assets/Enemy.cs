@@ -124,6 +124,9 @@ public class Enemy : MonoBehaviour
     public float EscapeDilayTime;
     public string debug;
 
+    public List<AudioClip> seList;
+    AudioSource seAudio;
+
     public virtual void Awake()
     {
         //mode = MoveMode.RANDOMMOVE;
@@ -176,6 +179,7 @@ public class Enemy : MonoBehaviour
         moveStop = false;
         DamageTime = DamageSetTime;
         flyDeathTime = originFlyDeathTime;
+        seAudio = gameObject.AddComponent<AudioSource>();
         isEscape = false;
         EscapeDilayTime = setEscapeDelayTime;
     }
@@ -228,7 +232,6 @@ public class Enemy : MonoBehaviour
             waveManager.enemyDeathNum++;
         enemySpawnManager.enemyCount--;
         Destroy(this.gameObject);
-
     }
 
     private void Slap()
@@ -357,7 +360,7 @@ public class Enemy : MonoBehaviour
     }
 
     public virtual void Blow()
-    {   
+    {
         Vector3 normal = Vector3.Normalize(PosBlow);
         transform.position += new Vector3(BlowOffSpeed * normal.x, BlowOffSpeed, BlowOffSpeed * normal.z);
         angleZ += 10;
@@ -397,7 +400,7 @@ public class Enemy : MonoBehaviour
 
     public virtual void AttackAnime()
     {
-
+        seAudio.PlayOneShot(seList[0]);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -426,6 +429,7 @@ public class Enemy : MonoBehaviour
             TriggerSetRotate();
             moveStop = !moveStop;
             Physics.IgnoreCollision(other.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
+
             TriggerSet(other);
         }
     }
@@ -446,6 +450,11 @@ public class Enemy : MonoBehaviour
             GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX;
             GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationY;
             PosBlow = transform.position - other.transform.position;
+            seAudio.PlayOneShot(seList[1]);
+        }
+        else
+        {
+            seAudio.PlayOneShot(seList[2]);
         }
     }
 
