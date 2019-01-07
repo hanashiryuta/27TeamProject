@@ -29,6 +29,12 @@ public class Roket_Enemy : Enemy
     public override void Update()
     {
         base.Update();
+
+        if (!GetComponent<Renderer>().isVisible)
+        {
+            Destroy(this.gameObject);
+        }
+
         if (!BlowMode)
         {
             if (isHook) Move();
