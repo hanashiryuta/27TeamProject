@@ -11,6 +11,11 @@ using UnityEngine;
 public class MoveEnemy : Enemy
 {
 
+    public override void Awake()
+    {
+        
+    }
+
     // Update is called once per frame
     public override void Update()
     {

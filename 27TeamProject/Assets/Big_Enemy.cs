@@ -14,14 +14,20 @@ public class Big_Enemy : Enemy
     public GameObject origin_Star_Particle;
     GameObject star_Particle;
 
+    public override void Awake()
+    {
+        
+    }
+
     // Update is called once per frame
     public override void Update()
     {
+            base.Update();
+
         isSticking = false;
         if (hp < 40)
         {
             isCatch = true;
-            base.Update();
             if (star_Particle == null)
                 star_Particle = Instantiate(origin_Star_Particle, transform.position + new Vector3(0,2,0), Quaternion.identity, transform);
         }
