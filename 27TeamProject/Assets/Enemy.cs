@@ -117,6 +117,8 @@ public class Enemy : MonoBehaviour
 
     public bool moveStop;
 
+    public string debug;
+
     public virtual void Awake()
     {
         //mode = MoveMode.RANDOMMOVE;
@@ -317,7 +319,9 @@ public class Enemy : MonoBehaviour
         Vector3 normal = Vector3.Normalize(PosBlow);
         transform.position += new Vector3(BlowOffSpeed * normal.x, BlowOffSpeed, BlowOffSpeed * normal.z);
         angleZ += 10;
-        transform.rotation = Quaternion.Euler(0, 0, angleZ);
+        Quaternion q = transform.rotation;
+        q = Quaternion.Euler(0,0,angleZ);
+        transform.rotation = q;// Quaternion.Euler(0, 0, angleZ);
     }
     public virtual void ThrowSet(float throwSpeed, Vector3 throwVelocity)
     {
@@ -360,6 +364,7 @@ public class Enemy : MonoBehaviour
         {
             GUIText = other.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
             isGUIDraw = true;
+            hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
             Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
             status = Status.DAMEGE;
             TriggerSetRotate();
@@ -417,7 +422,6 @@ public class Enemy : MonoBehaviour
 
     public virtual void TriggerSet(Collider other)
     {
-        hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
         if (hp <= 0)
         {
             BlowMode = true;

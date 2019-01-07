@@ -24,6 +24,13 @@ public class Big_Enemy : Enemy
             base.Update();
             if (star_Particle == null)
                 star_Particle = Instantiate(origin_Star_Particle, transform.position + new Vector3(0,2,0), Quaternion.identity, transform);
+            if (!BlowMode)
+            {
+            }
+            else
+            {
+                Blow();
+            }
         }
         else if (hp > 40)
         {

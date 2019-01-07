@@ -254,6 +254,9 @@ MonoBehaviour:
   isFly: 0
   moveStop: 0
   enemySpawnManager: {fileID: 0}
+  playerSP: 0.2
+  moveStop: 0
+  debug: 
   GUIFont: {fileID: 12800000, guid: d7d5b71cb41044c43bffbb0141fd35ae, type: 3}
   origin_GUITime: 0.5
 --- !u!135 &135470067315069520
