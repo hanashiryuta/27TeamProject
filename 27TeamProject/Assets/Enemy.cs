@@ -127,6 +127,8 @@ public class Enemy : MonoBehaviour
     public List<AudioClip> seList;
     AudioSource seAudio;
 
+    protected bool isGround;
+
     public virtual void Awake()
     {
         //mode = MoveMode.RANDOMMOVE;
@@ -253,12 +255,14 @@ public class Enemy : MonoBehaviour
             if (hl.transform.tag == "Ground")
             {
                 groundcount++;
+                isGround = false;
             }
         }
 
         if (groundcount == 0)
         {
             velosity *= -1;
+            isGround = true;
         }
     }
 
