@@ -141,33 +141,6 @@ public class Hook : MonoBehaviour {
                 hookState = HookState.ATTACK;
             }
         }
-
-        GameObject boss = GameObject.Find("Boss");
-        BossState bossState = boss.GetComponent<BossControl>().BossStateReturn();
-        if (collision.gameObject.CompareTag("Boss") && hookState == HookState.MOVE)
-        {
-            if (bossState == BossState.Dawn)
-            {
-
-                //当たった時にボタン押していたら
-                if (Input.GetButton("Jump"))
-                {
-                    //キャッチ処理
-                    hookState = HookState.CATCH;
-                    catchObject = collision.gameObject;
-                    player.GetComponent<Player>().SwingSet(collision.gameObject);
-
-                    collision.gameObject.layer = 12;
-                    collision.GetComponent<BossControl>().isHook = false;
-                }
-                //押していなければ
-                else
-                {
-                    catchObject = collision.gameObject;
-                    hookState = HookState.ATTACK;
-                }
-            }
-        }
     }
 
     void OnTriggerStay(Collider collider)

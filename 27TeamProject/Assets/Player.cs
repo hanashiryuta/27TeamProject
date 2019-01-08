@@ -457,129 +457,66 @@ public class Player : MonoBehaviour
     {
         if (testSwingState == TestSwingState.SIDE)
         {
-            if (catchObject.tag == "Enemy")
+            //ボタン押している間
+            if (Input.GetButton("Jump"))
             {
-                //ボタン押している間
-                if (Input.GetButton("Jump"))
+                sp -= 0.1f;
+                if (sp <= 0)
+                    sp = 0;
+                if (timing_Particle == null)
                 {
-                    sp -= 0.1f;
-                    if (sp <= 0)
-                        sp = 0;
-                    if (timing_Particle == null)
+                    timing_Particle = Instantiate(origin_Timing_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
+                }
+                else
+                {
+                    timingTime -= Time.deltaTime;
+                    if (timingTime <= 0)
+                        timingTime = origin_TimingTime;
+                    //ParticleSystem ps = timing_Particle.GetComponent<ParticleSystem>();
+                    //ParticleSystem.Particle[] particles = new ParticleSystem.Particle[ps.particleCount];
+                    //ps.GetParticles(particles);
+                    if (timingTime <= 0.5f)
+                    //if (particles[0].GetCurrentColor(ps).r == 255&&
+                    //    particles[0].GetCurrentColor(ps).g == 125&&
+                    //    particles[0].GetCurrentColor(ps).b == 0&&
+                    //    particles[0].GetCurrentColor(ps).a == 255)
                     {
-                        timing_Particle = Instantiate(origin_Timing_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
+                        if (Input.GetButtonDown("Fire2"))
+                        {
+                            //Debug.Break();
+                            Instantiate(good_Timing_Particle,new Vector3(transform.position.x,transform.position.y + transform.localScale.y/2,transform.position.z),Quaternion.identity,transform);
+                            swingSpeed += swingButtonRate;
+                            Destroy(timing_Particle);
+                            timingTime = origin_TimingTime;
+                        }
                     }
                     else
                     {
-                        timingTime -= Time.deltaTime;
-                        if (timingTime <= 0)
+                        if(Input.GetButtonDown("Fire2"))
+                        {
+                            Instantiate(badTiming_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
+                            swingSpeed -= swingButtonRate;
+                            Destroy(timing_Particle);
                             timingTime = origin_TimingTime;
-                        //ParticleSystem ps = timing_Particle.GetComponent<ParticleSystem>();
-                        //ParticleSystem.Particle[] particles = new ParticleSystem.Particle[ps.particleCount];
-                        //ps.GetParticles(particles);
-                        if (timingTime <= 0.5f)
-                        //if (particles[0].GetCurrentColor(ps).r == 255&&
-                        //    particles[0].GetCurrentColor(ps).g == 125&&
-                        //    particles[0].GetCurrentColor(ps).b == 0&&
-                        //    particles[0].GetCurrentColor(ps).a == 255)
-                        {
-                            if (Input.GetButtonDown("Fire2"))
-                            {
-                                //Debug.Break();
-                                Instantiate(good_Timing_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
-                                swingSpeed += swingButtonRate;
-                                Destroy(timing_Particle);
-                                timingTime = origin_TimingTime;
-                            }
-                        }
-                        else
-                        {
-                            if (Input.GetButtonDown("Fire2"))
-                            {
-                                Instantiate(badTiming_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
-                                swingSpeed -= swingButtonRate;
-                                Destroy(timing_Particle);
-                                timingTime = origin_TimingTime;
-                            }
                         }
                     }
-
-
-                    swingSpeed += swingSpeedRate;
-
-                    if (swingSpeed >= swingSpeedRange)
-                        swingSpeed = swingSpeedRange;
-                    else if (swingSpeed <= 0)
-                        swingSpeed = 0;
-
-                    Enemy enemy = catchObject.GetComponent<Enemy>();
-
-                    enemy.ThrowAttack = (int)(enemy.maxThrowAttack * swingSpeed / swingSpeedRange);
-                    enemy.SwingAttack = (int)(enemy.maxSwingAttack * swingSpeed / swingSpeedRange);
-
-                    swingAngle += swingSpeed;
-                    catchObject.transform.position = transform.position + new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180), 2, swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180));
                 }
-            }
+                
 
-            else if (catchObject.tag == "Boss")
-            {
-                //ボタン押している間
-                if (Input.GetButton("Jump"))
-                {
-                    sp -= 0.1f;
-                    if (sp <= 0)
-                        sp = 0;
-                    if (timing_Particle == null)
-                    {
-                        timing_Particle = Instantiate(origin_Timing_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
-                    }
-                    else
-                    {
-                        timingTime -= Time.deltaTime;
-                        if (timingTime <= 0)
-                            timingTime = origin_TimingTime;
-                        //ParticleSystem ps = timing_Particle.GetComponent<ParticleSystem>();
-                        //ParticleSystem.Particle[] particles = new ParticleSystem.Particle[ps.particleCount];
-                        //ps.GetParticles(particles);
-                        if (timingTime <= 0.5f)
-                        //if (particles[0].GetCurrentColor(ps).r == 255&&
-                        //    particles[0].GetCurrentColor(ps).g == 125&&
-                        //    particles[0].GetCurrentColor(ps).b == 0&&
-                        //    particles[0].GetCurrentColor(ps).a == 255)
-                        {
-                            if (Input.GetButtonDown("Fire2"))
-                            {
-                                //Debug.Break();
-                                Instantiate(good_Timing_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
-                                swingSpeed += swingButtonRate;
-                                Destroy(timing_Particle);
-                                timingTime = origin_TimingTime;
-                            }
-                        }
-                        else
-                        {
-                            if (Input.GetButtonDown("Fire2"))
-                            {
-                                Instantiate(badTiming_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
-                                swingSpeed -= swingButtonRate;
-                                Destroy(timing_Particle);
-                                timingTime = origin_TimingTime;
-                            }
-                        }
-                    }
+                swingSpeed += swingSpeedRate;
 
+                if (swingSpeed >= swingSpeedRange)
+                    swingSpeed = swingSpeedRange;
+                else if (swingSpeed <= 0)
+                    swingSpeed = 0;
 
-                    swingSpeed += swingSpeedRate;
+                Enemy enemy = catchObject.GetComponent<Enemy>();
 
-                    if (swingSpeed >= swingSpeedRange)
-                        swingSpeed = swingSpeedRange;
-                    else if (swingSpeed <= 0)
-                        swingSpeed = 0;
+                enemy.ThrowAttack = (int)(enemy.maxThrowAttack * swingSpeed / swingSpeedRange);
+                enemy.SwingAttack = (int)(enemy.maxSwingAttack * swingSpeed / swingSpeedRange);
 
-                    swingAngle += swingSpeed;
-                    catchObject.transform.position = transform.position + new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180), 2, swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180));
-                }
+                swingAngle += swingSpeed;
+                catchObject.transform.position = transform.position + new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180), 2, swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180));
             }
         }
         else
@@ -613,38 +550,19 @@ public class Player : MonoBehaviour
         }
         else
         {
-            if (catchObject.tag == "Enemy")
-            {
-                throwSpeed = swingSpeed * 400;
-                catchObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-                catchObject.GetComponent<Rigidbody>().useGravity = false;
-                Vector3 throwVelocity = (hookPointer.transform.position - transform.position).normalized;
-                throwVelocity.y = 0;
-                catchObject.transform.position = new Vector3(transform.position.x + throwVelocity.x * 2, 3, transform.position.z + throwVelocity.z * 2);
-                catchObject.GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
-                playerState = PlayerState.HOOKRETURN;
-                //catchObject.GetComponent<BoxCollider>().isTrigger = false;
-                catchObject.gameObject.layer = 15;
-                Destroy(swing_Particle);
-                catchObject.GetComponent<Enemy>().isFly = true;
-                timingTime = origin_TimingTime;
-            }
-
-            else if(catchObject.tag == "Boss")
-            {
-                throwSpeed = swingSpeed * 400;
-                catchObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-                catchObject.GetComponent<Rigidbody>().useGravity = false;
-                Vector3 throwVelocity = (hookPointer.transform.position - transform.position).normalized;
-                throwVelocity.y = 0;
-                catchObject.transform.position = new Vector3(transform.position.x + throwVelocity.x * 2, 3, transform.position.z + throwVelocity.z * 2);
-                catchObject.GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
-                playerState = PlayerState.HOOKRETURN;
-                //catchObject.GetComponent<BoxCollider>().isTrigger = false;
-                catchObject.gameObject.layer = 15;
-                Destroy(swing_Particle);
-                timingTime = origin_TimingTime;
-            }
+            throwSpeed = swingSpeed * 400;
+            catchObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            catchObject.GetComponent<Rigidbody>().useGravity = false;
+            Vector3 throwVelocity = (hookPointer.transform.position - transform.position).normalized;
+            throwVelocity.y = 0;
+            catchObject.transform.position = new Vector3(transform.position.x + throwVelocity.x*2, 3, transform.position.z + throwVelocity.z*2);
+            catchObject.GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
+            playerState = PlayerState.HOOKRETURN;
+            //catchObject.GetComponent<BoxCollider>().isTrigger = false;
+            catchObject.gameObject.layer = 15;
+            Destroy(swing_Particle);
+            catchObject.GetComponent<Enemy>().isFly = true;
+            timingTime = origin_TimingTime;
         }
     }
 

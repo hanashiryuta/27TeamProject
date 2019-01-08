@@ -14,8 +14,6 @@ TagManager:
   - IronBlock
   - PaulEnemyUnder
   - PaulEnemy
-  - Rock
-  - Boss
   layers:
   - Default
   - TransparentFX
@@ -38,7 +36,7 @@ TagManager:
   - SlapEnemy
   - IronBlock
   - StageWall
-  - Boss
+  - 
   - 
   - 
   - 
