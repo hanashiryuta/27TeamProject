@@ -35,7 +35,7 @@ public class Roket_Enemy : Enemy
     {
         base.Update();
 
-        if (!GetComponentInChildren<Renderer>().isVisible)
+        if (!GetComponentInChildren<Renderer>().isVisible && isGround && isEscape)
         {
             enemySpawnManager.enemyCount--;
             Destroy(this.gameObject);
