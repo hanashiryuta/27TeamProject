@@ -1175,6 +1175,10 @@ MonoBehaviour:
   enemySpawnManager: {fileID: 0}
   playerSP: 0
   moveStop: 0
+  isEscape: 0
+  EscapeSpeed: 0
+  setEscapeDelayTime: 0
+  EscapeDilayTime: 0
   GUIFont: {fileID: 12800000, guid: d7d5b71cb41044c43bffbb0141fd35ae, type: 3}
   origin_GUITime: 0.5
   GetMasterBlow: 0
@@ -1194,7 +1198,7 @@ MonoBehaviour:
   hp: 0
   layerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 8388608
   hook: {fileID: 0}
   BlowOffSpeed: 0
   isHook: 0
@@ -1228,6 +1232,10 @@ MonoBehaviour:
   enemySpawnManager: {fileID: 0}
   playerSP: 0
   moveStop: 0
+  isEscape: 0
+  EscapeSpeed: 0
+  setEscapeDelayTime: 0
+  EscapeDilayTime: 0
   GUIFont: {fileID: 12800000, guid: d7d5b71cb41044c43bffbb0141fd35ae, type: 3}
   origin_GUITime: 0.5
   PaulList:
@@ -1315,6 +1323,10 @@ MonoBehaviour:
   enemySpawnManager: {fileID: 0}
   playerSP: 0
   moveStop: 0
+  isEscape: 0
+  EscapeSpeed: 0
+  setEscapeDelayTime: 0
+  EscapeDilayTime: 0
   GUIFont: {fileID: 12800000, guid: d7d5b71cb41044c43bffbb0141fd35ae, type: 3}
   origin_GUITime: 0.5
   GetMasterBlow: 0
@@ -1387,6 +1399,10 @@ MonoBehaviour:
   enemySpawnManager: {fileID: 0}
   playerSP: 0
   moveStop: 0
+  isEscape: 0
+  EscapeSpeed: 0
+  setEscapeDelayTime: 0
+  EscapeDilayTime: 0
   GUIFont: {fileID: 12800000, guid: d7d5b71cb41044c43bffbb0141fd35ae, type: 3}
   origin_GUITime: 0.5
   GetMasterBlow: 0
@@ -1440,6 +1456,10 @@ MonoBehaviour:
   enemySpawnManager: {fileID: 0}
   playerSP: 0
   moveStop: 0
+  isEscape: 0
+  EscapeSpeed: 0
+  setEscapeDelayTime: 0
+  EscapeDilayTime: 0
   GUIFont: {fileID: 12800000, guid: d7d5b71cb41044c43bffbb0141fd35ae, type: 3}
   origin_GUITime: 0.5
   GetMasterBlow: 0

@@ -221,7 +221,7 @@ MonoBehaviour:
   hp: 0
   layerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 8388608
   hook: {fileID: 1345325903641440, guid: 38efe2a7165f6d447a685850c1279a71, type: 2}
   BlowOffSpeed: 0.5
   isHook: 0
@@ -252,8 +252,13 @@ MonoBehaviour:
   originFlyDeathTime: 2
   flyDeathTime: 0
   isFly: 0
-  moveStop: 0
   enemySpawnManager: {fileID: 0}
+  playerSP: 0
+  moveStop: 0
+  isEscape: 0
+  EscapeSpeed: 0
+  setEscapeDelayTime: 0
+  EscapeDilayTime: 0
   GUIFont: {fileID: 12800000, guid: d7d5b71cb41044c43bffbb0141fd35ae, type: 3}
   origin_GUITime: 0.5
 --- !u!135 &135470067315069520

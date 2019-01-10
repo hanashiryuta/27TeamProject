@@ -123,6 +123,8 @@ public class Enemy : MonoBehaviour
     public float setEscapeDelayTime;
     public float EscapeDilayTime;
 
+    public bool isGround;
+
     public virtual void Awake()
     {
         //mode = MoveMode.RANDOMMOVE;
@@ -177,6 +179,7 @@ public class Enemy : MonoBehaviour
         flyDeathTime = originFlyDeathTime;
         isEscape = false;
         EscapeDilayTime = setEscapeDelayTime;
+        isGround = false;
     }
 
     // Update is called once per frame
@@ -255,6 +258,7 @@ public class Enemy : MonoBehaviour
         if (groundcount == 0)
         {
             velosity *= -1;
+            isGround = true;
         }
     }
 
