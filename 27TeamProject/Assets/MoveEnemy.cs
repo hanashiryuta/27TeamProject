@@ -8,20 +8,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveEnemy : Enemy {
-    
-	// Update is called once per frame
-	public override void Update () {
+public class MoveEnemy : Enemy
+{
+
+    public override void Awake()
+    {
+        
+    }
+
+    // Update is called once per frame
+    public override void Update()
+    {
         base.Update();
+
+
         if (!BlowMode)
         {
-            if(isHook) Move();
-            
+            if (isHook) Move();
         }
+
         else
         {
             Blow();
         }
-	}
-    
+    }
+
+    public override void AttackAnime()
+    {
+        base.AttackAnime();
+        animator.SetTrigger("isAttack");
+    }
+
 }

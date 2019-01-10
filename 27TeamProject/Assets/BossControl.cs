@@ -39,7 +39,6 @@ public class BossControl : MonoBehaviour
     [SerializeField]
     GameObject hook;
     public bool isHook;
-
     private float time = 0;
 
     public GameObject rock;
@@ -52,6 +51,8 @@ public class BossControl : MonoBehaviour
     private bool damegeflag;
     private bool animeStop;
     private float angle;
+    private bool rockflag;
+    public float hp = 0;
 
     // Use this for initialization
     void Start()

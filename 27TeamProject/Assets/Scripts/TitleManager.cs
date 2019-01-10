@@ -12,10 +12,13 @@ using UnityEngine.UI;
 public class TitleManager : MonoBehaviour
 {
     public Button selectButton;
+    public FadeScript fade;
 
     // Use this for initialization
     void Start()
     {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         selectButton.Select();
     }
 
@@ -32,11 +35,13 @@ public class TitleManager : MonoBehaviour
 
     public void GameStart()
     {
-        SceneManager.LoadScene("Select");
+        if(fade.fadeState == FadeState.STAY)
+        fade.isSceneEnd = true;
     }
 
     public void GameEnd()
     {
-        Application.Quit();
+        if (fade.fadeState == FadeState.STAY)
+            Application.Quit();
     }
 }

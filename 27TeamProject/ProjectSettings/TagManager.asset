@@ -9,6 +9,7 @@ TagManager:
   - Leftblock
   - Rightblock
   - WarpGate1
+  - Rock
   - Slap_Circle
   - WaveManager
   - IronBlock
@@ -38,9 +39,11 @@ TagManager:
   - SlapEnemy
   - IronBlock
   - StageWall
+  - PaulEnemy
+  - LaserObject
+  - Ground
+  - Warning
   - Boss
-  - 
-  - 
   - 
   - 
   - 

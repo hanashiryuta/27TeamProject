@@ -1361,7 +1361,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03b157d7625014c58bfbad3513f40289, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Length: 1.0001866
   m_ChildTransform: {fileID: 4448537222895868}

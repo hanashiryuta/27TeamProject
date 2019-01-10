@@ -34,9 +34,14 @@ public class BGMManager : MonoBehaviour {
         {
             audioSource.clip = bgmList[1];
         }
+        else if(scene.name == "GameClear")
+        {
+            audioSource.clip = bgmList[2];
+        }
+        else if(scene.name == "GameOver")
+        {
+            audioSource.clip = bgmList[3];
+        }
         audioSource.Play();
-    }
-	
-    
-    
+    }   
 }
