@@ -20,6 +20,9 @@ public class EnemySpawnManager : MonoBehaviour {
 
     public WaveManager waveManager;
 
+    [HideInInspector]
+    public bool isBossSpawn;
+
     // Use this for initialization
     void Awake () {
         RateSet();
@@ -40,6 +43,10 @@ public class EnemySpawnManager : MonoBehaviour {
             for (int i = 0; i < line.Length; i++)
             {
                 lineList.Add(float.Parse(line[i]));
+                if(float.Parse(line[i]) == 6)
+                {
+                    isBossSpawn = true;
+                }
             }
             pointRate.Add(lineList);
         }
@@ -58,6 +65,5 @@ public class EnemySpawnManager : MonoBehaviour {
     void Update ()
     {
         isSpawn = enemyCount < enemyRange ? true : false;
-        Debug.Log(isSpawn);
 	}
 }

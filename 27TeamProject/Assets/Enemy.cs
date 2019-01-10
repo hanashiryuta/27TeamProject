@@ -422,7 +422,12 @@ public class Enemy : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider other)
-    {   
+    {
+        TriggerAction(other);
+    }
+
+    public virtual void TriggerAction(Collider other)
+    {
         if (other.gameObject.layer == CatchEnemyLayer)
         {
             GUIText = other.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
@@ -434,7 +439,7 @@ public class Enemy : MonoBehaviour
             moveStop = !moveStop;
 
             TriggerSet(other);
-            
+
         }
 
         if (other.gameObject.layer == ThrowEnemyLayer)

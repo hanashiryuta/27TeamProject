@@ -15,7 +15,8 @@ public enum BossState
     Stop,
     Attack,
     Damege,
-    Dawn
+    Dawn,
+    Fly
 }
 
 public class BossControl : MonoBehaviour
@@ -51,15 +52,18 @@ public class BossControl : MonoBehaviour
     private bool damegeflag;
     private bool animeStop;
     private float angle;
-    private bool rockflag;
     public float hp = 0;
+
+    [HideInInspector]
+    public WaveManager waveManager;
+
+    public float origin_FlyTime;
+    float flyTime;
 
     // Use this for initialization
     void Start()
     {
         player = GameObject.FindWithTag("Player");
-        leftblock = GameObject.FindWithTag("Leftblock");
-        rightblock = GameObject.FindWithTag("Rightblock");
         leftcheck = false;
         rightcheck = false;
         BC = this.GetComponent<BossControl>();
@@ -198,12 +202,19 @@ public class BossControl : MonoBehaviour
                     GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
                 }
                 break;
+            case BossState.Fly:
+                flyTime += Time.deltaTime;
+                if(flyTime > origin_FlyTime)
+                {
+                    waveManager.WavePlus();
+                }
+                break;
         }
     }
 
     void OnCollisionEnter(Collision col)
     {
-        if (col.gameObject.tag == "Leftblock" && leftcheck)
+        if (col.gameObject.tag == "IronBlock" && leftcheck)
         {
             leftcheck = false;
             boss.GetComponent<Animator>().SetTrigger("stanTrigger");
@@ -219,7 +230,7 @@ public class BossControl : MonoBehaviour
             Invoke("Release", 4.5f);//衝突時4.5秒間停止
         }
 
-        if (col.gameObject.tag == "Rightblock" && rightcheck)
+        if (col.gameObject.tag == "IronBlock" && rightcheck)
         {
             rightcheck = false;
             boss.GetComponent<Animator>().SetTrigger("stanTrigger");

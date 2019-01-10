@@ -309,47 +309,55 @@ public class Player : MonoBehaviour
     /// </summary>
     void HookPointer()
     {
-        //左スティックの方向にポインター配置
-        if (Mathf.Abs(Input.GetAxis("Vertical")) >= 0.1f || Mathf.Abs(Input.GetAxis("Horizontal")) >= 0.1f)
+        if (catchObject.CompareTag("Boss"))
         {
-            pointerAngle = Mathf.Atan2(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
+            pointerAngle = Mathf.Atan2(1, 0);
             pointerPosition = new Vector3(Mathf.Cos(pointerAngle) * pointerRadius, 2, Mathf.Sin(pointerAngle) * pointerRadius);
-
-        }
-
-        //左スティックの方向に四角形のあたり判定を飛ばす
-        Collider[] targetList = Physics.OverlapBox(new Vector3((transform.position.x + (transform.position.x + pointerPosition.x)) / 2, transform.position.y, (transform.position.z + (transform.position.z + pointerPosition.z)) / 2),
-            new Vector3(transform.localScale.x, transform.localScale.y * 2, pointerRadius / 2),
-            Quaternion.Euler(0, (pointerAngle - 90), 0), targetLayer);
-        //transform.rotation = Quaternion.Euler(0, pointerAngle - 90, 0);
-
-        //1つ以上検知していれば
-        if (targetList.Length > 0)
-        {
-            //一番近いものを検索し、その位置にポインターを配置する
-            GameObject nearEnemy = targetList[0].gameObject;
-            foreach (var cx in targetList)
-            {
-                float length = Vector3.Distance(transform.position, cx.transform.position);
-                float nearLength = Vector3.Distance(transform.position, nearEnemy.transform.position);
-
-                if (length <= nearLength)
-                {
-                    nearEnemy = cx.gameObject;
-                }
-            }
-            hookPointer.transform.position = nearEnemy.transform.position;
-            Color color = hookPointer.GetComponent<Renderer>().material.color;
-            color = Color.yellow;
-            hookPointer.GetComponent<Renderer>().material.color = color;
         }
         else
         {
-            hookPointer.transform.position = pointerPosition + transform.position;
-            Color color = hookPointer.GetComponent<Renderer>().material.color;
-            color = Color.white;
-            hookPointer.GetComponent<Renderer>().material.color = color;
-        }       
+            //左スティックの方向にポインター配置
+            if (Mathf.Abs(Input.GetAxis("Vertical")) >= 0.1f || Mathf.Abs(Input.GetAxis("Horizontal")) >= 0.1f)
+            {
+                pointerAngle = Mathf.Atan2(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
+                pointerPosition = new Vector3(Mathf.Cos(pointerAngle) * pointerRadius, 2, Mathf.Sin(pointerAngle) * pointerRadius);
+
+            }
+
+            //左スティックの方向に四角形のあたり判定を飛ばす
+            Collider[] targetList = Physics.OverlapBox(new Vector3((transform.position.x + (transform.position.x + pointerPosition.x)) / 2, transform.position.y, (transform.position.z + (transform.position.z + pointerPosition.z)) / 2),
+                new Vector3(transform.localScale.x, transform.localScale.y * 2, pointerRadius / 2),
+                Quaternion.Euler(0, (pointerAngle - 90), 0), targetLayer);
+            //transform.rotation = Quaternion.Euler(0, pointerAngle - 90, 0);
+
+            //1つ以上検知していれば
+            if (targetList.Length > 0)
+            {
+                //一番近いものを検索し、その位置にポインターを配置する
+                GameObject nearEnemy = targetList[0].gameObject;
+                foreach (var cx in targetList)
+                {
+                    float length = Vector3.Distance(transform.position, cx.transform.position);
+                    float nearLength = Vector3.Distance(transform.position, nearEnemy.transform.position);
+
+                    if (length <= nearLength)
+                    {
+                        nearEnemy = cx.gameObject;
+                    }
+                }
+                hookPointer.transform.position = nearEnemy.transform.position;
+                Color color = hookPointer.GetComponent<Renderer>().material.color;
+                color = Color.yellow;
+                hookPointer.GetComponent<Renderer>().material.color = color;
+            }
+            else
+            {
+                hookPointer.transform.position = pointerPosition + transform.position;
+                Color color = hookPointer.GetComponent<Renderer>().material.color;
+                color = Color.white;
+                hookPointer.GetComponent<Renderer>().material.color = color;
+            }
+        }
         
     }
 
@@ -564,6 +572,7 @@ public class Player : MonoBehaviour
             Destroy(swing_Particle);
             timingTime = origin_TimingTime;
             seAudio.PlayOneShot(seList[1]);
+            catchObject.GetComponent<BossControl>().bossState = BossState.Fly;
         }
     }
 
