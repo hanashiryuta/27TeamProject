@@ -131,6 +131,11 @@ public class Enemy : MonoBehaviour
 
     public virtual void Awake()
     {
+        AwakeSub();
+    }
+
+    public virtual void AwakeSub()
+    {
         //mode = MoveMode.RANDOMMOVE;
         //mode = Enum.GetValues(typeof(MoveMode)).Cast<MoveMode>().OrderBy(c => UnityEngine.Random.Range(0, 3)).FirstOrDefault();
         int random = UnityEngine.Random.Range(0, 2);
@@ -149,7 +154,11 @@ public class Enemy : MonoBehaviour
     }
 
     // Use this for initialization
-    public virtual void Start()
+    public virtual void Start () {
+        StartSub();
+    }
+
+    public virtual void StartSub()
     {
         hp = inputHp;
         isHook = true;
@@ -188,7 +197,12 @@ public class Enemy : MonoBehaviour
 
     // Update is called once per frame
     public virtual void Update()
-    {   
+    {
+        UpdateSub();
+    }
+
+    public virtual void UpdateSub()
+    {
         if (isGUIDraw)
         {
             GUITime -= Time.deltaTime;

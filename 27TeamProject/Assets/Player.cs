@@ -530,21 +530,41 @@ public class Player : MonoBehaviour
     /// </summary>
     void ObjectThrow()
     {
-        throwSpeed = Mathf.Abs(swingSpeed) * 400;
-        //catchObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        //catchObject.GetComponent<Rigidbody>().useGravity = false;
-        Vector3 throwVelocity = (hookPointer.transform.position - transform.position).normalized;
-        throwVelocity.y = 0;
-        catchObject.GetComponent<Enemy>().ThrowSet(throwSpeed,throwVelocity);
-        //catchObject.transform.position = new Vector3(transform.position.x + throwVelocity.x*2, 3, transform.position.z + throwVelocity.z*2);
-        //catchObject.GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
-        playerState = PlayerState.HOOKRETURN;
-        //catchObject.GetComponent<BoxCollider>().isTrigger = false;
-        //catchObject.gameObject.layer = 15;
-        Destroy(swing_Particle);
-        //catchObject.GetComponent<Enemy>().isFly = true;
-        timingTime = origin_TimingTime;
-        seAudio.PlayOneShot(seList[1]);
+        if (catchObject.tag == "Enemy")
+        {
+            throwSpeed = Mathf.Abs(swingSpeed) * 400;
+            //catchObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            //catchObject.GetComponent<Rigidbody>().useGravity = false;
+            Vector3 throwVelocity = (hookPointer.transform.position - transform.position).normalized;
+            throwVelocity.y = 0;
+            catchObject.GetComponent<Enemy>().ThrowSet(throwSpeed,throwVelocity);
+            //catchObject.transform.position = new Vector3(transform.position.x + throwVelocity.x*2, 3, transform.position.z + throwVelocity.z*2);
+            //catchObject.GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
+            playerState = PlayerState.HOOKRETURN;
+            //catchObject.GetComponent<BoxCollider>().isTrigger = false;
+            //catchObject.gameObject.layer = 15;
+            Destroy(swing_Particle);
+            //catchObject.GetComponent<Enemy>().isFly = true;
+            timingTime = origin_TimingTime;
+            seAudio.PlayOneShot(seList[1]);
+        }
+
+        else if(catchObject.tag == "Boss")
+        {
+            throwSpeed = swingSpeed * 400;
+            catchObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            catchObject.GetComponent<Rigidbody>().useGravity = false;
+            Vector3 throwVelocity = (hookPointer.transform.position - transform.position).normalized;
+            throwVelocity.y = 0;
+            catchObject.transform.position = new Vector3(transform.position.x + throwVelocity.x * 2, 3, transform.position.z + throwVelocity.z * 2);
+            catchObject.GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
+            playerState = PlayerState.HOOKRETURN;
+            //catchObject.GetComponent<BoxCollider>().isTrigger = false;
+            catchObject.gameObject.layer = 15;
+            Destroy(swing_Particle);
+            timingTime = origin_TimingTime;
+            seAudio.PlayOneShot(seList[1]);
+        }
     }
 
     /// <summary>
