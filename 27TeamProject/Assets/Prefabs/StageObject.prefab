@@ -1583,9 +1583,13 @@ MonoBehaviour:
   WaveBlock: {fileID: 1054374672118998, guid: 3d3c60f288f0b81479a7894ec70ab603, type: 2}
   waveCount: 1
   isWave: 0
+  isWarning: 0
   enemyDeathNum: 0
+  canvas: {fileID: 1055986866101664}
   enemyDeathCountText: {fileID: 114819375469192036}
   waveCountText: {fileID: 114491830639596764}
+  WaveWarningCount: {fileID: 1702992595259932, guid: 748d4dd3c0ef84f42b04656f5ab7932e,
+    type: 2}
   enemySpawnManager: {fileID: 114074329460401560}
 --- !u!135 &135433514074440992
 SphereCollider:

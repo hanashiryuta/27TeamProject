@@ -1167,6 +1167,7 @@ MonoBehaviour:
     type: 2}
   angleZ: 0
   PosBlow: {x: 0, y: 0, z: 0}
+  DamageSetTime: 0
   animator: {fileID: 0}
   originFlyDeathTime: 2
   flyDeathTime: 0
@@ -1219,6 +1220,7 @@ MonoBehaviour:
     type: 2}
   angleZ: 0
   PosBlow: {x: 0, y: 0, z: 0}
+  DamageSetTime: 0
   animator: {fileID: 0}
   originFlyDeathTime: 2
   flyDeathTime: 0
@@ -1305,6 +1307,7 @@ MonoBehaviour:
     type: 2}
   angleZ: 0
   PosBlow: {x: 0, y: 0, z: 0}
+  DamageSetTime: 0
   animator: {fileID: 0}
   originFlyDeathTime: 2
   flyDeathTime: 0
@@ -1376,6 +1379,7 @@ MonoBehaviour:
     type: 2}
   angleZ: 0
   PosBlow: {x: 0, y: 0, z: 0}
+  DamageSetTime: 0
   animator: {fileID: 0}
   originFlyDeathTime: 2
   flyDeathTime: 0
@@ -1428,6 +1432,7 @@ MonoBehaviour:
     type: 2}
   angleZ: 0
   PosBlow: {x: 0, y: 0, z: 0}
+  DamageSetTime: 0
   animator: {fileID: 0}
   originFlyDeathTime: 2
   flyDeathTime: 0
