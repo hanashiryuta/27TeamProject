@@ -32,7 +32,7 @@ public class Enemy : MonoBehaviour
     float speed; //移動スピード
     [SerializeField]
     public int inputHp; //HPの初期設定用
-    [SerializeField]
+    [HideInInspector]
     public int hp; //処理で使用するHP変数
 
     Vector3 velosity;
@@ -54,7 +54,7 @@ public class Enemy : MonoBehaviour
 
     [HideInInspector]
     public bool isSticking = true;
-
+    [HideInInspector]
     public bool BlowMode; //吹き飛ぶ前と後の切り替え用
 
     public int maxThrowAttack;
@@ -71,6 +71,7 @@ public class Enemy : MonoBehaviour
 
     [SerializeField]
     GameObject[] wavewall;
+    [HideInInspector]
     public float x, z;
 
     public GameObject slap_Circle;
@@ -84,6 +85,7 @@ public class Enemy : MonoBehaviour
     public GameObject origin_Damege_Particle;
     public GameObject origin_Death_Particle;
     
+    [HideInInspector]
     public float angleZ;
 
     float angleX;
@@ -98,6 +100,7 @@ public class Enemy : MonoBehaviour
     protected int ThisEnemyLayer;
     protected int CatchEnemyLayer;
     protected int ThrowEnemyLayer;
+    protected int GroundLayer;
 
     public Animator animator;
 
@@ -116,13 +119,16 @@ public class Enemy : MonoBehaviour
 
     public float playerSP;//プレイヤーが消費するSP
 
+    [HideInInspector]
     public bool moveStop;
 
+    [HideInInspector]
     public bool isEscape;
     public float EscapeSpeed;
     public float setEscapeDelayTime;
+    [HideInInspector]
     public float EscapeDilayTime;
-
+    [HideInInspector]
     public bool isGround;
 
     public virtual void Awake()
@@ -155,6 +161,7 @@ public class Enemy : MonoBehaviour
         ThisEnemyLayer = LayerMask.NameToLayer("Enemy");
         CatchEnemyLayer = LayerMask.NameToLayer("CatchEnemy");
         ThrowEnemyLayer = LayerMask.NameToLayer("ThrowEnemy");
+        GroundLayer = LayerMask.NameToLayer("Ground");
 
         switch (mode)
         {
