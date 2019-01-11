@@ -115,9 +115,4 @@ public class Sticking_Enemy : Enemy
             }
         }
     }
-
-    public override void AttackAnime()
-    {
-        animator.SetTrigger("isAttack");
-    }
 }
