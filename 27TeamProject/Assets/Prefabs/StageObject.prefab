@@ -1326,6 +1326,12 @@ MonoBehaviour:
   - {fileID: 8300000, guid: c10f2175ab8d0254893fede76563f5d1, type: 3}
   - {fileID: 8300000, guid: 30c38f5f9ffb37f42acac0adec314462, type: 3}
   - {fileID: 8300000, guid: 24bdbb838e387ec4484df3abb54062cd, type: 3}
+  bossLayer:
+    serializedVersion: 2
+    m_Bits: 33554432
+  rockLayer:
+    serializedVersion: 2
+    m_Bits: 67108864
 --- !u!114 &114063429190778510
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1466,7 +1472,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c38527858e63ca459894ec79a3f56e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpawnSetTime: 5
+  SpawnSetTime: 10
   SpawnTime: 0
   SpawnEnemy: {fileID: 0}
   SpawnLimit: 10
@@ -1691,7 +1697,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d69be74eadea6b045896359eb7a83ed3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpawnSetTime: 5
+  SpawnSetTime: 2
   SpawnTime: 0
   SpawnEnemy: {fileID: 0}
   SpawnLimit: 10
@@ -1800,7 +1806,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c38527858e63ca459894ec79a3f56e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpawnSetTime: 5
+  SpawnSetTime: 10
   SpawnTime: 0
   SpawnEnemy: {fileID: 0}
   SpawnLimit: 10
