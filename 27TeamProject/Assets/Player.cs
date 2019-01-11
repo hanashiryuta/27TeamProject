@@ -321,7 +321,7 @@ public class Player : MonoBehaviour
     {
         if (catchObject != null && catchObject.CompareTag("Boss"))
         {
-            pointerAngle = Mathf.Atan2(1, 1);
+            pointerAngle = Mathf.Atan2(0, 1);
             pointerPosition = new Vector3(Mathf.Cos(pointerAngle) * pointerRadius, 2, Mathf.Sin(pointerAngle) * pointerRadius);
         }
         else
@@ -334,87 +334,45 @@ public class Player : MonoBehaviour
 
             }
 
-            //左スティックの方向に四角形のあたり判定を飛ばす
-            Collider[] targetList = Physics.OverlapBox(new Vector3((transform.position.x + (transform.position.x + pointerPosition.x)) / 2, transform.position.y, (transform.position.z + (transform.position.z + pointerPosition.z)) / 2),
-                new Vector3(transform.localScale.x, transform.localScale.y * 2, pointerRadius / 2),
-                Quaternion.Euler(0, (pointerAngle - 90), 0), targetLayer);
-            //transform.rotation = Quaternion.Euler(0, pointerAngle - 90, 0);
-
-            Collider[] bossList = Physics.OverlapBox(new Vector3((transform.position.x + (transform.position.x + pointerPosition.x)) / 2, transform.position.y, (transform.position.z + (transform.position.z + pointerPosition.z)) / 2),
-            new Vector3(transform.localScale.x, transform.localScale.y * 2, pointerRadius / 2),
-                Quaternion.Euler(0, (pointerAngle - 90), 0), bossLayer);
-
-            Collider[] rockList = Physics.OverlapBox(new Vector3((transform.position.x + (transform.position.x + pointerPosition.x)) / 2, transform.position.y, (transform.position.z + (transform.position.z + pointerPosition.z)) / 2),
-            new Vector3(transform.localScale.x, transform.localScale.y * 2, pointerRadius / 2),
-                Quaternion.Euler(0, (pointerAngle - 90), 0), rockLayer);
-
-            //1つ以上検知していれば
-            if (targetList.Length > 0)
-            {
-                //一番近いものを検索し、その位置にポインターを配置する
-                GameObject nearEnemy = targetList[0].gameObject;
-                foreach (var cx in targetList)
-                {
-                    float length = Vector3.Distance(transform.position, cx.transform.position);
-                    float nearLength = Vector3.Distance(transform.position, nearEnemy.transform.position);
-
-                    if (length <= nearLength)
-                    {
-                        nearEnemy = cx.gameObject;
-                    }
-                }
-                hookPointer.transform.position = nearEnemy.transform.position;
-                Color color = hookPointer.GetComponent<Renderer>().material.color;
-                color = Color.yellow;
-                hookPointer.GetComponent<Renderer>().material.color = color;
-            }
-            else if (bossList.Length > 0)
-            {
-                //一番近いものを検索し、その位置にポインターを配置する
-                GameObject nearEnemy = bossList[0].gameObject;
-                foreach (var cx in bossList)
-                {
-                    float length = Vector3.Distance(transform.position, cx.transform.position);
-                    float nearLength = Vector3.Distance(transform.position, nearEnemy.transform.position);
-
-                    if (length <= nearLength)
-                    {
-                        nearEnemy = cx.gameObject;
-                    }
-                }
-                hookPointer.transform.position = nearEnemy.transform.position;
-                Color color = hookPointer.GetComponent<Renderer>().material.color;
-                color = Color.yellow;
-                hookPointer.GetComponent<Renderer>().material.color = color;
-            }
-            else if (rockList.Length > 0)
-            {
-                //一番近いものを検索し、その位置にポインターを配置する
-                GameObject nearEnemy = rockList[0].gameObject;
-                foreach (var cx in rockList)
-                {
-                    float length = Vector3.Distance(transform.position, cx.transform.position);
-                    float nearLength = Vector3.Distance(transform.position, nearEnemy.transform.position);
-
-                    if (length <= nearLength)
-                    {
-                        nearEnemy = cx.gameObject;
-                    }
-                }
-                hookPointer.transform.position = nearEnemy.transform.position;
-                Color color = hookPointer.GetComponent<Renderer>().material.color;
-                color = Color.yellow;
-                hookPointer.GetComponent<Renderer>().material.color = color;
-            }
-            else
+            if (!PointerBox(targetLayer) && !PointerBox(bossLayer) && !PointerBox(rockLayer))
             {
                 hookPointer.transform.position = pointerPosition + transform.position;
                 Color color = hookPointer.GetComponent<Renderer>().material.color;
                 color = Color.white;
                 hookPointer.GetComponent<Renderer>().material.color = color;
+            }       
+        }        
+    }
+
+    bool PointerBox(LayerMask layer)
+    {
+        //左スティックの方向に四角形のあたり判定を飛ばす
+        Collider[] list = Physics.OverlapBox(new Vector3((transform.position.x + (transform.position.x + pointerPosition.x)) / 2, transform.position.y, (transform.position.z + (transform.position.z + pointerPosition.z)) / 2),
+            new Vector3(transform.localScale.x, transform.localScale.y * 2, pointerRadius / 2),
+            Quaternion.Euler(0, (pointerAngle - 90), 0), layer);
+
+        //1つ以上検知していれば
+        if (list.Length > 0)
+        {
+            //一番近いものを検索し、その位置にポインターを配置する
+            GameObject nearEnemy = list[0].gameObject;
+            foreach (var cx in list)
+            {
+                float length = Vector3.Distance(transform.position, cx.transform.position);
+                float nearLength = Vector3.Distance(transform.position, nearEnemy.transform.position);
+
+                if (length <= nearLength)
+                {
+                    nearEnemy = cx.gameObject;
+                }
             }
+            hookPointer.transform.position = nearEnemy.transform.position;
+            Color color = hookPointer.GetComponent<Renderer>().material.color;
+            color = Color.yellow;
+            hookPointer.GetComponent<Renderer>().material.color = color;
+            return true;
         }
-        
+        return false;
     }
 
     /// <summary>
