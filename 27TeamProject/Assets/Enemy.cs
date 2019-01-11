@@ -32,7 +32,7 @@ public class Enemy : MonoBehaviour
     float speed; //移動スピード
     [SerializeField]
     public int inputHp; //HPの初期設定用
-    [SerializeField]
+    [HideInInspector]
     public int hp; //処理で使用するHP変数
 
     Vector3 velosity;
@@ -54,7 +54,7 @@ public class Enemy : MonoBehaviour
 
     [HideInInspector]
     public bool isSticking = true;
-
+    [HideInInspector]
     public bool BlowMode; //吹き飛ぶ前と後の切り替え用
 
     public int maxThrowAttack;
@@ -71,6 +71,7 @@ public class Enemy : MonoBehaviour
 
     [SerializeField]
     GameObject[] wavewall;
+    [HideInInspector]
     public float x, z;
 
     public GameObject slap_Circle;
@@ -84,6 +85,7 @@ public class Enemy : MonoBehaviour
     public GameObject origin_Damege_Particle;
     public GameObject origin_Death_Particle;
     
+    [HideInInspector]
     public float angleZ;
 
     float angleX;
@@ -98,6 +100,7 @@ public class Enemy : MonoBehaviour
     protected int ThisEnemyLayer;
     protected int CatchEnemyLayer;
     protected int ThrowEnemyLayer;
+    protected int GroundLayer;
 
     public Animator animator;
 
@@ -116,18 +119,28 @@ public class Enemy : MonoBehaviour
 
     public float playerSP;//プレイヤーが消費するSP
 
+    [HideInInspector]
     public bool moveStop;
 
+    [HideInInspector]
     public bool isEscape;
     public float EscapeSpeed;
     public float setEscapeDelayTime;
+    [HideInInspector]
     public float EscapeDilayTime;
+    [HideInInspector]
+    public bool isGround;
     public string debug;
 
     public List<AudioClip> seList;
-    AudioSource seAudio;
+    protected AudioSource seAudio;
 
     public virtual void Awake()
+    {
+        AwakeSub();
+    }
+
+    public virtual void AwakeSub()
     {
         //mode = MoveMode.RANDOMMOVE;
         //mode = Enum.GetValues(typeof(MoveMode)).Cast<MoveMode>().OrderBy(c => UnityEngine.Random.Range(0, 3)).FirstOrDefault();
@@ -147,7 +160,11 @@ public class Enemy : MonoBehaviour
     }
 
     // Use this for initialization
-    public virtual void Start()
+    public virtual void Start () {
+        StartSub();
+    }
+
+    public virtual void StartSub()
     {
         hp = inputHp;
         isHook = true;
@@ -157,6 +174,9 @@ public class Enemy : MonoBehaviour
         ThisEnemyLayer = LayerMask.NameToLayer("Enemy");
         CatchEnemyLayer = LayerMask.NameToLayer("CatchEnemy");
         ThrowEnemyLayer = LayerMask.NameToLayer("ThrowEnemy");
+        GroundLayer = LayerMask.NameToLayer("Ground");
+
+        Debug.Log(ThrowEnemyLayer);
 
         switch (mode)
         {
@@ -182,11 +202,17 @@ public class Enemy : MonoBehaviour
         seAudio = gameObject.AddComponent<AudioSource>();
         isEscape = false;
         EscapeDilayTime = setEscapeDelayTime;
+        isGround = false;
     }
 
     // Update is called once per frame
     public virtual void Update()
-    {   
+    {
+        UpdateSub();
+    }
+
+    public virtual void UpdateSub()
+    {
         if (isGUIDraw)
         {
             GUITime -= Time.deltaTime;
@@ -253,12 +279,14 @@ public class Enemy : MonoBehaviour
             if (hl.transform.tag == "Ground")
             {
                 groundcount++;
+                isGround = false;
             }
         }
 
         if (groundcount == 0)
         {
             velosity *= -1;
+            isGround = true;
         }
     }
 
@@ -400,11 +428,15 @@ public class Enemy : MonoBehaviour
 
     public virtual void AttackAnime()
     {
-        seAudio.PlayOneShot(seList[0]);
     }
 
     private void OnTriggerEnter(Collider other)
-    {   
+    {
+        TriggerAction(other);
+    }
+
+    public virtual void TriggerAction(Collider other)
+    {
         if (other.gameObject.layer == CatchEnemyLayer)
         {
             GUIText = other.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
@@ -416,7 +448,7 @@ public class Enemy : MonoBehaviour
             moveStop = !moveStop;
 
             TriggerSet(other);
-            
+
         }
 
         if (other.gameObject.layer == ThrowEnemyLayer)

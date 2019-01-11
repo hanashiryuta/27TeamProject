@@ -179,7 +179,7 @@ public class Hook : MonoBehaviour {
         {
 
             //当たった時にボタン押していたら
-            if (Input.GetButton("Jump"))
+            if (Input.GetButton(hookInput))
             {
                 //キャッチ処理
                 hookState = HookState.CATCH;
@@ -194,6 +194,33 @@ public class Hook : MonoBehaviour {
             {
                 catchObject = collision.gameObject;
                 hookState = HookState.ATTACK;
+            }
+        }
+
+
+        if (collision.gameObject.CompareTag("Boss") && hookState == HookState.MOVE)
+        {
+            BossState bossState = collision.gameObject.GetComponent<BossControl>().BossStateReturn();
+            if (bossState == BossState.Dawn)
+            {
+                //当たった時にボタン押していたら
+                if (Input.GetButton(hookInput))
+                {
+                    Debug.Log(bossState);
+                    //キャッチ処理
+                    hookState = HookState.CATCH;
+                    catchObject = collision.gameObject;
+                    player.GetComponent<Player>().SwingSet(collision.gameObject);
+
+                    collision.gameObject.layer = 12;
+                    collision.GetComponent<BossControl>().isHook = false;
+                }
+                //押していなければ
+                else
+                {
+                    catchObject = collision.gameObject;
+                    hookState = HookState.ATTACK;
+                }
             }
         }
     }

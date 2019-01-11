@@ -135,10 +135,7 @@ public class WaveManager : MonoBehaviour
         {
             if (enemyDeathNum >= 10 + 10 * waveCount)
             {
-                waveCount++;
-                enemyDeathNum = 0;
-                isWave = false;
-                enemySpawnManager.RateSet();
+                WavePlus();
             }
         }
         
@@ -148,6 +145,14 @@ public class WaveManager : MonoBehaviour
             fadeScript.nextScene = "GameClear";
             fadeScript.isSceneEnd = true;
         }
+    }
+
+    public void WavePlus()
+    {
+        waveCount++;
+        enemyDeathNum = 0;
+        isWave = false;
+        enemySpawnManager.RateSet();
     }
 }
 
