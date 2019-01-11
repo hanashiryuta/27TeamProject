@@ -13,6 +13,9 @@ public class Rock : Enemy {
     private GameObject obj;
 
     int BossLayer;
+    bool isGround;
+
+    float angle;
 
     public override void AwakeSub()
     {
@@ -21,6 +24,7 @@ public class Rock : Enemy {
     // Use this for initialization
     public override void StartSub()
     {
+        base.StartSub();
         BossLayer = LayerMask.NameToLayer("Boss");
         isHook = true;
         obj = GameObject.FindGameObjectWithTag("Boss");
@@ -43,6 +47,12 @@ public class Rock : Enemy {
     {
         time += Time.deltaTime;
 
+        if(!isGround)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, angle);
+            angle++;
+        }
+
         if (time > 5 && isHook == true)
         {
             Destroy(gameObject);
@@ -53,16 +63,17 @@ public class Rock : Enemy {
     {
         if (col.gameObject.tag == "Ground")
         {
+            isGround = true;
             transform.position = transform.position;
         }
     }
 
     public override void TriggerAction(Collider other)
     {
-        if (LayerMask.LayerToName(other.gameObject.layer) == "Boss")
-        {
-            Destroy(gameObject);
-        }
+    //    if (LayerMask.LayerToName(other.gameObject.layer) == "Boss")
+    //    {
+    //        Destroy(gameObject);
+    //    }
     //    if (other.gameObject.layer == BossLayer)
     //    {
     //        float boss = GetComponent<BossEnemy>().Hp();

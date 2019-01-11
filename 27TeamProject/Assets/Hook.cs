@@ -167,7 +167,7 @@ public class Hook : MonoBehaviour {
         {
 
             //当たった時にボタン押していたら
-            if (Input.GetButton("Jump"))
+            if (Input.GetButton(hookInput))
             {
                 //キャッチ処理
                 hookState = HookState.CATCH;
@@ -185,16 +185,16 @@ public class Hook : MonoBehaviour {
             }
         }
 
-        GameObject boss = GameObject.Find("Boss");
-        BossState bossState = boss.GetComponent<BossControl>().BossStateReturn();
+
         if (collision.gameObject.CompareTag("Boss") && hookState == HookState.MOVE)
         {
+            BossState bossState = collision.gameObject.GetComponent<BossControl>().BossStateReturn();
             if (bossState == BossState.Dawn)
             {
-
                 //当たった時にボタン押していたら
-                if (Input.GetButton("Jump"))
+                if (Input.GetButton(hookInput))
                 {
+                    Debug.Log(bossState);
                     //キャッチ処理
                     hookState = HookState.CATCH;
                     catchObject = collision.gameObject;

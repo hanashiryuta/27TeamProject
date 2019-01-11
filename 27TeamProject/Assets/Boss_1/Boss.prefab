@@ -77,6 +77,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1049813259905850
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4237770633897418}
+  m_Layer: 25
+  m_Name: DashPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1075841819639470
 GameObject:
   m_ObjectHideFlags: 1
@@ -433,6 +448,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1912375910132114
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4100401150280498}
+  m_Layer: 25
+  m_Name: StanPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1914083344866342
 GameObject:
   m_ObjectHideFlags: 0
@@ -447,6 +477,21 @@ GameObject:
   m_Layer: 25
   m_Name: Boss
   m_TagString: Boss
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1916218464483546
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4250268315359880}
+  m_Layer: 25
+  m_Name: BombPoint
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -496,6 +541,19 @@ Transform:
   m_Father: {fileID: 4348562484211172}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4100401150280498
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1912375910132114}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.4, y: 0.3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4109518689924098}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4104817672406384
 Transform:
   m_ObjectHideFlags: 1
@@ -518,10 +576,13 @@ Transform:
   m_GameObject: {fileID: 1914083344866342}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 1}
+  m_LocalScale: {x: 15, y: 15, z: 1}
   m_Children:
   - {fileID: 4603310873731124}
   - {fileID: 4348562484211172}
+  - {fileID: 4237770633897418}
+  - {fileID: 4100401150280498}
+  - {fileID: 4250268315359880}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -597,6 +658,32 @@ Transform:
   m_Father: {fileID: 4585020823412886}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -24.721}
+--- !u!4 &4237770633897418
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1049813259905850}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.5, y: 0.15, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4109518689924098}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4250268315359880
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1916218464483546}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4109518689924098}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4296282221540892
 Transform:
   m_ObjectHideFlags: 1
@@ -1119,7 +1206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 1.0000002
+  m_Length: 1.0000005
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4296282221540892}
   m_AttachedIK: {fileID: 0}
@@ -1252,7 +1339,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 0.99999964
+  m_Length: 0.9999995
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4476788187411114}
   m_AttachedIK: {fileID: 0}
@@ -1356,7 +1443,17 @@ MonoBehaviour:
   hitCount: 3
   hp: 0
   waveManager: {fileID: 0}
-  origin_FlyTime: 0
+  origin_FlyTime: 2
+  moveSpeed: 20
+  origin_BossDashParticle: {fileID: 1546136668873328, guid: 4f1b5ac608b473c4cacb112eb71eaa3c,
+    type: 2}
+  origin_StanParticle: {fileID: 1101927297335514, guid: 52fe255b569ddad4383dc5f06664c9f9,
+    type: 2}
+  dashPoint: {fileID: 4237770633897418}
+  stanPoint: {fileID: 4100401150280498}
+  bossBombParticle: {fileID: 1474380533186502, guid: 716e5d588db186f478a77efd46244a9f,
+    type: 2}
+  bombPoint: {fileID: 4250268315359880}
 --- !u!114 &114831731546708970
 MonoBehaviour:
   m_ObjectHideFlags: 1

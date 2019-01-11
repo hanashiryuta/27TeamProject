@@ -6,7 +6,7 @@ public class BossSpawn : EnemySpawn {
 	
 	// Update is called once per frame
 	public override void Update () {
-        if (waveManager.GetComponent<WaveManager>().isWave && enemySpawnManager.isSpawn)
+        if (waveManager.GetComponent<WaveManager>().isWave && enemySpawnManager.isSpawn && spawnList.Count > 0)
         {
             if (enemy == null )
                 SpawnTime -= Time.deltaTime;
@@ -20,7 +20,8 @@ public class BossSpawn : EnemySpawn {
                 if (SpawnCount < SpawnLimit)
                 {
                     int rand = Random.Range(0, spawnList.Count);
-                    enemy = Instantiate(spawnList[rand], transform.position + new Vector3(0, spawnList[rand].transform.localScale.y / 2, 0), Quaternion.identity);
+                    enemy = Instantiate(spawnList[rand], transform.position+new Vector3(0,0.5f,0), Quaternion.identity);
+                    enemy.GetComponent<BossControl>().waveManager = waveManager;
                     SpawnCount++;
                     SpawnTime = SpawnSetTime;
                     enemySpawnManager.enemyCount++;

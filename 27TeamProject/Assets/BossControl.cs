@@ -60,6 +60,21 @@ public class BossControl : MonoBehaviour
     public float origin_FlyTime;
     float flyTime;
 
+    public float moveSpeed;
+
+    public GameObject origin_BossDashParticle;
+    GameObject bossDashParticle;
+
+    public GameObject origin_StanParticle;
+    GameObject stanParticle;
+
+    public Transform dashPoint;
+    public Transform stanPoint;
+
+    public GameObject bossBombParticle;
+
+    public Transform bombPoint;
+
     // Use this for initialization
     void Start()
     {
@@ -100,7 +115,7 @@ public class BossControl : MonoBehaviour
                 Vector3 targetPos = transform.position;
                 targetPos.z = player.transform.position.z;
                 transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref velocity, smoothTime);
-                if (time >= 6)
+                if (time >= 3)
                 {
                     bossState = BossState.Stop;
                     runflag = false;
@@ -110,7 +125,7 @@ public class BossControl : MonoBehaviour
 
             case BossState.Stop:
                 transform.position = transform.position;
-                if (time >= 3)
+                if (time >= 1)
                 {
                     bossState = BossState.Attack;
                     time = 0;
@@ -125,18 +140,21 @@ public class BossControl : MonoBehaviour
                 if (!rightcheck && target.x < this.transform.position.x)
                 {
                     leftcheck = true;
+                    if (bossDashParticle == null)
+                        bossDashParticle = Instantiate(origin_BossDashParticle, dashPoint.position, Quaternion.Euler(0, 0, 90), transform);
                 }
 
                 //プレイヤーが右側
                 else if (!leftcheck && target.x > this.transform.position.x)
                 {
                     rightcheck = true;
+                    if (bossDashParticle == null)
+                        bossDashParticle = Instantiate(origin_BossDashParticle, dashPoint.position, Quaternion.Euler(0,0,-90), transform);
                 }
-
+                
                 ////移動処理
-                float trans = -10.0f * Time.deltaTime;
+                float trans = -moveSpeed * Time.deltaTime;
                 transform.Translate(new Vector3(trans, 0));
-
                 break;
 
             case BossState.Damege:
@@ -179,12 +197,18 @@ public class BossControl : MonoBehaviour
 
                 else if (3 < time)
                 {
+                    if (bossDashParticle == null)
+                    {
+                        if (rightcheck)
+                            bossDashParticle = Instantiate(origin_BossDashParticle, dashPoint.position, Quaternion.Euler(0, 0, -90), transform);
+                        else if (leftcheck)
+                            bossDashParticle = Instantiate(origin_BossDashParticle, dashPoint.position, Quaternion.Euler(0, 0, 90), transform);
+                    }
                     Debug.Log(Time.deltaTime);
                     ////移動処理
                     boss.GetComponent<Animator>().SetTrigger("runTrigger");
-                    transform.Translate(new Vector3(-10.0f * Time.deltaTime, 0));
+                    transform.Translate(new Vector3(-moveSpeed * Time.deltaTime, 0));
                 }
-
                 break;
 
             case BossState.Dawn:
@@ -207,6 +231,7 @@ public class BossControl : MonoBehaviour
                 if(flyTime > origin_FlyTime)
                 {
                     waveManager.WavePlus();
+                    Destroy(gameObject);
                 }
                 break;
         }
@@ -216,6 +241,10 @@ public class BossControl : MonoBehaviour
     {
         if (col.gameObject.tag == "IronBlock" && leftcheck)
         {
+            if (bossDashParticle != null)
+                Destroy(bossDashParticle);
+            if(stanParticle == null)
+                stanParticle = Instantiate(origin_StanParticle,stanPoint.position + new Vector3(0,3,0),Quaternion.identity,transform);
             leftcheck = false;
             boss.GetComponent<Animator>().SetTrigger("stanTrigger");
             angle = 180;
@@ -232,6 +261,10 @@ public class BossControl : MonoBehaviour
 
         if (col.gameObject.tag == "IronBlock" && rightcheck)
         {
+            if (bossDashParticle != null)
+                Destroy(bossDashParticle);
+            if (stanParticle == null)
+                stanParticle = Instantiate(origin_StanParticle, stanPoint.position + new Vector3(0, 3, 0), Quaternion.identity, transform);
             rightcheck = false;
             boss.GetComponent<Animator>().SetTrigger("stanTrigger");
             angle = -180;
@@ -255,7 +288,9 @@ public class BossControl : MonoBehaviour
             Debug.Log(hitCount);
             if (hitCount > 0)
                 boss.GetComponent<Animator>().SetTrigger("damegeTrigger");
+            Instantiate(bossBombParticle, bombPoint.position, Quaternion.identity);
             bossState = BossState.Damege;
+            Destroy(col.gameObject);
         }
     }
 
@@ -268,6 +303,8 @@ public class BossControl : MonoBehaviour
         //renderComponent.enabled = true;
         transform.Rotate(new Vector3(0, angle, 0));
         time = 0;
+        if (stanParticle != null)
+            Destroy(stanParticle);
         bossState = BossState.Move;
     }
 

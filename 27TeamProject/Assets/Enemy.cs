@@ -125,7 +125,7 @@ public class Enemy : MonoBehaviour
     public string debug;
 
     public List<AudioClip> seList;
-    AudioSource seAudio;
+    protected AudioSource seAudio;
 
     protected bool isGround;
 
@@ -168,6 +168,8 @@ public class Enemy : MonoBehaviour
         ThisEnemyLayer = LayerMask.NameToLayer("Enemy");
         CatchEnemyLayer = LayerMask.NameToLayer("CatchEnemy");
         ThrowEnemyLayer = LayerMask.NameToLayer("ThrowEnemy");
+
+        Debug.Log(ThrowEnemyLayer);
 
         switch (mode)
         {
@@ -418,7 +420,6 @@ public class Enemy : MonoBehaviour
 
     public virtual void AttackAnime()
     {
-        seAudio.PlayOneShot(seList[0]);
     }
 
     private void OnTriggerEnter(Collider other)

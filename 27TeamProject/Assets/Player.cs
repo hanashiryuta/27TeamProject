@@ -131,6 +131,9 @@ public class Player : MonoBehaviour
     float originSeTime = 0.5f;
     float seTime;
 
+    public LayerMask bossLayer;
+    public LayerMask rockLayer;
+
     // Use this for initialization
     void Start()
     {
@@ -302,6 +305,13 @@ public class Player : MonoBehaviour
             anim.SetTrigger("isDamege");
             hp--;
         }
+        else if (collision.gameObject.CompareTag("Boss") && damegeTime <= 0 && catchObject != collision.gameObject)
+        {
+            isDamege = true;
+            damegeTime = origin_DamegeTime;
+            anim.SetTrigger("isDamege");
+            hp -= 2;
+        }
     }
 
     /// <summary>
@@ -309,9 +319,9 @@ public class Player : MonoBehaviour
     /// </summary>
     void HookPointer()
     {
-        if (catchObject.CompareTag("Boss"))
+        if (catchObject != null && catchObject.CompareTag("Boss"))
         {
-            pointerAngle = Mathf.Atan2(1, 0);
+            pointerAngle = Mathf.Atan2(1, 1);
             pointerPosition = new Vector3(Mathf.Cos(pointerAngle) * pointerRadius, 2, Mathf.Sin(pointerAngle) * pointerRadius);
         }
         else
@@ -330,12 +340,58 @@ public class Player : MonoBehaviour
                 Quaternion.Euler(0, (pointerAngle - 90), 0), targetLayer);
             //transform.rotation = Quaternion.Euler(0, pointerAngle - 90, 0);
 
+            Collider[] bossList = Physics.OverlapBox(new Vector3((transform.position.x + (transform.position.x + pointerPosition.x)) / 2, transform.position.y, (transform.position.z + (transform.position.z + pointerPosition.z)) / 2),
+            new Vector3(transform.localScale.x, transform.localScale.y * 2, pointerRadius / 2),
+                Quaternion.Euler(0, (pointerAngle - 90), 0), bossLayer);
+
+            Collider[] rockList = Physics.OverlapBox(new Vector3((transform.position.x + (transform.position.x + pointerPosition.x)) / 2, transform.position.y, (transform.position.z + (transform.position.z + pointerPosition.z)) / 2),
+            new Vector3(transform.localScale.x, transform.localScale.y * 2, pointerRadius / 2),
+                Quaternion.Euler(0, (pointerAngle - 90), 0), rockLayer);
+
             //1つ以上検知していれば
             if (targetList.Length > 0)
             {
                 //一番近いものを検索し、その位置にポインターを配置する
                 GameObject nearEnemy = targetList[0].gameObject;
                 foreach (var cx in targetList)
+                {
+                    float length = Vector3.Distance(transform.position, cx.transform.position);
+                    float nearLength = Vector3.Distance(transform.position, nearEnemy.transform.position);
+
+                    if (length <= nearLength)
+                    {
+                        nearEnemy = cx.gameObject;
+                    }
+                }
+                hookPointer.transform.position = nearEnemy.transform.position;
+                Color color = hookPointer.GetComponent<Renderer>().material.color;
+                color = Color.yellow;
+                hookPointer.GetComponent<Renderer>().material.color = color;
+            }
+            else if (bossList.Length > 0)
+            {
+                //一番近いものを検索し、その位置にポインターを配置する
+                GameObject nearEnemy = bossList[0].gameObject;
+                foreach (var cx in bossList)
+                {
+                    float length = Vector3.Distance(transform.position, cx.transform.position);
+                    float nearLength = Vector3.Distance(transform.position, nearEnemy.transform.position);
+
+                    if (length <= nearLength)
+                    {
+                        nearEnemy = cx.gameObject;
+                    }
+                }
+                hookPointer.transform.position = nearEnemy.transform.position;
+                Color color = hookPointer.GetComponent<Renderer>().material.color;
+                color = Color.yellow;
+                hookPointer.GetComponent<Renderer>().material.color = color;
+            }
+            else if (rockList.Length > 0)
+            {
+                //一番近いものを検索し、その位置にポインターを配置する
+                GameObject nearEnemy = rockList[0].gameObject;
+                foreach (var cx in rockList)
                 {
                     float length = Vector3.Distance(transform.position, cx.transform.position);
                     float nearLength = Vector3.Distance(transform.position, nearEnemy.transform.position);
@@ -417,8 +473,11 @@ public class Player : MonoBehaviour
         catchObject = m_CatchObject;
         catchObject.GetComponent<BoxCollider>().isTrigger = true;
         catchObject.GetComponent<Rigidbody>().useGravity = false;
-        catchObject.GetComponent<Enemy>().isFly = false;
-        catchObject.GetComponent<Enemy>().flyDeathTime = catchObject.GetComponent<Enemy>().originFlyDeathTime;
+        if (!catchObject.CompareTag("Boss"))
+        {
+            catchObject.GetComponent<Enemy>().isFly = false;
+            catchObject.GetComponent<Enemy>().flyDeathTime = catchObject.GetComponent<Enemy>().originFlyDeathTime;
+        }
         swingRadius = Vector3.Distance(transform.position, catchObject.transform.position);
         if (swingRadius <= 1)
             swingRadius = 1;
@@ -438,10 +497,13 @@ public class Player : MonoBehaviour
     /// </summary>
     void HookSwing()
     {
-        spLossRange = catchObject.GetComponent<Enemy>().playerSP;
-        sp -= spLossRange;
-        if (sp <= 0)
-            sp = 0;
+        if (!catchObject.CompareTag("Boss"))
+        {
+            spLossRange = catchObject.GetComponent<Enemy>().playerSP;
+            sp -= spLossRange;
+            if (sp <= 0)
+                sp = 0;
+        }
 
         currentAngle = Mathf.Abs(Mathf.Atan2(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal")) * 180.0f / Mathf.PI);
 
@@ -515,11 +577,13 @@ public class Player : MonoBehaviour
         else if (swingSpeed <= -swingSpeedRange)
             swingSpeed = -swingSpeedRange;
 
-        Enemy enemy = catchObject.GetComponent<Enemy>();
+        if (!catchObject.CompareTag("Boss"))
+        {
+            Enemy enemy = catchObject.GetComponent<Enemy>();
 
-        enemy.ThrowAttack = (int)(enemy.maxThrowAttack * Mathf.Abs(swingSpeed) / swingSpeedRange);
-        enemy.SwingAttack = (int)(enemy.maxSwingAttack * Mathf.Abs(swingSpeed) / swingSpeedRange);
-
+            enemy.ThrowAttack = (int)(enemy.maxThrowAttack * Mathf.Abs(swingSpeed) / swingSpeedRange);
+            enemy.SwingAttack = (int)(enemy.maxSwingAttack * Mathf.Abs(swingSpeed) / swingSpeedRange);
+        }
         swingAngle += swingSpeed;
         catchObject.transform.position = transform.position + new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180), 2, swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180));
 
@@ -546,7 +610,7 @@ public class Player : MonoBehaviour
             Vector3 throwVelocity = (hookPointer.transform.position - transform.position).normalized;
             throwVelocity.y = 0;
             catchObject.GetComponent<Enemy>().ThrowSet(throwSpeed,throwVelocity);
-            //catchObject.transform.position = new Vector3(transform.position.x + throwVelocity.x*2, 3, transform.position.z + throwVelocity.z*2);
+            catchObject.transform.position = new Vector3(transform.position.x + throwVelocity.x*2, 3, transform.position.z + throwVelocity.z*2);
             //catchObject.GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
             playerState = PlayerState.HOOKRETURN;
             //catchObject.GetComponent<BoxCollider>().isTrigger = false;
@@ -559,7 +623,7 @@ public class Player : MonoBehaviour
 
         else if(catchObject.tag == "Boss")
         {
-            throwSpeed = swingSpeed * 400;
+            throwSpeed = Mathf.Abs(swingSpeed) * 400;
             catchObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
             catchObject.GetComponent<Rigidbody>().useGravity = false;
             Vector3 throwVelocity = (hookPointer.transform.position - transform.position).normalized;
