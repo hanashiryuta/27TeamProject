@@ -40,13 +40,13 @@ public class Sticking_Enemy : Enemy
         {
             GUIText = hit.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
             isGUIDraw = true;
+            hp -= hit.gameObject.GetComponent<Enemy>().SwingAttack;
             Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
             status = Status.DAMEGE;
             TriggerSetRotate();
             moveStop = !moveStop;
 
             TriggerSet(hit);
-
         }
 
         if (hit.gameObject.layer == ThrowEnemyLayer)
@@ -83,7 +83,7 @@ public class Sticking_Enemy : Enemy
                     //// rb.velocity = Vector3.zero;
 
                     child.Add(hit.gameObject);
-
+                    playerSP += 0.1f;
                 }
                 stickingCount++;
                 //GetComponent<BoxCollider>().isTrigger = false;
@@ -105,9 +105,16 @@ public class Sticking_Enemy : Enemy
     public override void Update()
     {
         base.Update();
-        if (isHook)
-            Move();
-        for(int i = 0; i < child.Count; i++)
+        if (!BlowMode)
+        {
+            if (isHook) Move();
+        }
+
+        else
+        {
+            Blow();
+        }
+        for (int i = 0; i < child.Count; i++)
         {
             if(child[i] == null)
             {
