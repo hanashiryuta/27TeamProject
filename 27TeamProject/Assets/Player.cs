@@ -100,7 +100,8 @@ public class Player : MonoBehaviour
     public float sp;
     float spLossRange = 0.1f;
     float maxHP;
-    float maxSP;
+    [HideInInspector]
+    public float maxSP;
 
     public Image hpBar;
     public Image spBar;
@@ -131,9 +132,9 @@ public class Player : MonoBehaviour
     float originSeTime = 0.5f;
     float seTime;
 
+    public FadeScript fadeScript;
     public LayerMask bossLayer;
     public LayerMask rockLayer;
-
     // Use this for initialization
     void Start()
     {
@@ -253,7 +254,8 @@ public class Player : MonoBehaviour
     {
         anim.SetBool("isDeath", true);
         isPlayerDeath = true;
-        SceneManager.LoadScene("GameOver");
+        fadeScript.nextScene = "GameClear";
+        fadeScript.isSceneEnd = true;
     }
 
     /// <summary>

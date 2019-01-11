@@ -25,6 +25,7 @@ public class Hook : MonoBehaviour {
     //プレイヤー
     [HideInInspector]
     public GameObject player;
+    Player playerScript;
     //目標地点
     [HideInInspector]
     public Vector3 targetPosition;
@@ -47,7 +48,7 @@ public class Hook : MonoBehaviour {
 
     [HideInInspector]
     public float targetDistance;
-
+    
     // Use this for initialization
     void Start () {
         //移動方向設定
@@ -60,10 +61,21 @@ public class Hook : MonoBehaviour {
             scale.x = -1;
         transform.localScale = scale;
         LineSet();
-	}
+        playerScript = player.GetComponent<Player>();
+    }
 
     void FixedUpdate()
     {
+        if (playerScript.sp < playerScript.maxSP * 3 / 10)
+        {
+            armLine.startColor = Color.red;
+            armLine.endColor = Color.red;
+        }
+        else
+        {
+            armLine.startColor = Color.white;
+            armLine.endColor = Color.white;
+        }
         armLine.SetPosition(0, player.transform.position + new Vector3(0, 2, 0));
         armLine.SetPosition(1, transform.position);
         //フック状態で変化

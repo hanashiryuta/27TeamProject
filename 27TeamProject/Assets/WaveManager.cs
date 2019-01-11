@@ -29,6 +29,8 @@ public class WaveManager : MonoBehaviour
 
     public EnemySpawnManager enemySpawnManager;
 
+    public FadeScript fadeScript;
+
     //public void OnCollisionEnter(Collision collision)
     //{
     //    if (collision.gameObject.tag == "Player")
@@ -140,7 +142,8 @@ public class WaveManager : MonoBehaviour
         if(waveCount > 3)
         {
             isSceneChange = true;
-            SceneManager.LoadScene("GameClear");
+            fadeScript.nextScene = "GameClear";
+            fadeScript.isSceneEnd = true;
         }
     }
 
