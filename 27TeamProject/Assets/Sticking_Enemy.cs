@@ -120,4 +120,14 @@ public class Sticking_Enemy : Enemy
     {
         animator.SetTrigger("isAttack");
     }
+
+    public override void DeathAction()
+    {
+     
+        Instantiate(origin_Death_Particle, transform.position, Quaternion.identity);
+        if (waveManager.isWave)
+            waveManager.enemyDeathNum += (stickingCount + 1);
+        enemySpawnManager.enemyCount -= (stickingCount + 1);
+        Destroy(this.gameObject);
+    }
 }
