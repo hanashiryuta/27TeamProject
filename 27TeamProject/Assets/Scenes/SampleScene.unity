@@ -575,42 +575,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 114803308311178010, guid: 69c60ddfc93c8ae4dba041f754ecedef,
-        type: 2}
-      propertyPath: origin_Spawn_Particle
-      value: 
-      objectReference: {fileID: 1773085424974958, guid: 27032da6152f86d49b66005ff5cd8d2b,
-        type: 2}
-    - target: {fileID: 114156281509363916, guid: 69c60ddfc93c8ae4dba041f754ecedef,
-        type: 2}
-      propertyPath: origin_Spawn_Particle
-      value: 
-      objectReference: {fileID: 1773085424974958, guid: 27032da6152f86d49b66005ff5cd8d2b,
-        type: 2}
-    - target: {fileID: 114671148317734438, guid: 69c60ddfc93c8ae4dba041f754ecedef,
-        type: 2}
-      propertyPath: origin_Spawn_Particle
-      value: 
-      objectReference: {fileID: 1773085424974958, guid: 27032da6152f86d49b66005ff5cd8d2b,
-        type: 2}
-    - target: {fileID: 114249608440650312, guid: 69c60ddfc93c8ae4dba041f754ecedef,
-        type: 2}
-      propertyPath: origin_Spawn_Particle
-      value: 
-      objectReference: {fileID: 1773085424974958, guid: 27032da6152f86d49b66005ff5cd8d2b,
-        type: 2}
-    - target: {fileID: 114761573980995086, guid: 69c60ddfc93c8ae4dba041f754ecedef,
-        type: 2}
-      propertyPath: origin_Spawn_Particle
-      value: 
-      objectReference: {fileID: 1773085424974958, guid: 27032da6152f86d49b66005ff5cd8d2b,
-        type: 2}
-    - target: {fileID: 114949783184587110, guid: 69c60ddfc93c8ae4dba041f754ecedef,
-        type: 2}
-      propertyPath: origin_Spawn_Particle
-      value: 
-      objectReference: {fileID: 1773085424974958, guid: 27032da6152f86d49b66005ff5cd8d2b,
-        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 69c60ddfc93c8ae4dba041f754ecedef, type: 2}
   m_IsPrefabAsset: 0
