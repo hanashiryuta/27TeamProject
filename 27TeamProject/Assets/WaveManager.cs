@@ -12,6 +12,7 @@ public class WaveManager : MonoBehaviour
     float x, ix, y;
     float time = 0.5f;
     float waveSpeed = -51;
+    float deleteTime = 5.0f;
     //float waveSpeedMax = 20;
     int count = 0;
     int max = 5;
@@ -31,14 +32,15 @@ public class WaveManager : MonoBehaviour
 
     [HideInInspector]
     public int enemyDeathNum;
-   
-    //public GameObject canvas;
+
+    public GameObject canvas;
 
     public Text enemyDeathCountText;
     public Text waveCountText;
-    public GameObject WaveWarningCount;
-
+    public GameObject WaveWarningCountObject;
     public EnemySpawnManager enemySpawnManager;
+
+    GameObject WaveWarningCount;
 
     //public void OnCollisionEnter(Collision collision)
     //{
@@ -85,12 +87,8 @@ public class WaveManager : MonoBehaviour
     {
         x = transform.position.x + 30;
         ix = transform.position.x - 30;
-        //if (Flag == true)
-        //{
         y = 10;
-        //    time -= Time.deltaTime;
-        //    if (time <= 0)
-        //    {
+
         Vector3 CreatePoint = new Vector3(x, y, transform.position.z - 10);
         //if (count == max)
         {
@@ -113,81 +111,95 @@ public class WaveManager : MonoBehaviour
         }
         count++;
         time = 0.02f;
-        //}
-
-        //}
 
     }
+
     void Start()
     {
         BlockInstance();
-        //Spark();
-        //Instantiate(WaveBlock, new Vector3(1.0f, 2.0f, 0.0f), Quaternion.identity);
-        WaveWarningCount.transform.position = new Vector3(1400, 0, 0);
-        
+        //Wave_Count();
+        WaveWarningCount = Instantiate(WaveWarningCountObject, canvas.transform);
+        WaveWarningCount.transform.localPosition = new Vector3(1400, 0, 0);
+
+
     }
+
+    //void Wave_Count()
+    //{
+    //    Instantiate(WaveWarningCount, new Vector3(1400.0f, 0.0f, 0.0f), Quaternion.identity);
+    //}
 
     void Update()
     {
-
+        Debug.Log(waveSpeed);
 
         if (isWarning == false)
         {
             WaveWarningCount.transform.position += new Vector3(waveSpeed, 0, 0);
-            waveSpeed = waveSpeed + 0.94f;
-            if (waveInterval < 4)
+            waveSpeed = waveSpeed + 0.95f;
+
+            if (waveInterval < 3.9f)
             {
-                //  waveSpeed = 0;
-                if (waveInterval < 2)
+                waveSpeed = 0;
+                if (waveInterval < 2f)
                 {
                     isWarning = true;
                 }
             }
         }
-        Debug.Log(isWarning + "判定");
+        //Debug.Log(isWarning + "判定");
         if (isWarning == true)
         {
+            if (WaveWarningCount != null)
+            {
+                WaveWarningCount.transform.position -= new Vector3(waveSpeed, 0, 0);
+                waveSpeed = waveSpeed + 1.3f;
+            }
 
-            WaveWarningCount.transform.position -= new Vector3(waveSpeed, 0, 0);
-            waveSpeed = waveSpeed + 1.3f;
+        }
+        if (waveInterval < 0.5f)
+        {
+            Destroy(WaveWarningCount);
         }
         if (waveCount > 0)
         {
             waveCountText.text = "wave:" + waveCount.ToString();
-           // WaveWarningCount.text = "WAVE" + waveCount.ToString();
+            if (WaveWarningCount != null)
+            {
+                WaveWarningCount.GetComponent<Text>().text = "WAVE:" + waveCount.ToString();
+            }
 
-        Debug.Log(waveSpeed);
         }
-    
+
         else
+        {
             waveCountText.text = "";
-            //warningWaveCountText.text = "";
+            WaveWarningCount.GetComponent<Text>().text = "";
+        }
         enemyDeathCountText.text = enemyDeathNum.ToString() + "/" + (20 + 10 * waveCount).ToString();
         if (!isWave)
         {
-
             waveInterval -= Time.deltaTime;
             if (waveInterval < 0)
             {
                 waveInterval = 5;
-
                 isWave = true;
             }
+            Debug.Log(waveInterval);
         }
         else
         {
             if (enemyDeathNum >= 20 + 10 * waveCount)
             {
                 waveCount++;
-                //waveCountWarning++;
                 enemyDeathNum = 0;
-                isWave = false;                
+                isWave = false;
                 enemySpawnManager.RateSet();
-                Instantiate(WaveWarningCount);
-                WaveWarningCount.transform.position = new Vector3(1400, 0, 0);
+                waveSpeed = 0;
+                WaveWarningCount = Instantiate(WaveWarningCountObject, canvas.transform);
+                WaveWarningCount.transform.localPosition = new Vector3(1400, 0, 0);
             }
         }
-
 
         if (waveCount > 3)
         {
@@ -195,5 +207,6 @@ public class WaveManager : MonoBehaviour
             SceneManager.LoadScene("GameClear");
         }
     }
+
 }
 

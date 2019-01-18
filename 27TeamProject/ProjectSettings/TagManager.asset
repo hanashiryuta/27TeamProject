@@ -15,6 +15,7 @@ TagManager:
   - IronBlock
   - PaulEnemyUnder
   - PaulEnemy
+  - Warning
   layers:
   - Default
   - TransparentFX
@@ -40,7 +41,6 @@ TagManager:
   - PaulEnemy
   - LaserObject
   - Warning
-  - 
   - 
   - 
   - 
