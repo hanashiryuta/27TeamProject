@@ -119,7 +119,7 @@ public class WaveManager : MonoBehaviour
             waveCountText.text = "wave:" + waveCount.ToString();
         else
             waveCountText.text = "";
-        enemyDeathCountText.text = enemyDeathNum.ToString() + "/" + (20 + 10 * waveCount).ToString();
+        enemyDeathCountText.text = enemyDeathNum.ToString() + "/" + (10 + 10 * waveCount).ToString();
         if (!isWave)
         {
             waveInterval -= Time.deltaTime;
@@ -131,12 +131,9 @@ public class WaveManager : MonoBehaviour
         }
         else
         {
-            if (enemyDeathNum >= 20 + 10 * waveCount)
+            if (enemyDeathNum >= 10 + 10 * waveCount)
             {
-                waveCount++;
-                enemyDeathNum = 0;
-                isWave = false;
-                enemySpawnManager.RateSet();
+                WavePlus();
             }
         }
         
@@ -145,6 +142,14 @@ public class WaveManager : MonoBehaviour
             isSceneChange = true;
             SceneManager.LoadScene("GameClear");
         }
+    }
+
+    public void WavePlus()
+    {
+        waveCount++;
+        enemyDeathNum = 0;
+        isWave = false;
+        enemySpawnManager.RateSet();
     }
 }
 

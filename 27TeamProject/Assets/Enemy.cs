@@ -130,8 +130,17 @@ public class Enemy : MonoBehaviour
     public float EscapeDilayTime;
     [HideInInspector]
     public bool isGround;
+    public string debug;
+
+    public List<AudioClip> seList;
+    protected AudioSource seAudio;
 
     public virtual void Awake()
+    {
+        AwakeSub();
+    }
+
+    public virtual void AwakeSub()
     {
         //mode = MoveMode.RANDOMMOVE;
         //mode = Enum.GetValues(typeof(MoveMode)).Cast<MoveMode>().OrderBy(c => UnityEngine.Random.Range(0, 3)).FirstOrDefault();
@@ -151,7 +160,11 @@ public class Enemy : MonoBehaviour
     }
 
     // Use this for initialization
-    public virtual void Start()
+    public virtual void Start () {
+        StartSub();
+    }
+
+    public virtual void StartSub()
     {
         hp = inputHp;
         isHook = true;
@@ -162,6 +175,8 @@ public class Enemy : MonoBehaviour
         CatchEnemyLayer = LayerMask.NameToLayer("CatchEnemy");
         ThrowEnemyLayer = LayerMask.NameToLayer("ThrowEnemy");
         GroundLayer = LayerMask.NameToLayer("Ground");
+
+        Debug.Log(ThrowEnemyLayer);
 
         switch (mode)
         {
@@ -184,6 +199,7 @@ public class Enemy : MonoBehaviour
         moveStop = false;
         DamageTime = DamageSetTime;
         flyDeathTime = originFlyDeathTime;
+        seAudio = gameObject.AddComponent<AudioSource>();
         isEscape = false;
         EscapeDilayTime = setEscapeDelayTime;
         isGround = false;
@@ -191,7 +207,12 @@ public class Enemy : MonoBehaviour
 
     // Update is called once per frame
     public virtual void Update()
-    {   
+    {
+        UpdateSub();
+    }
+
+    public virtual void UpdateSub()
+    {
         if (isGUIDraw)
         {
             GUITime -= Time.deltaTime;
@@ -237,7 +258,6 @@ public class Enemy : MonoBehaviour
             waveManager.enemyDeathNum++;
         enemySpawnManager.enemyCount--;
         Destroy(this.gameObject);
-
     }
 
     private void Slap()
@@ -259,6 +279,7 @@ public class Enemy : MonoBehaviour
             if (hl.transform.tag == "Ground")
             {
                 groundcount++;
+                isGround = false;
             }
         }
 
@@ -367,11 +388,13 @@ public class Enemy : MonoBehaviour
     }
 
     public virtual void Blow()
-    {   
+    {
         Vector3 normal = Vector3.Normalize(PosBlow);
         transform.position += new Vector3(BlowOffSpeed * normal.x, BlowOffSpeed, BlowOffSpeed * normal.z);
         angleZ += 10;
-        transform.rotation = Quaternion.Euler(0, 0, angleZ);
+        Quaternion q = transform.rotation;
+        q = Quaternion.Euler(0,0,angleZ);
+        transform.rotation = q;// Quaternion.Euler(0, 0, angleZ);
     }
     public virtual void ThrowSet(float throwSpeed, Vector3 throwVelocity)
     {
@@ -405,22 +428,27 @@ public class Enemy : MonoBehaviour
 
     public virtual void AttackAnime()
     {
-
     }
 
     private void OnTriggerEnter(Collider other)
-    {   
+    {
+        TriggerAction(other);
+    }
+
+    public virtual void TriggerAction(Collider other)
+    {
         if (other.gameObject.layer == CatchEnemyLayer)
         {
             GUIText = other.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
             isGUIDraw = true;
+            hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
             Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
             status = Status.DAMEGE;
             TriggerSetRotate();
             moveStop = !moveStop;
 
             TriggerSet(other);
-            
+
         }
 
         if (other.gameObject.layer == ThrowEnemyLayer)
@@ -433,6 +461,7 @@ public class Enemy : MonoBehaviour
             TriggerSetRotate();
             moveStop = !moveStop;
             Physics.IgnoreCollision(other.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
+
             TriggerSet(other);
         }
     }
@@ -445,7 +474,6 @@ public class Enemy : MonoBehaviour
 
     public virtual void TriggerSet(Collider other)
     {
-        hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
         if (hp <= 0)
         {
             BlowMode = true;
@@ -454,6 +482,11 @@ public class Enemy : MonoBehaviour
             GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX;
             GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationY;
             PosBlow = transform.position - other.transform.position;
+            seAudio.PlayOneShot(seList[1]);
+        }
+        else
+        {
+            seAudio.PlayOneShot(seList[2]);
         }
     }
 

@@ -35,6 +35,8 @@ public class MoveEnemy : Enemy
 
     public override void AttackAnime()
     {
+        base.AttackAnime();
+        seAudio.PlayOneShot(seList[0]);
         animator.SetTrigger("isAttack");
     }
 

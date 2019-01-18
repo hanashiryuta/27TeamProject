@@ -98,6 +98,7 @@ public class Player : MonoBehaviour
     float damegeTime;
 
     public float sp;
+    float spLossRange = 0.1f;
     float maxHP;
     float maxSP;
 
@@ -120,6 +121,19 @@ public class Player : MonoBehaviour
 
     public SwingState swingState;
 
+    public Gradient firstColor;
+    public Gradient secondColor;
+    public Gradient rainbow;
+    
+    public List<AudioClip> seList;
+    AudioSource seAudio;
+
+    float originSeTime = 0.5f;
+    float seTime;
+
+    public LayerMask bossLayer;
+    public LayerMask rockLayer;
+
     // Use this for initialization
     void Start()
     {
@@ -130,12 +144,31 @@ public class Player : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         maxHP = hp;
         maxSP = sp;
+        seAudio = GetComponent<AudioSource>();
     }
 
     private void FixedUpdate()
     {
         hpBar.fillAmount = hp / maxHP;
         spBar.fillAmount = sp / maxSP;
+
+        if (hp < maxHP * 3 / 10)
+        {
+            hpBar.color = Color.red;
+        }
+        else
+        {
+            spBar.color = Color.white;
+        }
+
+        if (sp < maxSP * 3 / 10)
+        {
+            spBar.color = Color.red;
+        }
+        else
+        {
+            spBar.color = Color.white;
+        }
 
         damegeTime -= Time.deltaTime;
         if (damegeTime <= 0)
@@ -245,6 +278,7 @@ public class Player : MonoBehaviour
         //Bボタンでジャンプ
         if (isJumpFlag && Input.GetButtonDown(timingInput))
         {
+            seAudio.PlayOneShot(seList[0]);
             isJumpFlag = false;
             rigid.AddForce(Vector2.up * jumpPower);
         }
@@ -271,6 +305,13 @@ public class Player : MonoBehaviour
             anim.SetTrigger("isDamege");
             hp--;
         }
+        else if (collision.gameObject.CompareTag("Boss") && damegeTime <= 0 && catchObject != collision.gameObject)
+        {
+            isDamege = true;
+            damegeTime = origin_DamegeTime;
+            anim.SetTrigger("isDamege");
+            hp -= 2;
+        }
     }
 
     /// <summary>
@@ -278,47 +319,101 @@ public class Player : MonoBehaviour
     /// </summary>
     void HookPointer()
     {
-        //左スティックの方向にポインター配置
-        if (Mathf.Abs(Input.GetAxis("Vertical")) >= 0.1f || Mathf.Abs(Input.GetAxis("Horizontal")) >= 0.1f)
+        if (catchObject != null && catchObject.CompareTag("Boss"))
         {
-            pointerAngle = Mathf.Atan2(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
+            pointerAngle = Mathf.Atan2(1, 1);
             pointerPosition = new Vector3(Mathf.Cos(pointerAngle) * pointerRadius, 2, Mathf.Sin(pointerAngle) * pointerRadius);
-
-        }
-
-        //左スティックの方向に四角形のあたり判定を飛ばす
-        Collider[] targetList = Physics.OverlapBox(new Vector3((transform.position.x + (transform.position.x + pointerPosition.x)) / 2, transform.position.y, (transform.position.z + (transform.position.z + pointerPosition.z)) / 2),
-            new Vector3(transform.localScale.x, transform.localScale.y * 2, pointerRadius / 2),
-            Quaternion.Euler(0, (pointerAngle - 90), 0), targetLayer);
-        //transform.rotation = Quaternion.Euler(0, pointerAngle - 90, 0);
-
-        //1つ以上検知していれば
-        if (targetList.Length > 0)
-        {
-            //一番近いものを検索し、その位置にポインターを配置する
-            GameObject nearEnemy = targetList[0].gameObject;
-            foreach (var cx in targetList)
-            {
-                float length = Vector3.Distance(transform.position, cx.transform.position);
-                float nearLength = Vector3.Distance(transform.position, nearEnemy.transform.position);
-
-                if (length <= nearLength)
-                {
-                    nearEnemy = cx.gameObject;
-                }
-            }
-            hookPointer.transform.position = nearEnemy.transform.position;
-            Color color = hookPointer.GetComponent<Renderer>().material.color;
-            color = Color.yellow;
-            hookPointer.GetComponent<Renderer>().material.color = color;
         }
         else
         {
-            hookPointer.transform.position = pointerPosition + transform.position;
-            Color color = hookPointer.GetComponent<Renderer>().material.color;
-            color = Color.white;
-            hookPointer.GetComponent<Renderer>().material.color = color;
-        }       
+            //左スティックの方向にポインター配置
+            if (Mathf.Abs(Input.GetAxis("Vertical")) >= 0.1f || Mathf.Abs(Input.GetAxis("Horizontal")) >= 0.1f)
+            {
+                pointerAngle = Mathf.Atan2(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
+                pointerPosition = new Vector3(Mathf.Cos(pointerAngle) * pointerRadius, 2, Mathf.Sin(pointerAngle) * pointerRadius);
+
+            }
+
+            //左スティックの方向に四角形のあたり判定を飛ばす
+            Collider[] targetList = Physics.OverlapBox(new Vector3((transform.position.x + (transform.position.x + pointerPosition.x)) / 2, transform.position.y, (transform.position.z + (transform.position.z + pointerPosition.z)) / 2),
+                new Vector3(transform.localScale.x, transform.localScale.y * 2, pointerRadius / 2),
+                Quaternion.Euler(0, (pointerAngle - 90), 0), targetLayer);
+            //transform.rotation = Quaternion.Euler(0, pointerAngle - 90, 0);
+
+            Collider[] bossList = Physics.OverlapBox(new Vector3((transform.position.x + (transform.position.x + pointerPosition.x)) / 2, transform.position.y, (transform.position.z + (transform.position.z + pointerPosition.z)) / 2),
+            new Vector3(transform.localScale.x, transform.localScale.y * 2, pointerRadius / 2),
+                Quaternion.Euler(0, (pointerAngle - 90), 0), bossLayer);
+
+            Collider[] rockList = Physics.OverlapBox(new Vector3((transform.position.x + (transform.position.x + pointerPosition.x)) / 2, transform.position.y, (transform.position.z + (transform.position.z + pointerPosition.z)) / 2),
+            new Vector3(transform.localScale.x, transform.localScale.y * 2, pointerRadius / 2),
+                Quaternion.Euler(0, (pointerAngle - 90), 0), rockLayer);
+
+            //1つ以上検知していれば
+            if (targetList.Length > 0)
+            {
+                //一番近いものを検索し、その位置にポインターを配置する
+                GameObject nearEnemy = targetList[0].gameObject;
+                foreach (var cx in targetList)
+                {
+                    float length = Vector3.Distance(transform.position, cx.transform.position);
+                    float nearLength = Vector3.Distance(transform.position, nearEnemy.transform.position);
+
+                    if (length <= nearLength)
+                    {
+                        nearEnemy = cx.gameObject;
+                    }
+                }
+                hookPointer.transform.position = nearEnemy.transform.position;
+                Color color = hookPointer.GetComponent<Renderer>().material.color;
+                color = Color.yellow;
+                hookPointer.GetComponent<Renderer>().material.color = color;
+            }
+            else if (bossList.Length > 0)
+            {
+                //一番近いものを検索し、その位置にポインターを配置する
+                GameObject nearEnemy = bossList[0].gameObject;
+                foreach (var cx in bossList)
+                {
+                    float length = Vector3.Distance(transform.position, cx.transform.position);
+                    float nearLength = Vector3.Distance(transform.position, nearEnemy.transform.position);
+
+                    if (length <= nearLength)
+                    {
+                        nearEnemy = cx.gameObject;
+                    }
+                }
+                hookPointer.transform.position = nearEnemy.transform.position;
+                Color color = hookPointer.GetComponent<Renderer>().material.color;
+                color = Color.yellow;
+                hookPointer.GetComponent<Renderer>().material.color = color;
+            }
+            else if (rockList.Length > 0)
+            {
+                //一番近いものを検索し、その位置にポインターを配置する
+                GameObject nearEnemy = rockList[0].gameObject;
+                foreach (var cx in rockList)
+                {
+                    float length = Vector3.Distance(transform.position, cx.transform.position);
+                    float nearLength = Vector3.Distance(transform.position, nearEnemy.transform.position);
+
+                    if (length <= nearLength)
+                    {
+                        nearEnemy = cx.gameObject;
+                    }
+                }
+                hookPointer.transform.position = nearEnemy.transform.position;
+                Color color = hookPointer.GetComponent<Renderer>().material.color;
+                color = Color.yellow;
+                hookPointer.GetComponent<Renderer>().material.color = color;
+            }
+            else
+            {
+                hookPointer.transform.position = pointerPosition + transform.position;
+                Color color = hookPointer.GetComponent<Renderer>().material.color;
+                color = Color.white;
+                hookPointer.GetComponent<Renderer>().material.color = color;
+            }
+        }
         
     }
 
@@ -336,6 +431,7 @@ public class Player : MonoBehaviour
             hook.GetComponent<Hook>().targetDistance = Vector3.Distance(hookPointer.transform.position, transform.position);
             isHookShot = false;
             anim.SetBool("isShot",true);
+            seAudio.PlayOneShot(seList[3]);
         }
         
     }
@@ -377,8 +473,11 @@ public class Player : MonoBehaviour
         catchObject = m_CatchObject;
         catchObject.GetComponent<BoxCollider>().isTrigger = true;
         catchObject.GetComponent<Rigidbody>().useGravity = false;
-        catchObject.GetComponent<Enemy>().isFly = false;
-        catchObject.GetComponent<Enemy>().flyDeathTime = catchObject.GetComponent<Enemy>().originFlyDeathTime;
+        if (!catchObject.CompareTag("Boss"))
+        {
+            catchObject.GetComponent<Enemy>().isFly = false;
+            catchObject.GetComponent<Enemy>().flyDeathTime = catchObject.GetComponent<Enemy>().originFlyDeathTime;
+        }
         swingRadius = Vector3.Distance(transform.position, catchObject.transform.position);
         if (swingRadius <= 1)
             swingRadius = 1;
@@ -398,140 +497,104 @@ public class Player : MonoBehaviour
     /// </summary>
     void HookSwing()
     {
-        if (swingState == SwingState.TRIGGERSWING)
+        if (!catchObject.CompareTag("Boss"))
         {
-            //ボタン押している間
-            if (Input.GetButton(shotInput))
-            {
-                sp -= 0.1f;
-                if (sp <= 0)
-                    sp = 0;
-                if (timing_Particle == null)
-                {
-                    timing_Particle = Instantiate(origin_Timing_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
-                }
-                else
-                {
-                    timingTime -= Time.deltaTime;
-                    if (timingTime <= 0)
-                        timingTime = origin_TimingTime;
-                    //ParticleSystem ps = timing_Particle.GetComponent<ParticleSystem>();
-                    //ParticleSystem.Particle[] particles = new ParticleSystem.Particle[ps.particleCount];
-                    //ps.GetParticles(particles);
-                    if (timingTime <= 0.5f)
-                    //if (particles[0].GetCurrentColor(ps).r == 255&&
-                    //    particles[0].GetCurrentColor(ps).g == 125&&
-                    //    particles[0].GetCurrentColor(ps).b == 0&&
-                    //    particles[0].GetCurrentColor(ps).a == 255)
-                    {
-                        if (Input.GetButtonDown(timingInput))
-                        {
-                            //Debug.Break();
-                            Instantiate(good_Timing_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
-                            swingSpeed += swingButtonRate;
-                            Destroy(timing_Particle);
-                            timingTime = origin_TimingTime;
-                        }
-                    }
-                    else
-                    {
-                        if (Input.GetButtonDown(timingInput))
-                        {
-                            Instantiate(badTiming_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
-                            swingSpeed -= swingButtonRate;
-                            Destroy(timing_Particle);
-                            timingTime = origin_TimingTime;
-                        }
-                    }
-                }
-
-
-                swingSpeed += swingSpeedRate;
-
-                if (swingSpeed >= swingSpeedRange)
-                    swingSpeed = swingSpeedRange;
-                else if (swingSpeed <= 0)
-                    swingSpeed = 0;
-
-                Enemy enemy = catchObject.GetComponent<Enemy>();
-
-                enemy.ThrowAttack = (int)(enemy.maxThrowAttack * swingSpeed / swingSpeedRange);
-                enemy.SwingAttack = (int)(enemy.maxSwingAttack * swingSpeed / swingSpeedRange);
-
-                swingAngle += swingSpeed;
-                catchObject.transform.position = transform.position + new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180), 2, swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180));
-            }
-        }
-        else
-        {
-            sp -= 0.1f;
+            spLossRange = catchObject.GetComponent<Enemy>().playerSP;
+            sp -= spLossRange;
             if (sp <= 0)
                 sp = 0;
+        }
 
-            currentAngle = Mathf.Abs(Mathf.Atan2(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal")) * 180.0f / Mathf.PI);
+        currentAngle = Mathf.Abs(Mathf.Atan2(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal")) * 180.0f / Mathf.PI);
 
-            if (Input.GetAxis("Vertical") > 0)
+        if (Input.GetAxis("Vertical") > 0)
+        {
+            if (currentAngle > previouseAngle)
             {
-                if (currentAngle > previouseAngle)
-                {
-                    if (setAngle < 0)
-                        setAngle = 0;
-                    setAngle += Mathf.Abs(currentAngle - previouseAngle);
-                }
-                else if (currentAngle < previouseAngle)
-                {
-                    if (setAngle > 0)
-                        setAngle = 0;
-                    setAngle -= Mathf.Abs(currentAngle - previouseAngle);
-                }
+                if (setAngle < 0)
+                    setAngle = 0;
+                setAngle += Mathf.Abs(currentAngle - previouseAngle);
             }
-            else if(Input.GetAxis("Vertical") < 0)
+            else if (currentAngle < previouseAngle)
             {
-                if (currentAngle > previouseAngle)
-                {
-                    if (setAngle > 0)
-                        setAngle = 0;
-                    setAngle -= Mathf.Abs(currentAngle - previouseAngle);
-                }
-                else if (currentAngle < previouseAngle)
-                {
-                    if (setAngle < 0)
-                        setAngle = 0;
-                    setAngle += Mathf.Abs(currentAngle - previouseAngle);
-                }
+                if (setAngle > 0)
+                    setAngle = 0;
+                setAngle -= Mathf.Abs(currentAngle - previouseAngle);
             }
+        }
+        else if(Input.GetAxis("Vertical") < 0)
+        {
+            if (currentAngle > previouseAngle)
+            {
+                if (setAngle > 0)
+                    setAngle = 0;
+                setAngle -= Mathf.Abs(currentAngle - previouseAngle);
+            }
+            else if (currentAngle < previouseAngle)
+            {
+                if (setAngle < 0)
+                    setAngle = 0;
+                setAngle += Mathf.Abs(currentAngle - previouseAngle);
+            }
+        }
             
-            if(setAngle >= 360)
-            {
-                setAngle = 0;
-                swingSpeed += swingButtonRate;
-                Instantiate(good_Timing_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
-                Debug.Log("左回転");
-            }
-            else if (setAngle <= -360)
-            {
-                setAngle = 0;
-                swingSpeed -= swingButtonRate;
-                Instantiate(badTiming_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
-                Debug.Log("右回転");
-            }
+        if(setAngle >= 360)
+        {
+            setAngle = 0;
+            swingSpeed += swingButtonRate;
+            Instantiate(good_Timing_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
+            Debug.Log("左回転");
+        }
+        else if (setAngle <= -360)
+        {
+            setAngle = 0;
+            swingSpeed -= swingButtonRate;
+            Instantiate(badTiming_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
+            Debug.Log("右回転");
+        }
 
-            if (swingSpeed >= swingSpeedRange)
-                swingSpeed = swingSpeedRange;
-            else if (swingSpeed <= -swingSpeedRange)
-                swingSpeed = -swingSpeedRange;
+        Gradient particleColor = firstColor;
+        if (Mathf.Abs(swingSpeed) >= swingSpeedRange / 3)
+            {
+            if (Mathf.Abs(swingSpeed) >= swingSpeedRange * 2 / 3)
+            {
+                Debug.Log("rainbow");
+                particleColor = rainbow;
+            }
+            else
+            {
+                Debug.Log("blue");
+                particleColor = secondColor;
+            }
+        }
 
+        ParticleSystem.MainModule mains = swing_Particle.GetComponent<ParticleSystem>().main;
+
+        mains.startColor = particleColor;
+
+        if (swingSpeed >= swingSpeedRange)
+            swingSpeed = swingSpeedRange;
+        else if (swingSpeed <= -swingSpeedRange)
+            swingSpeed = -swingSpeedRange;
+
+        if (!catchObject.CompareTag("Boss"))
+        {
             Enemy enemy = catchObject.GetComponent<Enemy>();
 
             enemy.ThrowAttack = (int)(enemy.maxThrowAttack * Mathf.Abs(swingSpeed) / swingSpeedRange);
             enemy.SwingAttack = (int)(enemy.maxSwingAttack * Mathf.Abs(swingSpeed) / swingSpeedRange);
-
-            swingAngle += swingSpeed;
-            catchObject.transform.position = transform.position + new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180), 2, swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180));
-
-            previouseAngle = currentAngle;
         }
-        
+        swingAngle += swingSpeed;
+        catchObject.transform.position = transform.position + new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180), 2, swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180));
+
+        seTime += Time.deltaTime;
+        if(seTime >= originSeTime)
+        {
+            seTime = 0;
+            seAudio.PlayOneShot(seList[2]);
+        }
+
+        previouseAngle = currentAngle;        
     }
 
     /// <summary>
@@ -539,13 +602,15 @@ public class Player : MonoBehaviour
     /// </summary>
     void ObjectThrow()
     {
+        if (catchObject.tag == "Enemy")
+        {
             throwSpeed = Mathf.Abs(swingSpeed) * 400;
             //catchObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
             //catchObject.GetComponent<Rigidbody>().useGravity = false;
             Vector3 throwVelocity = (hookPointer.transform.position - transform.position).normalized;
             throwVelocity.y = 0;
             catchObject.GetComponent<Enemy>().ThrowSet(throwSpeed,throwVelocity);
-            //catchObject.transform.position = new Vector3(transform.position.x + throwVelocity.x*2, 3, transform.position.z + throwVelocity.z*2);
+            catchObject.transform.position = new Vector3(transform.position.x + throwVelocity.x*2, 3, transform.position.z + throwVelocity.z*2);
             //catchObject.GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
             playerState = PlayerState.HOOKRETURN;
             //catchObject.GetComponent<BoxCollider>().isTrigger = false;
@@ -553,6 +618,26 @@ public class Player : MonoBehaviour
             Destroy(swing_Particle);
             //catchObject.GetComponent<Enemy>().isFly = true;
             timingTime = origin_TimingTime;
+            seAudio.PlayOneShot(seList[1]);
+        }
+
+        else if(catchObject.tag == "Boss")
+        {
+            throwSpeed = Mathf.Abs(swingSpeed) * 400;
+            catchObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            catchObject.GetComponent<Rigidbody>().useGravity = false;
+            Vector3 throwVelocity = (hookPointer.transform.position - transform.position).normalized;
+            throwVelocity.y = 0;
+            catchObject.transform.position = new Vector3(transform.position.x + throwVelocity.x * 2, 3, transform.position.z + throwVelocity.z * 2);
+            catchObject.GetComponent<Rigidbody>().AddForce(throwVelocity * throwSpeed);
+            playerState = PlayerState.HOOKRETURN;
+            //catchObject.GetComponent<BoxCollider>().isTrigger = false;
+            catchObject.gameObject.layer = 15;
+            Destroy(swing_Particle);
+            timingTime = origin_TimingTime;
+            seAudio.PlayOneShot(seList[1]);
+            catchObject.GetComponent<BossControl>().bossState = BossState.Fly;
+        }
     }
 
     /// <summary>
