@@ -15,6 +15,7 @@ TagManager:
   - IronBlock
   - PaulEnemyUnder
   - PaulEnemy
+  - Warning
   - Rock
   - Boss
   layers:
@@ -45,7 +46,6 @@ TagManager:
   - Warning
   - Boss
   - Rock
-  - 
   - 
   - 
   - 
