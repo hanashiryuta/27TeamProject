@@ -39,5 +39,4 @@ public class PaulEnemySpawn : EnemySpawn {
             SpawnCount = 0;
         }
     }
-
 }

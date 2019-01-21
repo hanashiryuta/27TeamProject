@@ -87,9 +87,7 @@ public class Enemy : MonoBehaviour
     
     [HideInInspector]
     public float angleZ;
-
-    float angleX;
-
+    
     [HideInInspector]
     public Vector3 PosBlow;
     
