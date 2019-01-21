@@ -20,26 +20,29 @@ public class BGMManager : MonoBehaviour {
         {
             Destroy(gameObject);
         }
-        audioSource = GetComponent<AudioSource>();
         SceneManager.sceneLoaded += OnSceneLoaded;
 	}
 
     void OnSceneLoaded(Scene scene,LoadSceneMode mode)
     {
-        if(scene.name == "Title")
+        if (scene.name == "Title")
         {
+            audioSource = GetComponent<AudioSource>();
             audioSource.clip = bgmList[0];
         }
         else if(scene.name == "SampleScene")
         {
+            audioSource = GetComponent<AudioSource>();
             audioSource.clip = bgmList[1];
         }
         else if(scene.name == "GameClear")
         {
+            audioSource = GetComponent<AudioSource>();
             audioSource.clip = bgmList[2];
         }
         else if(scene.name == "GameOver")
         {
+            audioSource = GetComponent<AudioSource>();
             audioSource.clip = bgmList[3];
         }
         audioSource.Play();

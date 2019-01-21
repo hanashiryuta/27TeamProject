@@ -13,7 +13,6 @@ public class Rock : Enemy {
     private GameObject obj;
 
     int BossLayer;
-    bool isGround;
 
     float angle;
 
