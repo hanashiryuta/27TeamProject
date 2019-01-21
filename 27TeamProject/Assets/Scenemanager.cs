@@ -5,32 +5,40 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Scenemanager : MonoBehaviour {
+
+    public string nextSceneName;
     public Button selectButton;
+    public FadeScript fade;
 
     // Use this for initialization
     void Start()
     {
+        if (Cursor.visible == true)
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
         selectButton.Select();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetButtonDown("Decision"))
-        //{
-
-        //    SceneManager.LoadScene("Select");
-        //}
 
     }
 
-    public void Title()
+    public void NextScene()
     {
-        SceneManager.LoadScene("Title");
+        if (fade.fadeState == FadeState.STAY)
+        {
+            fade.nextScene = nextSceneName;
+            fade.isSceneEnd = true;
+        }
     }
 
     public void GameEnd()
     {
-        Application.Quit();
+        if (fade.fadeState == FadeState.STAY)
+            Application.Quit();
     }
 }

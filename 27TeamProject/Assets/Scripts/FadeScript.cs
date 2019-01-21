@@ -20,6 +20,7 @@ public class FadeScript : MonoBehaviour {
 
     public bool isSceneEnd;
 
+    [HideInInspector]
     public string nextScene;
 
 	// Use this for initialization
