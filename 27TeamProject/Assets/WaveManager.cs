@@ -45,6 +45,7 @@ public class WaveManager : MonoBehaviour
     public EnemySpawnManager enemySpawnManager;
 
     GameObject WaveWarningCount;
+    public FadeScript fadeScript;
 
     //public void OnCollisionEnter(Collision collision)
     //{
@@ -180,25 +181,30 @@ public class WaveManager : MonoBehaviour
 
         else
         {
-
-            if (enemyDeathNum >= 0 + 3 * waveCount)
+            if (enemyDeathNum >= 10 + 3 * waveCount)
             {
-                waveCount++;
-                enemyDeathNum = 0;
-                isWave = false;
                 isWarning = false;
                 waveSpeed = -51.5f;
-                enemySpawnManager.RateSet();
                 WaveWarningCount = Instantiate(WaveWarningCountObject, canvas.transform);
                 WaveWarningCount.transform.localPosition = new Vector3(1400, 0, 0);
+                WavePlus();
             }
         }
 
         if (waveCount > 3)
         {
             isSceneChange = true;
-            SceneManager.LoadScene("GameClear");
+            fadeScript.nextScene = "GameClear";
+            fadeScript.isSceneEnd = true;
         }
+    }
+
+    public void WavePlus()
+    {
+        waveCount++;
+        enemyDeathNum = 0;
+        isWave = false;
+        enemySpawnManager.RateSet();
     }
 }
 

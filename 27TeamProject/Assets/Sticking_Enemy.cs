@@ -19,6 +19,11 @@ public class Sticking_Enemy : Enemy
 
     public List<GameObject> child;
 
+    public override void Awake()
+    {
+        
+    }
+
     //初期化
     public override void Start()
     {
@@ -35,13 +40,13 @@ public class Sticking_Enemy : Enemy
         {
             GUIText = hit.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
             isGUIDraw = true;
+            hp -= hit.gameObject.GetComponent<Enemy>().SwingAttack;
             Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
             status = Status.DAMEGE;
             TriggerSetRotate();
             moveStop = !moveStop;
 
             TriggerSet(hit);
-
         }
 
         if (hit.gameObject.layer == ThrowEnemyLayer)
@@ -78,7 +83,7 @@ public class Sticking_Enemy : Enemy
                     //// rb.velocity = Vector3.zero;
 
                     child.Add(hit.gameObject);
-
+                    playerSP += 0.1f;
                 }
                 stickingCount++;
                 //GetComponent<BoxCollider>().isTrigger = false;
@@ -100,14 +105,36 @@ public class Sticking_Enemy : Enemy
     public override void Update()
     {
         base.Update();
-        if (isHook)
-            Move();
-        for(int i = 0; i < child.Count; i++)
+        if (!BlowMode)
+        {
+            if (isHook) Move();
+        }
+
+        else
+        {
+            Blow();
+        }
+        for (int i = 0; i < child.Count; i++)
         {
             if(child[i] == null)
             {
                 child.Remove(child[i]);
             }
         }
+    }
+
+    public override void AttackAnime()
+    {
+        animator.SetTrigger("isAttack");
+    }
+
+    public override void DeathAction()
+    {
+     
+        Instantiate(origin_Death_Particle, transform.position, Quaternion.identity);
+        if (waveManager.isWave)
+            waveManager.enemyDeathNum += (stickingCount + 1);
+        enemySpawnManager.enemyCount -= (stickingCount + 1);
+        Destroy(this.gameObject);
     }
 }

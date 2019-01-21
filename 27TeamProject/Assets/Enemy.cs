@@ -12,10 +12,11 @@ using System.Linq;
 
 public enum MoveMode
 {
-    VERTICAL,
     HORIZONTAL,
     PLAYERCHASE,
     RANDOMMOVE,
+    VERTICAL,
+    ESCAPE,
 }
 
 public enum Status
@@ -31,7 +32,7 @@ public class Enemy : MonoBehaviour
     float speed; //移動スピード
     [SerializeField]
     public int inputHp; //HPの初期設定用
-    [SerializeField]
+    [HideInInspector]
     public int hp; //処理で使用するHP変数
 
     Vector3 velosity;
@@ -53,7 +54,7 @@ public class Enemy : MonoBehaviour
 
     [HideInInspector]
     public bool isSticking = true;
-
+    [HideInInspector]
     public bool BlowMode; //吹き飛ぶ前と後の切り替え用
 
     public int maxThrowAttack;
@@ -70,6 +71,7 @@ public class Enemy : MonoBehaviour
 
     [SerializeField]
     GameObject[] wavewall;
+    [HideInInspector]
     public float x, z;
 
     public GameObject slap_Circle;
@@ -83,6 +85,7 @@ public class Enemy : MonoBehaviour
     public GameObject origin_Damege_Particle;
     public GameObject origin_Death_Particle;
     
+    [HideInInspector]
     public float angleZ;
 
     float angleX;
@@ -97,6 +100,7 @@ public class Enemy : MonoBehaviour
     protected int ThisEnemyLayer;
     protected int CatchEnemyLayer;
     protected int ThrowEnemyLayer;
+    protected int GroundLayer;
 
     public Animator animator;
 
@@ -115,16 +119,36 @@ public class Enemy : MonoBehaviour
 
     public float playerSP;//プレイヤーが消費するSP
 
+    [HideInInspector]
     public bool moveStop;
 
+    [HideInInspector]
+    public bool isEscape;
+    public float EscapeSpeed;
+    public float setEscapeDelayTime;
+    [HideInInspector]
+    public float EscapeDilayTime;
+    [HideInInspector]
+    public bool isGround;
+    public string debug;
+
+    public List<AudioClip> seList;
+    protected AudioSource seAudio;
+
     public virtual void Awake()
+    {
+        AwakeSub();
+    }
+
+    public virtual void AwakeSub()
     {
         //mode = MoveMode.RANDOMMOVE;
         //mode = Enum.GetValues(typeof(MoveMode)).Cast<MoveMode>().OrderBy(c => UnityEngine.Random.Range(0, 3)).FirstOrDefault();
         int random = UnityEngine.Random.Range(0, 2);
         if (random == 0)
         {
-            mode = MoveMode.RANDOMMOVE;
+            //mode = MoveMode.RANDOMMOVE;
+            mode = MoveMode.HORIZONTAL;
         }
         else if (random == 1)
         {
@@ -136,7 +160,11 @@ public class Enemy : MonoBehaviour
     }
 
     // Use this for initialization
-    public virtual void Start()
+    public virtual void Start () {
+        StartSub();
+    }
+
+    public virtual void StartSub()
     {
         hp = inputHp;
         isHook = true;
@@ -146,6 +174,9 @@ public class Enemy : MonoBehaviour
         ThisEnemyLayer = LayerMask.NameToLayer("Enemy");
         CatchEnemyLayer = LayerMask.NameToLayer("CatchEnemy");
         ThrowEnemyLayer = LayerMask.NameToLayer("ThrowEnemy");
+        GroundLayer = LayerMask.NameToLayer("Ground");
+
+        Debug.Log(ThrowEnemyLayer);
 
         switch (mode)
         {
@@ -158,6 +189,9 @@ public class Enemy : MonoBehaviour
             case MoveMode.PLAYERCHASE:
                 velosity = new Vector3(1, 0, 0);
                 break;
+            case MoveMode.ESCAPE:
+                velosity = new Vector3(1, 0, 0);
+                break;
         }
 
         GUITime = origin_GUITime;
@@ -165,11 +199,20 @@ public class Enemy : MonoBehaviour
         moveStop = false;
         DamageTime = DamageSetTime;
         flyDeathTime = originFlyDeathTime;
+        seAudio = gameObject.AddComponent<AudioSource>();
+        isEscape = false;
+        EscapeDilayTime = setEscapeDelayTime;
+        isGround = false;
     }
 
     // Update is called once per frame
     public virtual void Update()
-    {   
+    {
+        UpdateSub();
+    }
+
+    public virtual void UpdateSub()
+    {
         if (isGUIDraw)
         {
             GUITime -= Time.deltaTime;
@@ -182,6 +225,7 @@ public class Enemy : MonoBehaviour
 
         if (isFly)
             flyDeathTime -= Time.deltaTime;
+
         if ((/*hp < 1 ||*/ Mathf.Abs(transform.position.z) > 50) || !waveManager.isWave || flyDeathTime < 0)
         {
             DeathAction();
@@ -214,7 +258,6 @@ public class Enemy : MonoBehaviour
             waveManager.enemyDeathNum++;
         enemySpawnManager.enemyCount--;
         Destroy(this.gameObject);
-
     }
 
     private void Slap()
@@ -236,12 +279,14 @@ public class Enemy : MonoBehaviour
             if (hl.transform.tag == "Ground")
             {
                 groundcount++;
+                isGround = false;
             }
         }
 
         if (groundcount == 0)
         {
             velosity *= -1;
+            isGround = true;
         }
     }
 
@@ -254,9 +299,14 @@ public class Enemy : MonoBehaviour
             RandomMove();
         }
 
+        if(mode == MoveMode.ESCAPE)
+        {
+            EscapeMove();
+        }
+
         if (mode == MoveMode.PLAYERCHASE)
         {
-            PlayerShaseMove();
+            PlayerChaseMove();
         }
         else
         {
@@ -282,7 +332,7 @@ public class Enemy : MonoBehaviour
         previousePositoin = currentPosition;
     }
 
-    void PlayerShaseMove()
+    void PlayerChaseMove()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Vector3 pos = player.transform.position - transform.position;
@@ -311,12 +361,40 @@ public class Enemy : MonoBehaviour
         transform.position += normalpos * speed;
     }
 
+    void EscapeMove()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        Vector3 pos = player.transform.position - transform.position;
+        Vector3 normalpos = Vector3.Normalize(pos);
+        if (Mathf.Abs(pos.x) < ChaseRange && Mathf.Abs(pos.z) < ChaseRange)
+        {
+            isEscape = true;
+        }
+
+        if (isEscape)
+        {
+            EscapeDilayTime -= Time.deltaTime;
+        }
+        else
+        {
+            transform.position += velosity * speed;
+        }
+
+        if(EscapeDilayTime < 0)
+        {
+            normalpos = new Vector3(normalpos.x, 0, 0);
+            transform.position += -normalpos * EscapeSpeed;
+        }
+    }
+
     public virtual void Blow()
-    {   
+    {
         Vector3 normal = Vector3.Normalize(PosBlow);
         transform.position += new Vector3(BlowOffSpeed * normal.x, BlowOffSpeed, BlowOffSpeed * normal.z);
         angleZ += 10;
-        transform.rotation = Quaternion.Euler(0, 0, angleZ);
+        Quaternion q = transform.rotation;
+        q = Quaternion.Euler(0,0,angleZ);
+        transform.rotation = q;// Quaternion.Euler(0, 0, angleZ);
     }
     public virtual void ThrowSet(float throwSpeed, Vector3 throwVelocity)
     {
@@ -350,22 +428,27 @@ public class Enemy : MonoBehaviour
 
     public virtual void AttackAnime()
     {
-
     }
 
     private void OnTriggerEnter(Collider other)
-    {   
+    {
+        TriggerAction(other);
+    }
+
+    public virtual void TriggerAction(Collider other)
+    {
         if (other.gameObject.layer == CatchEnemyLayer)
         {
             GUIText = other.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
             isGUIDraw = true;
+            hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
             Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
             status = Status.DAMEGE;
             TriggerSetRotate();
             moveStop = !moveStop;
 
             TriggerSet(other);
-            
+
         }
 
         if (other.gameObject.layer == ThrowEnemyLayer)
@@ -378,36 +461,11 @@ public class Enemy : MonoBehaviour
             TriggerSetRotate();
             moveStop = !moveStop;
             Physics.IgnoreCollision(other.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
+
             TriggerSet(other);
         }
-       // MaxSpeedEnemy(other);
     }
 
-    //public virtual void MaxSpeedEnemy(Collider other)
-    //{
-    //    if (other.gameObject.layer == CatchEnemyLayer)
-    //    {
-    //        GUIText = other.gameObject.GetComponent<Enemy>().SwingAttack.ToString();
-    //        isGUIDraw = true;
-    //        hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
-    //        Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
-    //        if (hp <= 5)
-    //        {
-    //            TriggerSet(other);
-    //        }
-    //    }
-
-    //    if (other.gameObject.layer == ThrowEnemyLayer)
-    //    {
-    //        GUIText = other.gameObject.GetComponent<Enemy>().ThrowAttack.ToString();
-    //        isGUIDraw = true;
-    //        hp -= other.gameObject.GetComponent<Enemy>().ThrowAttack;
-    //        Instantiate(origin_Damege_Particle, transform.position, Quaternion.identity);
-    //        status = Status.DAMEGE;
-    //        throwTime = throwSetTime;
-    //        Physics.IgnoreCollision(other.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
-    //    }
-    //}
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.layer == ThrowEnemyLayer)
@@ -416,7 +474,6 @@ public class Enemy : MonoBehaviour
 
     public virtual void TriggerSet(Collider other)
     {
-        hp -= other.gameObject.GetComponent<Enemy>().SwingAttack;
         if (hp <= 0)
         {
             BlowMode = true;
@@ -425,6 +482,11 @@ public class Enemy : MonoBehaviour
             GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX;
             GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationY;
             PosBlow = transform.position - other.transform.position;
+            seAudio.PlayOneShot(seList[1]);
+        }
+        else
+        {
+            seAudio.PlayOneShot(seList[2]);
         }
     }
 

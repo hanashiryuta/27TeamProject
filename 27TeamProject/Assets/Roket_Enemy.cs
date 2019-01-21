@@ -25,10 +25,23 @@ public class Roket_Enemy : Enemy
 
     //}
 
+    public override void Awake()
+    {
+        
+    }
+
     // Update is called once per frame
     public override void Update()
     {
         base.Update();
+
+        if (!GetComponentInChildren<Renderer>().isVisible && isGround && isEscape)
+        {
+            enemySpawnManager.enemyCount--;
+            Destroy(this.gameObject);
+        }
+
+
         if (!BlowMode)
         {
             if (isHook) Move();

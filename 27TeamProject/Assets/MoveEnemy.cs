@@ -11,6 +11,11 @@ using UnityEngine;
 public class MoveEnemy : Enemy
 {
 
+    public override void Awake()
+    {
+        
+    }
+
     // Update is called once per frame
     public override void Update()
     {
@@ -30,6 +35,8 @@ public class MoveEnemy : Enemy
 
     public override void AttackAnime()
     {
+        base.AttackAnime();
+        seAudio.PlayOneShot(seList[0]);
         animator.SetTrigger("isAttack");
     }
 

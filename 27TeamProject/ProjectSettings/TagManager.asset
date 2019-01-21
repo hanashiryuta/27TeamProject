@@ -16,6 +16,8 @@ TagManager:
   - PaulEnemyUnder
   - PaulEnemy
   - Warning
+  - Rock
+  - Boss
   layers:
   - Default
   - TransparentFX
@@ -40,11 +42,10 @@ TagManager:
   - StageWall
   - PaulEnemy
   - LaserObject
+  - Ground
   - Warning
-  - 
-  - 
-  - 
-  - 
+  - Boss
+  - Rock
   - 
   - 
   - 
