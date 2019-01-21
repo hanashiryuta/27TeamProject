@@ -17,9 +17,9 @@ public class WaveManager : MonoBehaviour
     float x, ix, y;
     float time = 0.5f;
     float waveSpeed = -51.5f;
-    float waveSpeedMin = 3;
-    float waveSpeedInit = 0;
-    float waveSpeed_RightEnd = 4;
+    float waveSpeedMin = 4;
+    //float waveSpeedInit = 0;
+    float waveSpeed_RightEnd = 3;
     float deleteTime = 5.0f;
     //float waveSpeedMax = 20;
     int count = 0;
