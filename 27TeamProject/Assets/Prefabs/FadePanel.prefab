@@ -40,7 +40,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab4eec6881d71ea4a851143e3948175d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeSpeed: 0.01
+  fadeSpeed: 0.05
   fadeState: 0
   isSceneEnd: 0
   nextScene: Select

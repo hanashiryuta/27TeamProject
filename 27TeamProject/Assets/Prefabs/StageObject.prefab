@@ -1375,7 +1375,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab4eec6881d71ea4a851143e3948175d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeSpeed: 0.01
+  fadeSpeed: 0.05
   fadeState: 0
   isSceneEnd: 0
   nextScene: Select
@@ -1738,7 +1738,7 @@ MonoBehaviour:
   enemyList: []
   enemySpawnManager: {fileID: 0}
   waveManager: {fileID: 0}
-  origin_Spawn_Particle: {fileID: 1773085424974958, guid: 27032da6152f86d49b66005ff5cd8d2b,
+  origin_Spawn_Particle: {fileID: 1210353364078936, guid: 2aa6fa3c7fbf75f428e1e6f596193e85,
     type: 2}
 --- !u!114 &114597204446743920
 MonoBehaviour:
