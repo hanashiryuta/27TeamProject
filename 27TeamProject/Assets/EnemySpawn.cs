@@ -85,6 +85,10 @@ public class EnemySpawn : MonoBehaviour {
         else
         {
             SpawnCount = 0;
+            if(spawn_Particle != null)
+            {
+                Destroy(spawn_Particle);
+            }
         }
 	}
 }

@@ -60,6 +60,11 @@ public class PaulEnemy : Enemy {
             //GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
             //GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
             PosBlow = transform.position - other.transform.position;
+            seAudio.PlayOneShot(seList[1]);
+        }
+        else
+        {
+            seAudio.PlayOneShot(seList[2]);
         }
     }
 
