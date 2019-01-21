@@ -254,7 +254,7 @@ public class Player : MonoBehaviour
     {
         anim.SetBool("isDeath", true);
         isPlayerDeath = true;
-        fadeScript.nextScene = "GameClear";
+        fadeScript.nextScene = "GameOver";
         fadeScript.isSceneEnd = true;
     }
 

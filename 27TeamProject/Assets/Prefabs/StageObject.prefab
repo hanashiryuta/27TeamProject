@@ -1229,6 +1229,7 @@ MonoBehaviour:
     m_Bits: 512
   origin_DamegeTime: 0.1
   sp: 100
+  maxSP: 0
   hpBar: {fileID: 114597204446743920}
   spBar: {fileID: 114327107986978686}
   origin_Swing_Particle: {fileID: 1845615675441322, guid: 5ccf8a215f0440947a7748b52a8b0e89,
@@ -1326,6 +1327,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: c10f2175ab8d0254893fede76563f5d1, type: 3}
   - {fileID: 8300000, guid: 30c38f5f9ffb37f42acac0adec314462, type: 3}
   - {fileID: 8300000, guid: 24bdbb838e387ec4484df3abb54062cd, type: 3}
+  fadeScript: {fileID: 114063429190778510}
   bossLayer:
     serializedVersion: 2
     m_Bits: 33554432
@@ -2002,6 +2004,7 @@ MonoBehaviour:
   enemyDeathCountText: {fileID: 114819375469192036}
   waveCountText: {fileID: 114491830639596764}
   enemySpawnManager: {fileID: 114074329460401560}
+  fadeScript: {fileID: 114063429190778510}
 --- !u!135 &135433514074440992
 SphereCollider:
   m_ObjectHideFlags: 1
