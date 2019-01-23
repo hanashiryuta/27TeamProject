@@ -323,7 +323,7 @@ public class Player : MonoBehaviour
     {
         if (catchObject != null && catchObject.CompareTag("Boss"))
         {
-            pointerAngle = Mathf.Atan2(0, 1);
+            pointerAngle = Mathf.Atan2(1,0);
             pointerPosition = new Vector3(Mathf.Cos(pointerAngle) * pointerRadius, 2, Mathf.Sin(pointerAngle) * pointerRadius);
         }
         else

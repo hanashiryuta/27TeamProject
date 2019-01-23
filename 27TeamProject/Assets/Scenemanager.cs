@@ -10,6 +10,9 @@ public class Scenemanager : MonoBehaviour {
     public Button selectButton;
     public FadeScript fade;
 
+    public List<AudioClip> seList;
+    AudioSource seAudio;
+
     // Use this for initialization
     void Start()
     {
@@ -18,19 +21,15 @@ public class Scenemanager : MonoBehaviour {
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
+        seAudio = gameObject.AddComponent<AudioSource>();
         selectButton.Select();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public void NextScene()
     {
         if (fade.fadeState == FadeState.STAY)
         {
+            seAudio.PlayOneShot(seList[1]);
             fade.nextScene = nextSceneName;
             fade.isSceneEnd = true;
         }
@@ -39,6 +38,14 @@ public class Scenemanager : MonoBehaviour {
     public void GameEnd()
     {
         if (fade.fadeState == FadeState.STAY)
+        {
+            seAudio.PlayOneShot(seList[1]);
             Application.Quit();
+        }
+    }
+
+    public void SelectSound()
+    {
+        seAudio.PlayOneShot(seList[0]);
     }
 }
