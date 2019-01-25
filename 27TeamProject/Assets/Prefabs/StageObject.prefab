@@ -173,6 +173,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4325033245331934}
   - component: {fileID: 114185898482747864}
+  - component: {fileID: 65721939529739326}
   m_Layer: 0
   m_Name: EnemySpawnPoint8
   m_TagString: Untagged
@@ -189,6 +190,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4320728212847586}
   - component: {fileID: 114731858853073740}
+  - component: {fileID: 65077930573788416}
   m_Layer: 0
   m_Name: EnemySpawnPoint7
   m_TagString: Untagged
@@ -240,6 +242,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4886645934796372}
   - component: {fileID: 114803308311178010}
+  - component: {fileID: 65797162811044840}
   m_Layer: 0
   m_Name: EnemySpawnPoint4
   m_TagString: Untagged
@@ -274,6 +277,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4440391559012112}
   - component: {fileID: 114156281509363916}
+  - component: {fileID: 65192270926036692}
   m_Layer: 0
   m_Name: EnemySpawnPoint1
   m_TagString: Untagged
@@ -309,6 +313,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4056414493842526}
   - component: {fileID: 114808167661072118}
+  - component: {fileID: 65685264987746574}
   m_Layer: 0
   m_Name: EnemySpawnPoint6
   m_TagString: Untagged
@@ -340,6 +345,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4286389954590898}
   - component: {fileID: 114249608440650312}
+  - component: {fileID: 65082934879641670}
   m_Layer: 0
   m_Name: EnemySpawnPoint3
   m_TagString: Untagged
@@ -356,6 +362,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4935293985208354}
   - component: {fileID: 114671148317734438}
+  - component: {fileID: 65879663402402496}
   m_Layer: 0
   m_Name: EnemySpawnPoint2
   m_TagString: Untagged
@@ -372,6 +379,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4682981056991892}
   - component: {fileID: 114567688702782262}
+  - component: {fileID: 65493075570693614}
   m_Layer: 0
   m_Name: EnemySpawnPoint9
   m_TagString: Untagged
@@ -439,6 +447,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4552502039055768}
   - component: {fileID: 114949783184587110}
+  - component: {fileID: 65493600180765498}
   m_Layer: 0
   m_Name: EnemySpawnPoint5
   m_TagString: Untagged
@@ -1053,6 +1062,42 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &65077930573788416
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1359143996640136}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &65082934879641670
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1566274704145790}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &65192270926036692
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1434028113148314}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &65376242398923772
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -1064,6 +1109,78 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &65493075570693614
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1623102497754012}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &65493600180765498
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1695539503785084}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &65685264987746574
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1519323948109292}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &65721939529739326
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1325340008059736}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &65797162811044840
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1405027228000602}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &65879663402402496
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1585790855457174}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0, y: 0, z: 0}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!81 &81996385502479976
 AudioListener:
@@ -1401,7 +1518,7 @@ MonoBehaviour:
   - {fileID: 1000943937109094, guid: 96ed7e7d73a0a9f4b844843f98dce0b1, type: 2}
   - {fileID: 1239241153488046, guid: 070d2b41dc59b994eb400ee054f367c7, type: 2}
   - {fileID: 1567855478769968, guid: 74bb0849ccb5cfd44b99cfcee3935c96, type: 2}
-  - {fileID: 1447667295648964, guid: 63a4a4fc9650fe641be71883cd4174be, type: 2}
+  - {fileID: 1202992824919218, guid: 63a4a4fc9650fe641be71883cd4174be, type: 2}
   - {fileID: 1472290693001800, guid: f88a72ab674faaa448c24efb23b50508, type: 2}
   - {fileID: 1914083344866342, guid: 40d511d9074da2d4eb1fd2c5a8047b77, type: 2}
   isSpawn: 0
