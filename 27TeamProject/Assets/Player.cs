@@ -325,6 +325,7 @@ public class Player : MonoBehaviour
         {
             pointerAngle = Mathf.Atan2(1,0);
             pointerPosition = new Vector3(Mathf.Cos(pointerAngle) * pointerRadius, 2, Mathf.Sin(pointerAngle) * pointerRadius);
+            hookPointer.transform.position = pointerPosition + transform.position;
         }
         else
         {

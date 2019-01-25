@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 114346539367117058}
   - component: {fileID: 54952120001892088}
   - component: {fileID: 65156802765627368}
+  - component: {fileID: 114772572718263564}
   m_Layer: 26
   m_Name: rock
   m_TagString: Enemy
@@ -37,8 +38,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1748233591890930}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -18.174835, y: -3.8589234, z: 10.31}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalPosition: {x: 0, y: 0, z: 10.31}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -121,11 +122,26 @@ MonoBehaviour:
   EscapeSpeed: 0
   setEscapeDelayTime: 0
   EscapeDilayTime: 0
+  isGround: 0
   debug: 
   seList: []
   GUIFont: {fileID: 0}
   origin_GUITime: 0.5
   m_power: 600
+--- !u!114 &114772572718263564
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1748233591890930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!212 &212506666412617044
 SpriteRenderer:
   m_ObjectHideFlags: 1
