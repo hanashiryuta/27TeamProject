@@ -375,6 +375,7 @@ GameObject:
   - component: {fileID: 133662941}
   - component: {fileID: 133662940}
   - component: {fileID: 133662939}
+  - component: {fileID: 133662942}
   m_Layer: 5
   m_Name: StartButton
   m_TagString: Untagged
@@ -398,7 +399,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -300, y: -400}
+  m_AnchoredPosition: {x: 0, y: -100}
   m_SizeDelta: {x: 754, y: 402}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &133662939
@@ -487,6 +488,70 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 133662937}
   m_CullTransparentMesh: 0
+--- !u!114 &133662942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 133662937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1862395651, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 393489261}
+          m_MethodName: Selected
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 133662939}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  - eventID: 8
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 393489261}
+          m_MethodName: SelectUpdate
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  - eventID: 10
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 393489261}
+          m_MethodName: Deselect
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  delegates: []
 --- !u!1 &179233673
 GameObject:
   m_ObjectHideFlags: 0
@@ -611,6 +676,10 @@ MonoBehaviour:
   nextSceneName: Select
   selectButton: {fileID: 133662939}
   fade: {fileID: 1616306969}
+  seList:
+  - {fileID: 8300000, guid: f5b5b5c5064a7144d9eb5a184e8c52d6, type: 3}
+  - {fileID: 8300000, guid: dc1f0f2771718f141bc569bb31e90126, type: 3}
+  buttonScaleRate: 0.005
 --- !u!4 &393489262
 Transform:
   m_ObjectHideFlags: 0
@@ -618,7 +687,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 393489260}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.71921575, y: 3.1468754, z: 1.8917532}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -735,6 +804,7 @@ GameObject:
   - component: {fileID: 557320750}
   - component: {fileID: 557320749}
   - component: {fileID: 557320748}
+  - component: {fileID: 557320751}
   m_Layer: 5
   m_Name: EndButton
   m_TagString: Untagged
@@ -758,7 +828,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 300, y: -400}
+  m_AnchoredPosition: {x: 0, y: -350}
   m_SizeDelta: {x: 754, y: 402}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &557320748
@@ -847,6 +917,70 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 557320746}
   m_CullTransparentMesh: 0
+--- !u!114 &557320751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 557320746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1862395651, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 393489261}
+          m_MethodName: Selected
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 557320748}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  - eventID: 8
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 393489261}
+          m_MethodName: SelectUpdate
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  - eventID: 10
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 393489261}
+          m_MethodName: Deselect
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  delegates: []
 --- !u!1001 &729081744
 Prefab:
   m_ObjectHideFlags: 0
@@ -1166,7 +1300,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: e72da17fc6e19a447b300dbc009a69d9, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.8
+  m_Volume: 0.6
   m_Pitch: 1
   Loop: 1
   Mute: 0

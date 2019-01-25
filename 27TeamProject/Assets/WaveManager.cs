@@ -160,7 +160,7 @@ public class WaveManager : MonoBehaviour
             {
                 WaveWarningCount.GetComponent<Text>().text = "WAVE:" + waveCount.ToString();
             }
-            enemyDeathCountText.text = enemyDeathNum.ToString() + "/" + (0 + 3 * waveCount).ToString();
+            enemyDeathCountText.text = enemyDeathNum.ToString() + "/" + (10 + 10 * waveCount).ToString();
         }
 
         else
@@ -181,7 +181,7 @@ public class WaveManager : MonoBehaviour
 
         else
         {
-            if (enemyDeathNum >= 10 + 3 * waveCount)
+            if (enemyDeathNum >= 10 + 10 * waveCount)
             {
                 isWarning = false;
                 waveSpeed = -51.5f;
