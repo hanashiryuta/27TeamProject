@@ -67,6 +67,7 @@ public class EnemySpawn : MonoBehaviour {
             {
                 spawn_Particle = Instantiate(origin_Spawn_Particle, transform.position, Quaternion.identity, transform);
             }
+
             if(SpawnTime < 0)
             {
                 if(SpawnCount < SpawnLimit)
