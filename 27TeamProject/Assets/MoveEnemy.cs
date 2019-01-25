@@ -20,8 +20,7 @@ public class MoveEnemy : Enemy
     public override void Update()
     {
         base.Update();
-
-
+        
         if (!BlowMode)
         {
             if (isHook) Move();
@@ -39,5 +38,4 @@ public class MoveEnemy : Enemy
         seAudio.PlayOneShot(seList[0]);
         animator.SetTrigger("isAttack");
     }
-
 }
