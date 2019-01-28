@@ -28,7 +28,7 @@ public class LaserLastObject : MonoBehaviour {
         {
             if (other.gameObject.layer == PlayerLayer)
             {
-                other.GetComponent<Player>().hp -= 100;
+                other.GetComponent<Player>().hp -= 4;
             }
             else if (other.gameObject.layer == EnemyLayer)
             {

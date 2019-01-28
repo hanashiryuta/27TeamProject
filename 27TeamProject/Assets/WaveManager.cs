@@ -173,7 +173,7 @@ public class WaveManager : MonoBehaviour
             {
                 WaveWarningCount.GetComponent<Text>().text = "WAVE" + waveCount.ToString();
             }
-            enemyDeathCountText.text = enemyDeathNum.ToString() + "/" + (0 + 3 * waveCount).ToString();
+            enemyDeathCountText.text = enemyDeathNum.ToString() + "/" + (10 + 10 * waveCount).ToString();
         }
 
         else

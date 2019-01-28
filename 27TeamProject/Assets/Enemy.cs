@@ -25,6 +25,12 @@ public enum Status
     DAMEGE,
 }
 
+public enum HookStart
+{
+    Left,
+    Right,
+}
+
 public class Enemy : MonoBehaviour
 {
 
@@ -87,9 +93,7 @@ public class Enemy : MonoBehaviour
     
     [HideInInspector]
     public float angleZ;
-
-    float angleX;
-
+    
     [HideInInspector]
     public Vector3 PosBlow;
     
@@ -135,6 +139,11 @@ public class Enemy : MonoBehaviour
     public List<AudioClip> seList;
     protected AudioSource seAudio;
 
+    HookStart start;
+    bool isLeft;
+    bool setStart;
+    bool Change;
+
     public virtual void Awake()
     {
         AwakeSub();
@@ -169,13 +178,15 @@ public class Enemy : MonoBehaviour
         hp = inputHp;
         isHook = true;
         BlowMode = false;
+        setStart = false;
+        Change = false;
         angleZ = transform.rotation.x;
         status = Status.NORMAL;
         ThisEnemyLayer = LayerMask.NameToLayer("Enemy");
         CatchEnemyLayer = LayerMask.NameToLayer("CatchEnemy");
         ThrowEnemyLayer = LayerMask.NameToLayer("ThrowEnemy");
         GroundLayer = LayerMask.NameToLayer("Ground");
-
+        
         Debug.Log(ThrowEnemyLayer);
 
         switch (mode)
@@ -423,7 +434,6 @@ public class Enemy : MonoBehaviour
         {
             AttackAnime();
         }
-
     }
 
     public virtual void AttackAnime()
@@ -493,6 +503,74 @@ public class Enemy : MonoBehaviour
     public virtual void TriggerSetRotate()
     {
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, -30));
+    }
+
+    public virtual void HookSwing()
+    {   
+        Player player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        Vector3 pos = new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z) - transform.position;
+        Vector3 normal = Vector3.Normalize(pos);
+        if (normal.x > 0)
+        {
+            isLeft = true;
+            if (!setStart)
+            {
+                start = HookStart.Left;
+                Change = false;
+                setStart = true;
+            }
+        }
+        else
+        {
+            isLeft = false;
+            if (!setStart)
+            {
+                start = HookStart.Right;
+                Change = true;
+                setStart = true;
+            }
+        }
+
+        if (isLeft)
+        {
+            switch (start)
+            {
+                case HookStart.Left:
+                    if (Change == isLeft)
+                    {
+                        Change = false;
+                        transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y + 180, 0);
+                    }
+                    break;
+                case HookStart.Right:
+                    if (Change == isLeft)
+                    {
+                        Change = false;
+                        transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y + 180, 0);
+                    }
+                    break;
+            }
+        }
+        else
+        {
+            switch (start)
+            {
+                case HookStart.Left:
+                    if (Change == isLeft)
+                    {
+                        Change = true;
+                        transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y + 180, 0);
+                    }
+                    break;
+                case HookStart.Right:
+                    if (Change == isLeft)
+                    {
+                        Change = true;
+                        transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y + 180, 0);
+                    }
+                    break;
+            }
+        }
     }
 
     protected Vector2 GUIPosition;
