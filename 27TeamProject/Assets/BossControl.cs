@@ -81,6 +81,7 @@ public class BossControl : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        bgmManager = GameObject.FindGameObjectWithTag("BGM").GetComponent<BGMManager>();
         player = GameObject.FindWithTag("Player");
         BC = this.GetComponent<BossControl>();
         playerCheck = false;
@@ -91,6 +92,8 @@ public class BossControl : MonoBehaviour
         isHook = true;
         animeStop = false;
         wallHit = false;
+        bgmManager.Boss_BGM();
+        
     }
 
     // Update is called once per frame
@@ -99,10 +102,6 @@ public class BossControl : MonoBehaviour
         if (!playerCheck)
         {
             Move();
-        }
-        if(enemySpawnManager.isBossSpawn == true)
-        {
-            bgmManager.Boss_BGM();
         }
     }
 

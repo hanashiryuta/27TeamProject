@@ -14,6 +14,7 @@ public class Warning_Change : MonoBehaviour
     int count;
     void Start()
     {
+        bgmManager = GameObject.FindGameObjectWithTag("BGM").GetComponent<BGMManager>();
         count = 0;
         im = im.GetComponent<Image>();
         im.color = new Color(0, 0, 0, 0);

@@ -240,6 +240,7 @@ public class WaveManager : MonoBehaviour
                     waveSpeed = -51.5f;
                     WaveWarningCount = Instantiate(WaveWarningCountObject, canvas.transform);
                     WaveWarningCount.transform.localPosition = new Vector3(1400, 0, 0);
+                    waveWarnintNumberImage = WaveWarningCount.transform.GetChild(1).gameObject;
                 }
             }
         }
@@ -249,6 +250,13 @@ public class WaveManager : MonoBehaviour
     public void WavePlus()
     {
         waveCount++;
+        if (waveCount > 3)
+        {
+            isSceneChange = true;
+            fadeScript.nextScene = "GameClear";
+            fadeScript.isSceneEnd = true;
+            return;
+        }
         enemyDeathNum = 0;
         isWave = false;
         enemySpawnManager.RateSet();

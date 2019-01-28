@@ -28,7 +28,7 @@ public class LightWarning : MonoBehaviour
 
     public void Update()
     {
-        if (count < 240)
+        if (count < 200)
         {
             if (enemySpawnManager.isBossSpawn == true)
             {

@@ -19,6 +19,7 @@ TagManager:
   - Rock
   - Boss
   - SpawnManager
+  - BGM
   layers:
   - Default
   - TransparentFX

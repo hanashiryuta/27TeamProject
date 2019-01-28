@@ -51,15 +51,17 @@ public class BGMManager : MonoBehaviour
     }
     public void Boss_BGM()
     {
-        audioSource = GetComponent<AudioSource>();
+        audioSource = this.gameObject.GetComponent<AudioSource>();
+        audioSource.Stop();
         audioSource.clip = bgmList[4];
         audioSource.Play();
     }
 
     public void Warning_BGM()
     {
+        audioSource = this.gameObject.GetComponent<AudioSource>();
+        Debug.Log(this.gameObject);
         audioSource.Stop();
-        audioSource = GetComponent<AudioSource>();
         audioSource.clip = bgmList[5];
         audioSource.Play();
     }
