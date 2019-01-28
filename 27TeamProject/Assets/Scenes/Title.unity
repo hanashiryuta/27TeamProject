@@ -1400,6 +1400,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 433307986687f7b4fbd41900194ca53d, type: 3}
   - {fileID: 8300000, guid: 5b2fed38c0331854b8fc0421c988b687, type: 3}
   - {fileID: 8300000, guid: 998e7076b8bd1074db7001063ef968ad, type: 3}
+  - {fileID: 8300000, guid: 3460fd1785663564caedb888722804eb, type: 3}
+  - {fileID: 8300000, guid: 76b82d66eacc97a48b91bf543132f6f7, type: 3}
+  enemySpawnManager: {fileID: 114854822635749702, guid: 69c60ddfc93c8ae4dba041f754ecedef,
+    type: 2}
 --- !u!114 &1616306969 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 114227839428074558, guid: f76b08ef4bdd5794eb8dabe76f690750,

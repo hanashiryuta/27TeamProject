@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class BGMManager : MonoBehaviour {
+public class BGMManager : MonoBehaviour
+{
 
     public List<AudioClip> bgmList;
+    public EnemySpawnManager enemySpawnManager;
     static BGMManager instance;
     AudioSource audioSource;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         if (instance == null)
         {
             DontDestroyOnLoad(gameObject);
@@ -21,28 +24,43 @@ public class BGMManager : MonoBehaviour {
             Destroy(gameObject);
         }
         SceneManager.sceneLoaded += OnSceneLoaded;
-	}
+    }
 
-    void OnSceneLoaded(Scene scene,LoadSceneMode mode)
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         audioSource = GetComponent<AudioSource>();
         if (scene.name == "Title")
         {
             audioSource.clip = bgmList[0];
         }
-        else if(scene.name == "SampleScene")
+        else if (scene.name == "SampleScene")
         {
             audioSource.clip = bgmList[1];
         }
-        else if(scene.name == "GameClear")
+        else if (scene.name == "GameClear")
         {
             audioSource.clip = bgmList[2];
         }
-        else if(scene.name == "GameOver")
+        else if (scene.name == "GameOver")
         {
             audioSource.clip = bgmList[3];
         }
         audioSource.Play();
         SceneManager.sceneLoaded += OnSceneLoaded;
-    }   
+    }
+    public void Boss_BGM()
+    {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = bgmList[4];
+        audioSource.Play();
+    }
+
+    public void Warning_BGM()
+    {
+        audioSource.Stop();
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = bgmList[5];
+        audioSource.Play();
+    }
+
 }

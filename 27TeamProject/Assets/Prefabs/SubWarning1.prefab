@@ -146,7 +146,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 51416263afa9bb1449046539736130b8, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 76b82d66eacc97a48b91bf543132f6f7, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1.24
@@ -271,6 +271,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   im: {fileID: 114234419396224016}
+  bgmManager: {fileID: 0}
   isUp: 1
 --- !u!114 &114234419396224016
 MonoBehaviour:
@@ -338,6 +339,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   im: {fileID: 114017600702228750}
+  bgmManager: {fileID: 0}
   isUp: 1
 --- !u!114 &114371944172399112
 MonoBehaviour:
@@ -351,6 +353,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   im: {fileID: 114653611196845124}
+  bgmManager: {fileID: 0}
   isUp: 1
 --- !u!114 &114377156027750418
 MonoBehaviour:
@@ -364,6 +367,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   im: {fileID: 114244851968433938}
+  bgmManager: {fileID: 0}
   isUp: 1
 --- !u!114 &114455770626874996
 MonoBehaviour:
@@ -377,6 +381,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   im: {fileID: 114871838994460968}
+  bgmManager: {fileID: 0}
   isUp: 1
 --- !u!114 &114653611196845124
 MonoBehaviour:
@@ -417,6 +422,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   im: {fileID: 114785584292540170}
+  bgmManager: {fileID: 0}
   isUp: 1
 --- !u!114 &114785584292540170
 MonoBehaviour:

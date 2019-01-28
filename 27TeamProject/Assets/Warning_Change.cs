@@ -8,6 +8,7 @@ public class Warning_Change : MonoBehaviour
 
    
     public Image im;
+    public BGMManager bgmManager;
     [HideInInspector]
     public bool isUp = true;
     int count;
@@ -16,12 +17,14 @@ public class Warning_Change : MonoBehaviour
         count = 0;
         im = im.GetComponent<Image>();
         im.color = new Color(0, 0, 0, 0);
+        bgmManager.Warning_BGM();
 
     }
 
     void Update()
     {
 
+       
         if (count < 150)
         {
             if (im.color.b > 1)
