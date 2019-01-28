@@ -135,6 +135,9 @@ public class Player : MonoBehaviour
     public FadeScript fadeScript;
     public LayerMask bossLayer;
     public LayerMask rockLayer;
+
+    public PauseManager pauseManager;
+
     // Use this for initialization
     void Start()
     {
@@ -150,6 +153,11 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if(Input.GetButtonDown("Pause"))
+        {
+            pauseManager.isPause = true;
+        }
+
         hpBar.fillAmount = hp / maxHP;
         spBar.fillAmount = sp / maxSP;
 
@@ -179,6 +187,7 @@ public class Player : MonoBehaviour
             Death();
             return;
         }
+
         HookPointer();
         Move();
         anim.SetBool("isJump", !isJumpFlag);
