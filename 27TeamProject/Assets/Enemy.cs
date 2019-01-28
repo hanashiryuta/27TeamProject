@@ -188,19 +188,23 @@ public class Enemy : MonoBehaviour
         
         Debug.Log(ThrowEnemyLayer);
 
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        Vector3 pos = player.transform.position - transform.position;
+        Vector3 normalpos = Vector3.Normalize(pos);
+
         switch (mode)
         {
             case MoveMode.HORIZONTAL:
-                velosity = new Vector3(1, 0, 0);
+                velosity = new Vector3(1 * normalpos.x, 0, 0);
                 break;
             case MoveMode.VERTICAL:
-                velosity = new Vector3(0, 0, 1);
+                velosity = new Vector3(0, 0, 1 * normalpos.z);
                 break;
             case MoveMode.PLAYERCHASE:
-                velosity = new Vector3(1, 0, 0);
+                velosity = new Vector3(1 * normalpos.x, 0, 0);
                 break;
             case MoveMode.ESCAPE:
-                velosity = new Vector3(1, 0, 0);
+                velosity = new Vector3(1 * normalpos.x, 0, 0);
                 break;
         }
 
