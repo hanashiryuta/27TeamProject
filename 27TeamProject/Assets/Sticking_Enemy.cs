@@ -109,7 +109,6 @@ public class Sticking_Enemy : Enemy
         {
             if (isHook) Move();
         }
-
         else
         {
             Blow();
@@ -121,6 +120,8 @@ public class Sticking_Enemy : Enemy
                 child.Remove(child[i]);
             }
         }
+
+        if (!isHook) HookSwing();
     }
 
     public override void AttackAnime()
