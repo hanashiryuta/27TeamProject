@@ -589,6 +589,7 @@ public class Player : MonoBehaviour
             //catchObject.GetComponent<Enemy>().isFly = true;
             timingTime = origin_TimingTime;
             seAudio.PlayOneShot(seList[1]);
+            swingSpeed = 0;
         }
 
         else if(catchObject.tag == "Boss")
@@ -607,6 +608,7 @@ public class Player : MonoBehaviour
             timingTime = origin_TimingTime;
             seAudio.PlayOneShot(seList[1]);
             catchObject.GetComponent<BossControl>().bossState = BossState.Fly;
+            swingSpeed = 0;
         }
     }
 

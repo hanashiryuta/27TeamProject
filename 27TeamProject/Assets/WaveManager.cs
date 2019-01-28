@@ -39,6 +39,7 @@ public class WaveManager : MonoBehaviour
     public GameObject WaveBlock;
     public GameObject canvas;
     public GameObject WaveWarningCountObject;
+    GameObject waveWarnintNumberImage;
     public GameObject BossWarningObject;
 
     public GameObject BossWarningLightObject;
@@ -127,6 +128,7 @@ public class WaveManager : MonoBehaviour
         BlockInstance();
         WaveWarningCount = Instantiate(WaveWarningCountObject, canvas.transform);
         WaveWarningCount.transform.localPosition = new Vector3(1400, 0, 0);
+        waveWarnintNumberImage = WaveWarningCount.transform.GetChild(1).gameObject;
     }
 
     private void Update()
@@ -177,7 +179,8 @@ public class WaveManager : MonoBehaviour
             waveCountImage.sprite = numberList[waveCount];
             if (WaveWarningCount != null)
             {
-                WaveWarningCount.GetComponent<Text>().text = "WAVE" + waveCount.ToString();
+                //WaveWarningCount.GetComponent<Text>().text = "WAVE" + waveCount.ToString();
+                waveWarnintNumberImage.GetComponent<Image>().sprite = numberList[waveCount];
             }
             //enemyDeathCountText.text = enemyDeathNum.ToString() + "/" + (10 + 10 * waveCount).ToString();
             enemyDeathCountImage[0].sprite = numberList[enemyDeathNum / 10];
