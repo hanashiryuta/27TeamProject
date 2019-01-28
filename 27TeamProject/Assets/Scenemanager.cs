@@ -19,7 +19,7 @@ public class Scenemanager : MonoBehaviour {
     RectTransform buttonRect;
 
     // Use this for initialization
-    void Start()
+    public virtual void  Start()
     {
         if (Cursor.visible == true)
         {
@@ -30,7 +30,12 @@ public class Scenemanager : MonoBehaviour {
         selectButton.Select();
     }
 
-    public void NextScene()
+    public virtual void Update()
+    {
+
+    }
+
+    public virtual void NextScene()
     {
         if (fade.fadeState == FadeState.STAY)
         {
@@ -40,7 +45,7 @@ public class Scenemanager : MonoBehaviour {
         }
     }
 
-    public void GameEnd()
+    public virtual void GameEnd()
     {
         if (fade.fadeState == FadeState.STAY)
         {
@@ -49,14 +54,14 @@ public class Scenemanager : MonoBehaviour {
         }
     }
 
-    public void Selected(Button button)
+    public virtual void Selected(Button button)
     {
         seAudio.PlayOneShot(seList[0]);
         buttonScale = 1.0f;
         this.buttonRect = button.GetComponent<RectTransform>();
     }
 
-    public void SelectUpdate()
+    public virtual void SelectUpdate()
     {
         buttonRect.localScale = new Vector3(buttonScale, buttonScale, buttonScale);
         buttonScale += buttonScaleRate;
@@ -70,7 +75,7 @@ public class Scenemanager : MonoBehaviour {
         }
     }
 
-    public void Deselect()
+    public virtual void Deselect()
     {
         buttonScale = 1.0f;
         buttonRect.localScale = new Vector3(buttonScale, buttonScale, buttonScale);

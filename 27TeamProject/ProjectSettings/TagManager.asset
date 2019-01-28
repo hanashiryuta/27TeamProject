@@ -18,6 +18,7 @@ TagManager:
   - Warning
   - Rock
   - Boss
+  - SpawnManager
   layers:
   - Default
   - TransparentFX
@@ -46,6 +47,7 @@ TagManager:
   - Warning
   - Boss
   - Rock
+  - 
   - 
   - 
   - 
