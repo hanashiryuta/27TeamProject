@@ -40,6 +40,8 @@ public class PaulLaserScript : Enemy {
 
     public GameObject LaserAnimObject;
 
+    bool isCharge = true;
+
     public override void Awake()
     {
         
@@ -115,10 +117,18 @@ public class PaulLaserScript : Enemy {
                 time = setTime;
                 isLaser = true;
                 lineRenderer.SetPosition(0, LaserStart.transform.position);
+                seAudio.PlayOneShot(seList[1]);
+                isCharge = true;
+
             }
 
             if (time < animTime && time > 1)
             {
+                if(isCharge)
+                {
+                    seAudio.PlayOneShot(seList[0]);
+                    isCharge = false;
+                }
                 LaserAnimObject.SetActive(true);
                 anim.SetTrigger("isTriggerLaser");
             }

@@ -15,8 +15,10 @@ TagManager:
   - IronBlock
   - PaulEnemyUnder
   - PaulEnemy
+  - Warning
   - Rock
   - Boss
+  - SpawnManager
   layers:
   - Default
   - TransparentFX

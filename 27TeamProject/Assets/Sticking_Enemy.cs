@@ -97,7 +97,7 @@ public class Sticking_Enemy : Enemy
         for (int i = 0; i < child.Count; i++)
         {
             child[i].layer = 15;
-            child[i].GetComponent<BoxCollider>().isTrigger = false;
+            child[i].GetComponent<BoxCollider>().isTrigger = true;
         }
     }
 
