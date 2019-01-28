@@ -1146,7 +1146,7 @@ MonoBehaviour:
   BlowOffSpeed: 5
   isHook: 0
   isCatch: 1
-  isSticking: 1
+  isSticking: 0
   BlowMode: 0
   maxThrowAttack: 0
   maxSwingAttack: 0
@@ -1209,7 +1209,7 @@ MonoBehaviour:
   BlowOffSpeed: 0
   isHook: 0
   isCatch: 1
-  isSticking: 1
+  isSticking: 0
   BlowMode: 1
   maxThrowAttack: 0
   maxSwingAttack: 0
@@ -1305,7 +1305,7 @@ MonoBehaviour:
   BlowOffSpeed: 5
   isHook: 0
   isCatch: 1
-  isSticking: 1
+  isSticking: 0
   BlowMode: 0
   maxThrowAttack: 0
   maxSwingAttack: 0
@@ -1387,7 +1387,7 @@ MonoBehaviour:
   BlowOffSpeed: 5
   isHook: 0
   isCatch: 1
-  isSticking: 1
+  isSticking: 0
   BlowMode: 0
   maxThrowAttack: 0
   maxSwingAttack: 0
@@ -1450,7 +1450,7 @@ MonoBehaviour:
   BlowOffSpeed: 5
   isHook: 0
   isCatch: 1
-  isSticking: 1
+  isSticking: 0
   BlowMode: 0
   maxThrowAttack: 0
   maxSwingAttack: 0

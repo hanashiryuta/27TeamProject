@@ -49,6 +49,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1055005731486450
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4202568175342622}
+  - component: {fileID: 108922157959066310}
+  - component: {fileID: 114717342345788134}
+  m_Layer: 0
+  m_Name: MainLight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1088315590556532
 GameObject:
   m_ObjectHideFlags: 1
@@ -1361,6 +1378,19 @@ Transform:
   m_Father: {fileID: 4767790337771770}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4202568175342622
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1055005731486450}
+  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalPosition: {x: 1159.0856, y: 373.25842, z: 15.682229}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4759802356981290}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!4 &4205497185990148
 Transform:
   m_ObjectHideFlags: 1
@@ -1742,6 +1772,7 @@ Transform:
   - {fileID: 4388054338662366}
   - {fileID: 4883141309711220}
   - {fileID: 4915292982034504}
+  - {fileID: 4202568175342622}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2290,6 +2321,43 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!108 &108922157959066310
+Light:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1055005731486450}
+  m_Enabled: 1
+  serializedVersion: 8
+  m_Type: 1
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Intensity: 1
+  m_Range: 10
+  m_SpotAngle: 30
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
 --- !u!114 &114004727988493670
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2312,19 +2380,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 253671dcd21d8ee41b8d780aebc301d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Flag: 1
-  WaveBlock: {fileID: 1054374672118998, guid: 3d3c60f288f0b81479a7894ec70ab603, type: 2}
+  enemyDeathNum: 0
   waveCount: 1
   isWave: 0
   isWarning: 0
-  enemyDeathNum: 0
+  Flag: 1
+  isUp: 0
+  isSceneChange: 0
+  isBossLight: 0
+  WaveBlock: {fileID: 1054374672118998, guid: 3d3c60f288f0b81479a7894ec70ab603, type: 2}
   canvas: {fileID: 1240216397137032}
-  enemyDeathCountText: {fileID: 114339041621713324}
-  waveCountText: {fileID: 114519267055434940}
   WaveWarningCountObject: {fileID: 1811423569846250, guid: 005643f162a9edb4391b117aeba2fc21,
     type: 2}
-  enemySpawnManager: {fileID: 114854822635749702}
+  BossWarningObject: {fileID: 1334124963565436, guid: 023b942f2cf7fc8479d3f7d7e5754a4a,
+    type: 2}
+  BossWarningLightObject: {fileID: 0}
+  MainLight: {fileID: 1055005731486450}
+  enemyDeathCountText: {fileID: 114339041621713324}
+  waveCountText: {fileID: 114519267055434940}
   fadeScript: {fileID: 114431412657754456}
+  enemySpawnManager: {fileID: 114854822635749702}
 --- !u!114 &114101031914045074
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2766,6 +2841,8 @@ MonoBehaviour:
   - Player
   - Enemy
   - SpawnManager
+  - Boss
+  - Rock
   arrowRect: {fileID: 224889657763522478}
 --- !u!114 &114403618083597464
 MonoBehaviour:
@@ -3247,6 +3324,20 @@ MonoBehaviour:
   waveManager: {fileID: 0}
   origin_Spawn_Particle: {fileID: 1210353364078936, guid: 2aa6fa3c7fbf75f428e1e6f596193e85,
     type: 2}
+--- !u!114 &114717342345788134
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1055005731486450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a46a1a699755964494c215bf54f01fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lt: {fileID: 108922157959066310}
+  isUp: 1
+  enemySpawnManager: {fileID: 114854822635749702}
 --- !u!114 &114797216253943984
 MonoBehaviour:
   m_ObjectHideFlags: 1

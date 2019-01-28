@@ -57,8 +57,7 @@ public class Enemy : MonoBehaviour
 
     [HideInInspector]
     public bool isCatch = true;
-
-    [HideInInspector]
+    
     public bool isSticking = true;
     [HideInInspector]
     public bool BlowMode; //吹き飛ぶ前と後の切り替え用
