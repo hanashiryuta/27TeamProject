@@ -27,8 +27,6 @@ public class BossControl : MonoBehaviour
     protected GameObject player;
     protected GameObject leftblock;
     protected GameObject rightblock;
-    private bool leftcheck; //プレイヤーの方向左側判定
-    private bool rightcheck; //プレイヤーの方向右側判定
     private float interval = 0.1f; //点滅インターバル
     private bool playerCheck;
 
@@ -53,6 +51,9 @@ public class BossControl : MonoBehaviour
     private bool animeStop;
     private float angle;
     public float hp = 0;
+
+    private bool wallHit;
+    private float dashDirection;
 
     [HideInInspector]
     public WaveManager waveManager;
@@ -79,8 +80,6 @@ public class BossControl : MonoBehaviour
     void Start()
     {
         player = GameObject.FindWithTag("Player");
-        leftcheck = false;
-        rightcheck = false;
         BC = this.GetComponent<BossControl>();
         playerCheck = false;
         rockflag = false;
@@ -89,6 +88,7 @@ public class BossControl : MonoBehaviour
         damegeflag = false;
         isHook = true;
         animeStop = false;
+        wallHit = false;
     }
 
     // Update is called once per frame
@@ -115,6 +115,23 @@ public class BossControl : MonoBehaviour
                 Vector3 targetPos = transform.position;
                 targetPos.z = player.transform.position.z;
                 transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref velocity, smoothTime);
+
+                //プレイヤーが左側
+                if (target.x < this.transform.position.x)
+                {
+                    rockflag = false;
+                    this.transform.rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+                    dashDirection = 90;
+                }
+
+                //プレイヤーが右側
+                else if (target.x > this.transform.position.x)
+                {
+                    rockflag = true;
+                    this.transform.rotation = Quaternion.Euler(0.0f, -180.0f, 0.0f);
+                    dashDirection = -90;
+                }
+
                 if (time >= 3)
                 {
                     bossState = BossState.Stop;
@@ -131,31 +148,17 @@ public class BossControl : MonoBehaviour
                     time = 0;
                 }
                 break;
-
             case BossState.Attack:
-                //プレイヤーの位置
-                target = player.transform.position;
-
-                //プレイヤーが左側
-                if (!rightcheck && target.x < this.transform.position.x)
-                {
-                    leftcheck = true;
-                    if (bossDashParticle == null)
-                        bossDashParticle = Instantiate(origin_BossDashParticle, dashPoint.position, Quaternion.Euler(0, 0, 90), transform);
-                }
-
-                //プレイヤーが右側
-                else if (!leftcheck && target.x > this.transform.position.x)
-                {
-                    rightcheck = true;
-                    if (bossDashParticle == null)
-                        bossDashParticle = Instantiate(origin_BossDashParticle, dashPoint.position, Quaternion.Euler(0,0,-90), transform);
-                }
-                
                 ////移動処理
+                if(!wallHit)
+                {
+                    wallHit = true;
+                }
                 float trans = -moveSpeed * Time.deltaTime;
                 transform.Translate(new Vector3(trans, 0));
-                break;
+                if (bossDashParticle == null)
+                    bossDashParticle = Instantiate(origin_BossDashParticle, dashPoint.position, Quaternion.Euler(0, 0, dashDirection), transform);
+                    break;
 
             case BossState.Damege:
                 if (!damegeflag)
@@ -163,51 +166,18 @@ public class BossControl : MonoBehaviour
                     trans = 0;
                     time = 0;
                     damegeflag = true;
-                    boss.GetComponent<Animator>().SetTrigger("runTrigger");
+                    runflag = false;
                 }
-
                 transform.position = transform.position;
-
-                if (time < 3)
-                {
-                    //プレイヤーの位置
-                    target = player.transform.position;
-
-                    //プレイヤーが左側
-                    if (target.x < this.transform.position.x)
-                    {
-                        leftcheck = true;
-                        rightcheck = false;
-                        this.transform.rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
-                    }
-
-                    //プレイヤーが右側
-                    else if (target.x > this.transform.position.x)
-                    {
-                        rightcheck = true;
-                        leftcheck = false;
-                        this.transform.rotation = Quaternion.Euler(0.0f, -180.0f, 0.0f);
-                    }
-                }
 
                 if (hitCount == 0)
                 {
                     bossState = BossState.Dawn;
                 }
 
-                else if (3 < time)
+                else if (time > 1)
                 {
-                    if (bossDashParticle == null)
-                    {
-                        if (rightcheck)
-                            bossDashParticle = Instantiate(origin_BossDashParticle, dashPoint.position, Quaternion.Euler(0, 0, -90), transform);
-                        else if (leftcheck)
-                            bossDashParticle = Instantiate(origin_BossDashParticle, dashPoint.position, Quaternion.Euler(0, 0, 90), transform);
-                    }
-                    Debug.Log(Time.deltaTime);
-                    ////移動処理
-                    boss.GetComponent<Animator>().SetTrigger("runTrigger");
-                    transform.Translate(new Vector3(-moveSpeed * Time.deltaTime, 0));
+                    bossState = BossState.Move;
                 }
                 break;
 
@@ -217,18 +187,18 @@ public class BossControl : MonoBehaviour
                     boss.GetComponent<Animator>().SetTrigger("dawnTrigger");
                     animeStop = true;
                 }
-                if(time>2)
+                if (time > 2)
                 {
                     boss.GetComponent<Animator>().speed = 0;
                 }
-                if(!isHook)
+                if (!isHook)
                 {
                     GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
                 }
                 break;
             case BossState.Fly:
                 flyTime += Time.deltaTime;
-                if(flyTime > origin_FlyTime)
+                if (flyTime > origin_FlyTime)
                 {
                     waveManager.WavePlus();
                     Destroy(gameObject);
@@ -239,38 +209,16 @@ public class BossControl : MonoBehaviour
 
     void OnCollisionEnter(Collision col)
     {
-        if (col.gameObject.tag == "IronBlock" && leftcheck)
-        {
-            if (bossDashParticle != null)
-                Destroy(bossDashParticle);
-            if(stanParticle == null)
-                stanParticle = Instantiate(origin_StanParticle,stanPoint.position + new Vector3(0,3,0),Quaternion.identity,transform);
-            leftcheck = false;
-            boss.GetComponent<Animator>().SetTrigger("stanTrigger");
-            angle = 180;
-            damegeflag = false;
-            //StartCoroutine("Blink");
-            rockflag = false;
-            for (int count = 0; count < 3; count++)
-            {
-                RockInstantiate();
-            }
-            BC.enabled = false;
-            Invoke("Release", 4.5f);//衝突時4.5秒間停止
-        }
-
-        if (col.gameObject.tag == "IronBlock" && rightcheck)
+        if (col.gameObject.tag == "IronBlock" && wallHit)
         {
             if (bossDashParticle != null)
                 Destroy(bossDashParticle);
             if (stanParticle == null)
                 stanParticle = Instantiate(origin_StanParticle, stanPoint.position + new Vector3(0, 3, 0), Quaternion.identity, transform);
-            rightcheck = false;
+            wallHit = false;
             boss.GetComponent<Animator>().SetTrigger("stanTrigger");
-            angle = -180;
             damegeflag = false;
             //StartCoroutine("Blink");
-            rockflag = true;
             for (int count = 0; count < 3; count++)
             {
                 RockInstantiate();
@@ -285,7 +233,8 @@ public class BossControl : MonoBehaviour
         if (LayerMask.LayerToName(col.gameObject.layer) == "ThrowEnemy")
         {
             hitCount--;
-            Debug.Log(hitCount);
+            if (bossDashParticle != null)
+                Destroy(bossDashParticle);
             if (hitCount > 0)
                 boss.GetComponent<Animator>().SetTrigger("damegeTrigger");
             Instantiate(bossBombParticle, bombPoint.position, Quaternion.identity);
@@ -301,7 +250,6 @@ public class BossControl : MonoBehaviour
         //StopCoroutine("Blink");
         //var renderComponent = GetComponent<Renderer>();
         //renderComponent.enabled = true;
-        transform.Rotate(new Vector3(0, angle, 0));
         time = 0;
         if (stanParticle != null)
             Destroy(stanParticle);
