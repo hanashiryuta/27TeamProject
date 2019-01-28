@@ -49,8 +49,9 @@ public class WaveManager : MonoBehaviour
 
     GameObject WaveWarningCount;
 
-    public Text enemyDeathCountText;
-    public Text waveCountText;
+    public Image waveCountImage;
+    public List<Sprite> numberList;
+    public List<Image> enemyDeathCountImage;
 
     public FadeScript fadeScript;
     public EnemySpawnManager enemySpawnManager;
@@ -126,14 +127,18 @@ public class WaveManager : MonoBehaviour
         BlockInstance();
         WaveWarningCount = Instantiate(WaveWarningCountObject, canvas.transform);
         WaveWarningCount.transform.localPosition = new Vector3(1400, 0, 0);
-      
-
-
-
     }
 
     private void Update()
     {
+
+        if (waveCount > 3)
+        {
+            isSceneChange = true;
+            fadeScript.nextScene = "GameClear";
+            fadeScript.isSceneEnd = true;
+            return;
+        }
 
         if (isWarning == false)
         {
@@ -168,17 +173,23 @@ public class WaveManager : MonoBehaviour
 
         if (waveCount > 0)
         {
-            waveCountText.text = "wave:" + waveCount.ToString();
+            //waveCountText.text = "wave:" + waveCount.ToString();
+            waveCountImage.sprite = numberList[waveCount];
             if (WaveWarningCount != null)
             {
                 WaveWarningCount.GetComponent<Text>().text = "WAVE" + waveCount.ToString();
             }
-            enemyDeathCountText.text = enemyDeathNum.ToString() + "/" + (10 + 10 * waveCount).ToString();
+            //enemyDeathCountText.text = enemyDeathNum.ToString() + "/" + (10 + 10 * waveCount).ToString();
+            enemyDeathCountImage[0].sprite = numberList[enemyDeathNum / 10];
+            enemyDeathCountImage[1].sprite = numberList[enemyDeathNum % 10];
+            enemyDeathCountImage[2].sprite = numberList[(10 + 10 * waveCount) / 10];
+            enemyDeathCountImage[3].sprite = numberList[(10 + 10 * waveCount) % 10];
         }
 
         else
         {
-            waveCountText.text = "";
+            //waveCountText.text = "";
+            waveCountImage.sprite = null;
             WaveWarningCount.GetComponent<Text>().text = "";
         }
 
@@ -230,12 +241,6 @@ public class WaveManager : MonoBehaviour
             }
         }
 
-        if (waveCount > 3)
-        {
-            isSceneChange = true;
-            fadeScript.nextScene = "GameClear";
-            fadeScript.isSceneEnd = true;
-        }
     }
 
     public void WavePlus()
