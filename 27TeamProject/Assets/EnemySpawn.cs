@@ -74,7 +74,6 @@ public class EnemySpawn : MonoBehaviour {
             {
                 spawn_Particle = Instantiate(origin_Spawn_Particle, transform.position, Quaternion.identity, transform);
             }
-<<<<<<< HEAD
 
             if(SpawnTime < 2)
             {
@@ -84,8 +83,6 @@ public class EnemySpawn : MonoBehaviour {
                 box.size = new Vector3(x, 0, z);
             }
 
-=======
->>>>>>> parent of 8f30737... 振り回されるEnemyが一定の方向を向くように変更
             if(SpawnTime < 0)
             {
                 if(SpawnCount < SpawnLimit)

@@ -25,10 +25,14 @@ public class MoveEnemy : Enemy
         {
             if (isHook) Move();
         }
-
         else
         {
             Blow();
+        }
+
+        if (!isHook)
+        {
+            HookSwing();
         }
     }
 
