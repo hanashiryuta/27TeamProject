@@ -1179,6 +1179,7 @@ MonoBehaviour:
   EscapeSpeed: 0
   setEscapeDelayTime: 0
   EscapeDilayTime: 0
+  isGround: 0
   debug: 
   seList: []
   GUIFont: {fileID: 12800000, guid: d7d5b71cb41044c43bffbb0141fd35ae, type: 3}
@@ -1238,6 +1239,7 @@ MonoBehaviour:
   EscapeSpeed: 0
   setEscapeDelayTime: 0
   EscapeDilayTime: 0
+  isGround: 0
   debug: 
   seList:
   - {fileID: 8300000, guid: 7f14b6bd95d45c043969d9d86f316c80, type: 3}
@@ -1334,6 +1336,7 @@ MonoBehaviour:
   EscapeSpeed: 0
   setEscapeDelayTime: 0
   EscapeDilayTime: 0
+  isGround: 0
   debug: 
   seList: []
   GUIFont: {fileID: 12800000, guid: d7d5b71cb41044c43bffbb0141fd35ae, type: 3}
@@ -1412,6 +1415,7 @@ MonoBehaviour:
   EscapeSpeed: 0
   setEscapeDelayTime: 0
   EscapeDilayTime: 0
+  isGround: 0
   debug: 
   seList: []
   GUIFont: {fileID: 12800000, guid: d7d5b71cb41044c43bffbb0141fd35ae, type: 3}
@@ -1471,6 +1475,7 @@ MonoBehaviour:
   EscapeSpeed: 0
   setEscapeDelayTime: 0
   EscapeDilayTime: 0
+  isGround: 0
   debug: 
   seList: []
   GUIFont: {fileID: 12800000, guid: d7d5b71cb41044c43bffbb0141fd35ae, type: 3}
@@ -1551,7 +1556,7 @@ LineRenderer:
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 6e421bb7709144b4094b49733fa8c0f9, type: 2}
+  - {fileID: 2100000, guid: 310ad985513efc64eb60ed499630dc92, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1576,7 +1581,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 0}
   m_Parameters:
     serializedVersion: 2
-    widthMultiplier: 5
+    widthMultiplier: 10
     widthCurve:
       serializedVersion: 2
       m_Curve:
