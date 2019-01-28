@@ -14,51 +14,35 @@ public class LightWarning : MonoBehaviour
     public Light lt;
     [HideInInspector]
     public bool isUp = true;
-    int count;
-    public EnemySpawnManager enemySpawnManager;
 
     void Start()
     {
-        lt = GetComponent<Light>();
-        lt.color = new Color(1, 1, 1, 1);
-        enemySpawnManager.isBossSpawn = false;
-        count = 0;
-
+        lt = lt.GetComponent<Light>();
     }
 
-    public void Update()
+    void Update()
     {
-        if (count < 240)
-        {
-            if (enemySpawnManager.isBossSpawn == true)
-            {
-                if (lt.color.b > 1)
-                {
-                    isUp = true;
-                }
-                else if (lt.color.b < 0)
-                {
-                    isUp = false;
-                }
-                if (isUp == true)
-                {
-                    //lt.color -= Color.white / 1.0f * Time.deltaTime;
-                    lt.color -= Color.green / 1.0f * Time.deltaTime;
-                    lt.color -= Color.blue / 1.0f * Time.deltaTime;
-                }
-                else if (isUp == false)
-                {
+        Color alpha = lt.color;
+        alpha.a = 1.0f;
+        lt.color = alpha;
 
-                    lt.color += Color.green / 1.0f * Time.deltaTime;
-                    lt.color += Color.blue / 1.0f * Time.deltaTime;
-                }
-                count++;
-            }
-            
-        }
-        else
+        if (lt.color.b > 1)
         {
-            lt.color = new Color(1, 1, 1, 1);
+            isUp = true;
+        }
+        else if (lt.color.b < 0)
+        {
+            isUp = false;
+        }
+        if (isUp == true)
+        {
+            lt.color -= Color.green / 1.0f * Time.deltaTime;
+            lt.color -= Color.blue / 1.0f * Time.deltaTime;
+        }
+        else if (isUp == false)
+        {
+            lt.color += Color.green / 1.0f * Time.deltaTime;
+            lt.color += Color.blue / 1.0f * Time.deltaTime;
         }
     }
 }

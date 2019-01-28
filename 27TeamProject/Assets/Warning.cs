@@ -20,7 +20,7 @@ public class Warning : MonoBehaviour
             s.transform.position += new Vector3(-offset, 0, 0);
             if (s.transform.position.x < 0 - (s.GetComponent<RectTransform>().sizeDelta.x / 2))
             {
-                s.transform.position = new Vector3(Screen.width + s.GetComponent<RectTransform>().sizeDelta.x * 1.49f, s.transform.position.y, s.transform.position.z);
+                s.transform.position = new Vector3(Screen.width + s.GetComponent<RectTransform>().sizeDelta.x * 1.8f, s.transform.position.y, s.transform.position.z);
 
             }
         }
