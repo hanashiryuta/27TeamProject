@@ -11,50 +11,42 @@ using UnityEngine.UI;
 
 public class WaveManager : MonoBehaviour
 {
-    [HideInInspector]
-    public int enemyDeathNum;
-    [HideInInspector]
-    public int waveCount = 1;
+    public bool Flag = false;
+    public GameObject WaveBlock;
+
     float x, ix, y;
+    float time = 0.5f;
     float waveSpeed = -51.5f;
     float waveSpeedMin = 4;
+    //float waveSpeedInit = 0;
     float waveSpeed_RightEnd = 3;
-    float BossCount;
-    float BossCountMax;
-    float waveInterval = 5;
-   
+    float deleteTime = 5.0f;
+    //float waveSpeedMax = 20;
+    int count = 0;
+    int max = 5;
+
+    [HideInInspector]
+    public int waveCount = 1;
+    [HideInInspector]
+    // public int waveCountWarning = 1;
+    bool isSceneChange;
     [HideInInspector]
     public bool isWave = false;
     [HideInInspector]
     public bool isWarning = false;
-    [HideInInspector]
-    public bool Flag = false;
-    [HideInInspector]
-    public bool isUp;
-    [HideInInspector]
-    public bool isSceneChange;
+    float waveInterval = 5;
 
-    public bool isBossLight = false;
-
-    public GameObject WaveBlock;
+    [HideInInspector]
+    public int enemyDeathNum;
     public GameObject canvas;
-    public GameObject WaveWarningCountObject;
-    public GameObject BossWarningObject;
-
-    public GameObject BossWarningLightObject;
-    public GameObject MainLight;
-
-    GameObject BossWarningLight;
-    GameObject BossWarning;
-
-    GameObject WaveWarningCount;
-
     public Text enemyDeathCountText;
     public Text waveCountText;
-
-    public FadeScript fadeScript;
+    public GameObject WaveWarningCountObject;
     public EnemySpawnManager enemySpawnManager;
-    
+
+    GameObject WaveWarningCount;
+    public FadeScript fadeScript;
+
     //public void OnCollisionEnter(Collision collision)
     //{
     //    if (collision.gameObject.tag == "Player")
@@ -96,7 +88,6 @@ public class WaveManager : MonoBehaviour
     //        }
     //    }
     //}
-
     public void BlockInstance()
     {
         x = transform.position.x + 30;
@@ -114,27 +105,23 @@ public class WaveManager : MonoBehaviour
         {
             Instantiate(WaveBlock, CreatePoint3, Quaternion.Euler(0, -180, 0));
         }
-        Vector3 CreatePoint4 = new Vector3(ix, y, transform.position.z - 10);
+        Vector3 CreatePoint4 = new Vector3(ix, y, transform.position.z - 10);        
         {
             Instantiate(WaveBlock, CreatePoint4, Quaternion.Euler(0, -270, 0));
         }
-        
+        count++;
+        time = 0.02f;
     }
 
     private void Start()
     {
-        BlockInstance();
+        BlockInstance();        
         WaveWarningCount = Instantiate(WaveWarningCountObject, canvas.transform);
         WaveWarningCount.transform.localPosition = new Vector3(1400, 0, 0);
-      
-
-
-
     }
 
     private void Update()
-    {
-
+    {       
         if (isWarning == false)
         {
             WaveWarningCount.transform.position += new Vector3(waveSpeed, 0, 0);
@@ -151,9 +138,9 @@ public class WaveManager : MonoBehaviour
                 }
             }
         }
-       
+
         if (WaveWarningCount != null)
-        {
+        {             
             if (isWarning == true)
             {
                 WaveWarningCount.transform.position -= new Vector3(waveSpeed, 0, 0);
@@ -171,7 +158,7 @@ public class WaveManager : MonoBehaviour
             waveCountText.text = "wave:" + waveCount.ToString();
             if (WaveWarningCount != null)
             {
-                WaveWarningCount.GetComponent<Text>().text = "WAVE" + waveCount.ToString();
+                WaveWarningCount.GetComponent<Text>().text = "WAVE:" + waveCount.ToString();
             }
             enemyDeathCountText.text = enemyDeathNum.ToString() + "/" + (10 + 10 * waveCount).ToString();
         }
@@ -189,44 +176,18 @@ public class WaveManager : MonoBehaviour
             {
                 waveInterval = 5;
                 isWave = true;
-            }
-
-            if (enemySpawnManager.GetComponent<EnemySpawnManager>().isBossSpawn == true)
-            {
-                
-                if (waveInterval < 4.5f)
-                {
-                    isBossLight = true;
-                    if (BossCount == BossCountMax)
-                    {
-                        BossWarning = Instantiate(BossWarningObject, canvas.transform);
-                        //BossWarningLight = Instantiate(BossWarningLightObject);
-                        //MainLight.SetActive(false);
-                    }
-                    BossCount++;
-                }
-
-                else
-                {
-                    //MainLight.SetActive(true);
-                    Destroy(BossWarning);
-                    //Destroy(MainLight);
-                    
-                }
-            }
+            }          
         }
+
         else
         {
-            if (enemyDeathNum >= 10 + 10 * waveCount)
+            if (enemyDeathNum >= 10 + 3 * waveCount)
             {
+                isWarning = false;
+                waveSpeed = -51.5f;
+                WaveWarningCount = Instantiate(WaveWarningCountObject, canvas.transform);
+                WaveWarningCount.transform.localPosition = new Vector3(1400, 0, 0);
                 WavePlus();
-                if (enemySpawnManager.GetComponent<EnemySpawnManager>().isBossSpawn == false)
-                {
-                    isWarning = false;
-                    waveSpeed = -51.5f;
-                    WaveWarningCount = Instantiate(WaveWarningCountObject, canvas.transform);
-                    WaveWarningCount.transform.localPosition = new Vector3(1400, 0, 0);
-                }
             }
         }
 
