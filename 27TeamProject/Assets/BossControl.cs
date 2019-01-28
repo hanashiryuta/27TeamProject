@@ -57,7 +57,9 @@ public class BossControl : MonoBehaviour
 
     [HideInInspector]
     public WaveManager waveManager;
-
+    public EnemySpawnManager enemySpawnManager;
+    public BGMManager bgmManager;
+    
     public float origin_FlyTime;
     float flyTime;
 
@@ -97,6 +99,10 @@ public class BossControl : MonoBehaviour
         if (!playerCheck)
         {
             Move();
+        }
+        if(enemySpawnManager.isBossSpawn == true)
+        {
+            bgmManager.Boss_BGM();
         }
     }
 

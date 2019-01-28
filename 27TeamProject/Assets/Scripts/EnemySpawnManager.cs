@@ -19,6 +19,7 @@ public class EnemySpawnManager : MonoBehaviour {
     public int enemyRange;
 
     public WaveManager waveManager;
+    public BGMManager bgmManager;
 
     [HideInInspector]
     public bool isBossSpawn;
@@ -45,8 +46,7 @@ public class EnemySpawnManager : MonoBehaviour {
                 lineList.Add(float.Parse(line[i]));
                 if (i == 5 && float.Parse(line[i]) > 0)
                 {
-                    isBossSpawn = true;
-                  
+                    isBossSpawn = true;                   
                 }
             }
             pointRate.Add(lineList);
