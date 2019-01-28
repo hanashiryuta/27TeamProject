@@ -20,7 +20,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4728625776480960}
   - component: {fileID: 114074905880339386}
-  - component: {fileID: 65166675839328498}
   m_Layer: 0
   m_Name: PaulEnemySpawn
   m_TagString: Untagged
@@ -41,18 +40,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &65166675839328498
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1025830835339394}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0, y: 1, z: 0}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114074905880339386
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -69,8 +56,4 @@ MonoBehaviour:
   SpawnEnemy: {fileID: 1809161476772550, guid: 98f87cde642a46848981c162ca4d89f9, type: 2}
   SpawnLimit: 0
   SpawnCount: 0
-  spawnRate: []
-  enemyList: []
-  enemySpawnManager: {fileID: 0}
   waveManager: {fileID: 0}
-  origin_Spawn_Particle: {fileID: 0}

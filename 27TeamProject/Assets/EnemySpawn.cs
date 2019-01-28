@@ -38,17 +38,10 @@ public class EnemySpawn : MonoBehaviour {
 
     protected GameObject enemy;
 
-    BoxCollider box;
-    float x, z;
-
     // Use this for initialization
     public virtual void Start () {
-        box = GetComponent<BoxCollider>();
-        box.size = new Vector3(0, 0, 0);
-        x = 0;
-        z = x;
-        box.enabled = false;
-    }
+        
+	}
 
     public void RateSet(WaveManager waveManager)
     {
@@ -74,15 +67,6 @@ public class EnemySpawn : MonoBehaviour {
             {
                 spawn_Particle = Instantiate(origin_Spawn_Particle, transform.position, Quaternion.identity, transform);
             }
-
-            if(SpawnTime < 2)
-            {
-                box.enabled = true;
-                x += 0.05f;
-                z = x;
-                box.size = new Vector3(x, 0, z);
-            }
-
             if(SpawnTime < 0)
             {
                 if(SpawnCount < SpawnLimit)
@@ -94,10 +78,6 @@ public class EnemySpawn : MonoBehaviour {
                     SpawnTime = SpawnSetTime;
                     SpawnCount++;
                     enemySpawnManager.enemyCount++;
-                    box.size = new Vector3(0, 0, 0);
-                    x = 0;
-                    z = x;
-                    box.enabled = false;
                     Destroy(spawn_Particle);
                 }
             }

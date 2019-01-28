@@ -50,11 +50,6 @@ public class Big_Enemy : Enemy
                 if (isHook) Move();
             }
         }
-
-        if (!isHook)
-        {
-            HookSwing();
-        }
     }
 
     //public override void DeathAction()
