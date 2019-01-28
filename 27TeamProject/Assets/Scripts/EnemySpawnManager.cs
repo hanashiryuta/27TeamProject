@@ -43,9 +43,10 @@ public class EnemySpawnManager : MonoBehaviour {
             for (int i = 0; i < line.Length; i++)
             {
                 lineList.Add(float.Parse(line[i]));
-                if(float.Parse(line[i]) == 6)
+                if (i == 5 && float.Parse(line[i]) > 0)
                 {
                     isBossSpawn = true;
+                  
                 }
             }
             pointRate.Add(lineList);
