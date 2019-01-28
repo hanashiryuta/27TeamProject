@@ -1253,7 +1253,7 @@ MonoBehaviour:
   - {fileID: 4972654225065534}
   - {fileID: 4652751131346360}
   listCount: 0
-  setTime: 20
+  setTime: 10
   time: 0
   LaserSpeed: 0.65
   isLaser: 0
