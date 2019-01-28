@@ -19,6 +19,7 @@ public class BGMManager : MonoBehaviour {
         else
         {
             Destroy(gameObject);
+            return;
         }
         SceneManager.sceneLoaded += OnSceneLoaded;
 	}

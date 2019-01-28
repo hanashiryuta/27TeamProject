@@ -6,6 +6,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class CameraControl : MonoBehaviour {
 
@@ -27,8 +28,15 @@ public class CameraControl : MonoBehaviour {
     }	
 	// Update is called once per frame
 	void Update() {
-        //プレイヤー追従
-        CameraMove();
+        try
+        {
+            //プレイヤー追従
+            CameraMove();
+        }
+        catch(NullReferenceException nre)
+        {
+            return;
+        }
     }
 
     public void CheckLeft()

@@ -85,6 +85,10 @@ public class Sticking_Enemy : Enemy
                     child.Add(hit.gameObject);
                     playerSP += 0.1f;
                 }
+                else
+                {
+                    stickingCount = countMax;
+                }
                 stickingCount++;
                 //GetComponent<BoxCollider>().isTrigger = false;
             }
@@ -136,6 +140,7 @@ public class Sticking_Enemy : Enemy
         if (waveManager.isWave)
             waveManager.enemyDeathNum += (stickingCount + 1);
         enemySpawnManager.enemyCount -= (stickingCount + 1);
+        Debug.Log(stickingCount);
         Destroy(this.gameObject);
     }
 }
