@@ -25,15 +25,13 @@ public class PauseManager : Scenemanager {
     
     List<GameObject> pauseList;//ポーズするオブジェクト
     public List<string> tagNameList;//ポーズするタグ
-
-    public GameObject selectArrowObject;
-    RectTransform arrowRect;
+    
+    public RectTransform arrowRect;
 
     // Use this for initialization
     public override void Start () {
         base.Start();
         pauseList = new List<GameObject>();
-        arrowRect = selectArrowObject.GetComponent<RectTransform>();
         isPause = false;
     }
 	
@@ -70,7 +68,6 @@ public class PauseManager : Scenemanager {
     public override void Selected(Button button)
     {
         base.Selected(button);
-        RectTransform buttonRect = button.GetComponent<RectTransform>();
         arrowRect.position = new Vector3(arrowRect.position.x, buttonRect.position.y, arrowRect.position.z);
     }
 

@@ -11,12 +11,12 @@ public class Scenemanager : MonoBehaviour {
     public FadeScript fade;
 
     public List<AudioClip> seList;
-    AudioSource seAudio;
+    protected AudioSource seAudio;
     
-    float buttonScale;
+    protected float buttonScale;
     public float buttonScaleRate = 0.005f;
 
-    RectTransform buttonRect;
+    protected RectTransform buttonRect;
 
     // Use this for initialization
     public virtual void  Start()
@@ -81,3 +81,4 @@ public class Scenemanager : MonoBehaviour {
         buttonRect.localScale = new Vector3(buttonScale, buttonScale, buttonScale);
     }
 }
+;
