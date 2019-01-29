@@ -60,6 +60,7 @@ public class Sticking_Enemy : Enemy
             moveStop = !moveStop;
             Physics.IgnoreCollision(hit.gameObject.GetComponent<BoxCollider>(), GetComponent<BoxCollider>());
             TriggerSetRotate();
+            TriggerSet(hit);
         }
 
         if (!isHook)

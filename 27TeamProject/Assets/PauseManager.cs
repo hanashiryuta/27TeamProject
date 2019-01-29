@@ -29,8 +29,14 @@ public class PauseManager : Scenemanager {
     public RectTransform arrowRect;
 
     // Use this for initialization
-    public override void Start () {
-        base.Start();
+    public override void Start ()
+    {
+        if (Cursor.visible == true)
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        seAudio = gameObject.AddComponent<AudioSource>();
         pauseList = new List<GameObject>();
         isPause = false;
     }

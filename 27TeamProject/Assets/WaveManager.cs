@@ -56,6 +56,11 @@ public class WaveManager : MonoBehaviour
 
     public FadeScript fadeScript;
     public EnemySpawnManager enemySpawnManager;
+
+    int enemyDeathOriginCount = 0;
+    int enemyDeathCountRate = 10;
+
+    public GameObject enemyDeathCountObject;
     
     //public void OnCollisionEnter(Collision collision)
     //{
@@ -183,10 +188,17 @@ public class WaveManager : MonoBehaviour
                 waveWarnintNumberImage.GetComponent<Image>().sprite = numberList[waveCount];
             }
             //enemyDeathCountText.text = enemyDeathNum.ToString() + "/" + (10 + 10 * waveCount).ToString();
-            enemyDeathCountImage[0].sprite = numberList[enemyDeathNum / 10];
-            enemyDeathCountImage[1].sprite = numberList[enemyDeathNum % 10];
-            enemyDeathCountImage[2].sprite = numberList[(10 + 10 * waveCount) / 10];
-            enemyDeathCountImage[3].sprite = numberList[(10 + 10 * waveCount) % 10];
+            if (!enemySpawnManager.isBossSpawn)
+            {
+                enemyDeathCountImage[0].sprite = numberList[enemyDeathNum / 10];
+                enemyDeathCountImage[1].sprite = numberList[enemyDeathNum % 10];
+                enemyDeathCountImage[2].sprite = numberList[(enemyDeathOriginCount + enemyDeathCountRate * waveCount) / 10];
+                enemyDeathCountImage[3].sprite = numberList[(enemyDeathOriginCount + enemyDeathCountRate * waveCount) % 10];
+            }
+            else
+            {
+                enemyDeathCountObject.SetActive(false);
+            }
         }
 
         else
@@ -231,7 +243,7 @@ public class WaveManager : MonoBehaviour
         }
         else
         {
-            if (enemyDeathNum >= 10 + 10 * waveCount)
+            if (enemyDeathNum >= enemyDeathOriginCount + enemyDeathCountRate * waveCount)
             {
                 WavePlus();
                 if (enemySpawnManager.GetComponent<EnemySpawnManager>().isBossSpawn == false)
