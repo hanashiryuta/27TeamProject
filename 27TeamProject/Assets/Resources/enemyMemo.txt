@@ -1,6 +1,1 @@
-MoveEnemy
-PaulEnemy
-StickingEnemy
-RoketEnemy
-BigEnemy
-Boss
+MoveEnemy/PaulEnemy/StickingEnemy/RoketEnemy/BigEnemy/Boss
