@@ -311,10 +311,13 @@ public class Player : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Enemy") && damegeTime <= 0&&catchObject != collision.gameObject)
         {
-            isDamege = true;
-            damegeTime = origin_DamegeTime;
-            anim.SetTrigger("isDamege");
-            hp--;
+            if (collision.gameObject.GetComponent<Enemy>().attack > 0)
+            {
+                isDamege = true;
+                damegeTime = origin_DamegeTime;
+                anim.SetTrigger("isDamege");
+                hp -= collision.gameObject.GetComponent<Enemy>().attack;
+            }
         }
         else if (collision.gameObject.CompareTag("Boss") && damegeTime <= 0 && catchObject != collision.gameObject)
         {

@@ -57,7 +57,7 @@ public class WaveManager : MonoBehaviour
     public FadeScript fadeScript;
     public EnemySpawnManager enemySpawnManager;
 
-    int enemyDeathOriginCount = 0;
+    int enemyDeathOriginCount = 10;
     int enemyDeathCountRate = 10;
 
     public GameObject enemyDeathCountObject;

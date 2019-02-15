@@ -30,6 +30,7 @@ public class BGMManager : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         audioSource = GetComponent<AudioSource>();
+        audioSource.Stop();
         if (scene.name == "Title")
         {
             audioSource.clip = bgmList[0];

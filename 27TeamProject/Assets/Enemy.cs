@@ -143,6 +143,8 @@ public class Enemy : MonoBehaviour
     bool setStart;
     bool Change;
 
+    public float attack;
+
     public virtual void Awake()
     {
         AwakeSub();

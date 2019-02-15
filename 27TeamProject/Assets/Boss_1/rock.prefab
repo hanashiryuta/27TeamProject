@@ -115,7 +115,7 @@ MonoBehaviour:
   flyDeathTime: 0
   isFly: 0
   enemySpawnManager: {fileID: 0}
-  playerSP: 0
+  playerSP: 0.2
   moveStop: 0
   isEscape: 0
   EscapeSpeed: 0
@@ -124,6 +124,7 @@ MonoBehaviour:
   isGround: 0
   debug: 
   seList: []
+  attack: 0
   GUIFont: {fileID: 0}
   origin_GUITime: 0.5
   m_power: 600
