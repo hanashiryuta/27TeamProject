@@ -138,6 +138,7 @@ public class Player : MonoBehaviour
 
     public PauseManager pauseManager;
 
+    Dictionary<float,GameObject> timingParticleList;
     // Use this for initialization
     void Start()
     {
@@ -149,6 +150,11 @@ public class Player : MonoBehaviour
         maxHP = hp;
         maxSP = sp;
         seAudio = GetComponent<AudioSource>();
+        timingParticleList = new Dictionary<float, GameObject>()
+        {
+            {1, good_Timing_Particle },
+            {-1, badTiming_Particle },
+        };
     }
 
     private void FixedUpdate()
@@ -409,34 +415,6 @@ public class Player : MonoBehaviour
         
     }
 
-    ///// <summary>
-    ///// フック射出準備
-    ///// </summary>
-    ///// <param name="hook"></param>
-    //public void HookSet(GameObject hook)
-    //{
-    //    hitPosition = hook.transform.position;
-    //    hitDistance = Vector3.Distance(hook.transform.position, transform.position);
-    //    playerState = PlayerState.HOOKMOVE;
-    //}
-
-    ///// <summary>
-    ///// フック移動
-    ///// </summary>
-    //void HookMove()
-    //{
-    //    Vector3 flyVelocity = (hitPosition - transform.position).normalized;
-    //    rigid.AddForce(flyVelocity * flySpeed);
-    //    //ボタン離せばフック切断
-    //    if (Input.GetButtonUp("Jump"))
-    //    {
-    //        //Destroy(GetComponent<DistanceJoint2D>());
-    //        hook.GetComponent<Hook>().hookState = HookState.RETURN;
-    //        playerState = PlayerState.HOOKRETURN;
-    //    }
-    //    //rigid.AddForce(new Vector3(Input.GetAxis("Horizontal") * 10, 0));
-    //}
-
     /// <summary>
     /// 回す準備
     /// </summary>
@@ -461,8 +439,11 @@ public class Player : MonoBehaviour
         
     }
 
+    //現在の角度
     float currentAngle = 0;
+    //1フレーム前の角度
     float previouseAngle = 0;
+    //回転方向
     float setAngle = 0;
 
     /// <summary>
@@ -470,96 +451,61 @@ public class Player : MonoBehaviour
     /// </summary>
     void HookSwing()
     {
-        if (!catchObject.CompareTag("Boss"))
-        {
-            spLossRange = catchObject.GetComponent<Enemy>().playerSP;
-            sp -= spLossRange;
-            if (sp <= 0)
-                sp = 0;
+        //現在の角度取得
+        currentAngle = Mathf.Abs(Mathf.Atan2
+            (Input.GetAxis("Vertical"),
+            Input.GetAxis("Horizontal")) * 180.0f / Mathf.PI);
+
+        //スティックの回転方向によってオブジェクトを回転させる
+        if (currentAngle != previouseAngle) {
+            if (SpinCheck(Input.GetAxisRaw("Vertical")))
+                RightSpin();
+            else
+                LeftSpin();
         }
 
-        currentAngle = Mathf.Abs(Mathf.Atan2(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal")) * 180.0f / Mathf.PI);
-
-        if (Input.GetAxis("Vertical") > 0)
+        //回転加速処理
+        if(Math.Abs(setAngle) >= 360)
         {
-            if (currentAngle > previouseAngle)
-            {
-                if (setAngle < 0)
-                    setAngle = 0;
-                setAngle += Mathf.Abs(currentAngle - previouseAngle);
-            }
-            else if (currentAngle < previouseAngle)
-            {
-                if (setAngle > 0)
-                    setAngle = 0;
-                setAngle -= Mathf.Abs(currentAngle - previouseAngle);
-            }
-        }
-        else if(Input.GetAxis("Vertical") < 0)
-        {
-            if (currentAngle > previouseAngle)
-            {
-                if (setAngle > 0)
-                    setAngle = 0;
-                setAngle -= Mathf.Abs(currentAngle - previouseAngle);
-            }
-            else if (currentAngle < previouseAngle)
-            {
-                if (setAngle < 0)
-                    setAngle = 0;
-                setAngle += Mathf.Abs(currentAngle - previouseAngle);
-            }
-        }
-            
-        if(setAngle >= 360)
-        {
+            //方向指定
+            float direction = setAngle / Math.Abs(setAngle);
             setAngle = 0;
-            swingSpeed += swingButtonRate;
-            Instantiate(good_Timing_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
-            Debug.Log("左回転");
-        }
-        else if (setAngle <= -360)
-        {
-            setAngle = 0;
-            swingSpeed -= swingButtonRate;
-            Instantiate(badTiming_Particle, new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), Quaternion.identity, transform);
-            Debug.Log("右回転");
+            //回転スピードアップ
+            swingSpeed += swingButtonRate * direction;
+            Instantiate(timingParticleList[direction],
+                new Vector3(transform.position.x, transform.position.y + transform.localScale.y / 2, transform.position.z), 
+                Quaternion.identity,
+                transform);
         }
 
+        //パーティクル色変更
         Gradient particleColor = firstColor;
         if (Mathf.Abs(swingSpeed) >= swingSpeedRange / 3)
-            {
+        {
             if (Mathf.Abs(swingSpeed) >= swingSpeedRange * 2 / 3)
-            {
-                Debug.Log("rainbow");
                 particleColor = rainbow;
-            }
             else
-            {
-                Debug.Log("blue");
                 particleColor = secondColor;
-            }
         }
 
+        //色設定
         ParticleSystem.MainModule mains = swing_Particle.GetComponent<ParticleSystem>().main;
-
         mains.startColor = particleColor;
 
+        //上限設定
         if (swingSpeed >= swingSpeedRange)
             swingSpeed = swingSpeedRange;
         else if (swingSpeed <= -swingSpeedRange)
             swingSpeed = -swingSpeedRange;
-
-        if (!catchObject.CompareTag("Boss"))
-        {
-            Enemy enemy = catchObject.GetComponent<Enemy>();
-
-            enemy.ThrowAttack = (int)(enemy.maxThrowAttack * Mathf.Abs(swingSpeed) / swingSpeedRange);
-            enemy.SwingAttack = (int)(enemy.maxSwingAttack * Mathf.Abs(swingSpeed) / swingSpeedRange);
-        }
+       
         swingAngle += swingSpeed;
-        catchObject.transform.position = transform.position + new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180), 2, swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180));
+        //位置設定
+        catchObject.transform.position = transform.position + 
+            new Vector3(swingRadius * Mathf.Cos(swingAngle * Mathf.PI / 180),
+            2,
+            swingRadius * Mathf.Sin(swingAngle * Mathf.PI / 180));
 
+        //SE設定
         seTime += Time.deltaTime;
         if(seTime >= originSeTime)
         {
@@ -567,7 +513,83 @@ public class Player : MonoBehaviour
             seAudio.PlayOneShot(seList[2]);
         }
 
-        previouseAngle = currentAngle;        
+        //現在の角度に保存
+        previouseAngle = currentAngle;  
+
+        //ボスを掴んでいたら終了
+        if (catchObject.CompareTag("Boss"))
+            return;
+        
+        Enemy enemy = catchObject.GetComponent<Enemy>();
+
+        //SP減少処理
+        spLossRange = enemy.playerSP;
+        sp -= spLossRange;
+        if (sp <= 0)
+            sp = 0;   
+    }
+
+    /// <summary>
+    /// 回転方向判定
+    /// </summary>
+    /// <param name="vartical">スティックY軸入力</param>
+    /// <returns></returns>
+    bool SpinCheck(float vartical)
+    {
+        //スティックが上方向（０～180の間）
+        if(vartical > 0)
+        {
+            //現在の角度が1フレーム前の角度より大きければ
+            if (currentAngle > previouseAngle)
+            {
+                //右回転
+                return true;
+            }
+            else 
+            {
+                //左回転
+                return false;
+            }
+        }
+        //スティックが下方向（-180～0の間）
+        else
+        {
+            //現在の角度が1フレーム前の角度より大きければ
+            if (currentAngle > previouseAngle)
+            {
+                //左回転
+                return false;
+            }
+            else 
+            {
+                //右回転
+                return true;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 右回転メソッド
+    /// </summary>
+    void RightSpin()
+    {
+        //前回と逆ならリセット
+        if (setAngle < 0)
+            setAngle = 0;
+        //右方向に足す
+        setAngle += Mathf.Abs(currentAngle - previouseAngle);
+    }
+
+    /// <summary>
+    /// 左回転メソッド
+    /// </summary>
+    void LeftSpin()
+    {
+        //前回と逆ならリセット
+        if (setAngle > 0)
+            setAngle = 0;
+        //左方向に足す
+        setAngle -= Mathf.Abs(currentAngle - previouseAngle);
     }
 
     /// <summary>
@@ -577,6 +599,9 @@ public class Player : MonoBehaviour
     {
         if (catchObject.tag == "Enemy")
         {
+            Enemy enemy = catchObject.GetComponent<Enemy>();
+            enemy.ThrowAttack = (int)(enemy.maxThrowAttack * Mathf.Abs(swingSpeed) / swingSpeedRange);
+            enemy.SwingAttack = (int)(enemy.maxSwingAttack * Mathf.Abs(swingSpeed) / swingSpeedRange);
             throwSpeed = Mathf.Abs(swingSpeed) * 400;
             //catchObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
             //catchObject.GetComponent<Rigidbody>().useGravity = false;
